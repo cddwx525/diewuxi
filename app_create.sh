@@ -10,7 +10,7 @@ mkdir "${name}"
 
 cd "${name}"
 
-cat >> app_main.php << END
+cat > app_main.php << END
 <?php
 namespace ${name};
 
@@ -30,7 +30,7 @@ class app_main extends \\start_app
 END
 
 
-cat >> app_setting.php << END
+cat > app_setting.php << END
 <?php
 namespace ${name};
 
@@ -63,7 +63,7 @@ class app_setting
 ?>
 END
 
-cat >> urls.php << END
+cat > urls.php << END
 <?php
 namespace ${name};
 
@@ -111,7 +111,7 @@ mkdir views
 
 mkdir lib
 
-cat >> lib/url.php << END
+cat > lib/url.php << END
 <?php
 namespace ${name}\\lib;
 
@@ -121,7 +121,7 @@ class url extends \\url_parser
 ?>
 END
 
-cat >> lib/db_hander.php << END
+cat > lib/db_hander.php << END
 <?php
 namespace ${name}\\lib;
 
@@ -135,13 +135,148 @@ END
 
 mkdir lib/controllers
 
+cat > lib/controllers/base.php << END
+<?php
+namespace ${name}\\lib\\controllers;
+
+use ${name}\\lib\\url;
+
+class base
+{
+    public function init()
+    {
+    }
+}
+?>
+END
+
 mkdir lib/views
+
+cat > lib/views/html.php << END
+<?php
+namespace ${name}\\lib\\views;
+
+abstract class html
+{
+    abstract protected function get_part(\$result);
+
+    public function layout(\$result)
+    {
+        \$part = \$this->get_part(\$result);
+
+        print "<!DOCTYPE html>
+<html>
+<head>
+" . \$part["head"] . "
+</head>
+<body>
+" . \$part["body"] . "
+</body>
+</html>";
+    }
+}
+?>
+END
+
+cat > lib/views/base.php << END
+<?php
+namespace ${name}\\lib\\views;
+
+use ${name}\\lib\\url;
+use ${name}\\lib\\views\\html;
+
+abstract class base extends html
+{
+    /*
+     * title
+     * main
+     */
+    abstract protected function get_items(\$result);
+
+    /*
+     * Use modified variables to complete abstact function in parent.
+     */
+    protected function get_part(\$result)
+    {
+        \$url = new url();
+
+        \$items = \$this->get_items(\$result);
+
+
+        /*
+         * Head part.
+         */
+        \$meta_http_equiv = "<meta http-equiv=\\"Content-Type\\" content=\\"text/html; charset=utf-8\\" />";
+        \$meta_viewport = "<meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\" />";
+
+        \$link_css = array();
+        \$link_css[] = "<link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"" . \$url->get_static("css/main.css") . "\\">";
+        \$link_css = implode("\\n", \$link_css);
+
+        \$mathjax = "<script type=\\"text/x-mathjax-config\\">MathJax.Hub.Config({tex2jax: {inlineMath: [['\$','\$'], ['\\\\\\\\(','\\\\\\\\)']]}, processEscapes: true, TeX: {extensions: [\\"mhchem.js\\"]}});</script>
+<script type=\\"text/javascript\\" async src=\\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML\\"></script>";
+
+        \$title_block = "<title>" . \$items["title"] . " - Site_name</title>";
+
+        \$head = array();
+        \$head[] = \$meta_http_equiv;
+        \$head[] = \$meta_viewport;
+        \$head[] = \$link_css;
+        \$head[] = \$mathjax;
+        \$head[] = \$title_block;
+
+        \$head = implode("\\n", \$head);
+
+
+        /*
+         * Body part.
+         */
+        \$header = "<div id=\\"header\\" class=\\"border_frame\\">
+<div id=\\"site_name\\">
+<h1><a href=\\"" . \$url->get(array(APP_NAME, "home", ""), array(), "") . "\\">Site_name</a></h1>
+</div>
+
+<div id=\\"site_description\\">
+<p>Site_description</p>
+</div>
+</div>
+
+<div id=\\"top_menu\\" class=\\"border_frame\\">
+<div id=\\"top_menu_list\\">
+<ul>
+<li><a href=\\"" . \$url->get(array(APP_NAME, "home", ""), array(), "") . "\\">Home</a></li>
+<li><a href=\\"" . \$url->get(array(APP_NAME, "about", ""), array(), "") . "\\">About</a></li>
+</ul>
+</div>
+<div class=\\"clear_both\\"></div>
+</div>";
+
+        \$footer = "<div id=\\"footer\\" class=\\"border_frame\\">
+<p>Site_name this_year--" . date("Y") . "</p>
+</div>";
+
+
+        \$body = array();
+        \$body[] = \$header;
+        \$body[] = \$items["main"];
+        \$body[] = \$footer;
+
+        \$body = implode("\\n\\n", \$body);
+
+        return array(
+            "head" => \$head,
+            "body" => \$body,
+        );
+    }
+}
+?>
+END
 
 mkdir static
 
 mkdir static/css
 
-cat >> static/css/main.css << END
+cat > static/css/main.css << END
 /*******************************************************************************
  * Main css.
  ******************************************************************************/

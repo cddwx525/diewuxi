@@ -88,7 +88,8 @@ class url_parser
         }
         else
         {
-            return FALSE;
+            echo "Get url [" . $url_record[0] . "->" . $url_record[1] . "->" . $url_record[2] . "] wrong!";
+            exit();
         }
     }
 

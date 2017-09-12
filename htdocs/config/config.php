@@ -4,5 +4,5 @@ define("STATIC_FILE", TRUE);
 
 define("SITE_BASE", "");
 
-define("MAIN_APP", "forum");
+define("MAIN_APP", "");
 ?>
