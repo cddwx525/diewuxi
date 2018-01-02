@@ -9,8 +9,9 @@ class start_app
 
         if ($dynamic_match["controller_type"] === "SPECIAL")
         {
-            $dynamic_match["controller_name"] = $special_actions[$dynamic_match["special_flag"]][0];
-            $dynamic_match["action_name"] = $special_actions[$dynamic_match["special_flag"]][1];
+            //print_r(explode(".", $special_actions[$dynamic_match["special_flag"]][1]));
+            $dynamic_match["controller_name"] = explode(".", $special_actions[$dynamic_match["special_flag"]][1])[0];
+            $dynamic_match["action_name"] = explode(".", $special_actions[$dynamic_match["special_flag"]][1])[1];
         }
         else
         {

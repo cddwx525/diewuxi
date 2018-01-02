@@ -147,11 +147,11 @@ abstract class base
 
         $header = "<div id=\"header\" class=\"border_frame\">
 <div id=\"site_name\">
-<h1><a href=\"" . $url->get(array($result["meta_data"]["main_app"]["app_space_name"], "home.show", ""), array(), "") . "\">" . $result["meta_data"]["main_app"]["app_name"] . "</a></h1>
+<h1><a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">" . $result["meta_data"]["main_app"]["site_name"] . "</a></h1>
 </div>
 
 <div id=\"site_description\">
-<p>" . $result["meta_data"]["main_app"]["app_description"] . "</p>
+<p>" . $result["meta_data"]["main_app"]["site_description"] . "</p>
 </div>
 </div>";
 
@@ -181,7 +181,7 @@ abstract class base
         $items = $this->get_items($result);
 
         $footer = "<div id=\"footer\" class=\"border_frame\">
-<p>" . $result["meta_data"]["main_app"]["app_name"] . " " . $result["meta_data"]["main_app"]["begin_year"] . "--" . date("Y") . "</p>
+<p>" . $result["meta_data"]["main_app"]["site_name"] . " " . $result["meta_data"]["main_app"]["site_begin_year"] . "--" . date("Y") . "</p>
 </div>";
 
         return $footer;

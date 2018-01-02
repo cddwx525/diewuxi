@@ -1,6 +1,122 @@
 /*******************************************************************************
- * Main css for doc.
+ * Main css.
  ******************************************************************************/
+
+*
+{
+    /*
+    border-style: solid;
+    border-width: 1px;
+    margin: 0;
+    padding: 0;
+    */
+}
+
+body
+{      
+    /*
+    margin: 0em;
+    padding: 0.6em;
+    */
+
+    /*
+    width: 100%;
+    border: solid Brown 1px;
+    */
+
+    font-family: Monospace;
+    font-size: 80%;
+
+    color: Black;
+    background-color: White;
+}
+
+
+/*******************************************************************************
+ * Link css.
+ ******************************************************************************/
+
+/*
+ * Unvisited
+ */
+a:link
+{
+    /*
+    color: #00FFFF;
+    background-color: #000000;
+    */
+    color: Black;
+    text-decoration: underline;
+}
+
+/*
+ * Hovering
+ */
+a:hover
+{
+    /*
+    color: #00FFFF;
+    background-color: #000000;
+    */
+    color: Black;
+    text-decoration: none;
+}
+
+/*
+ * Clicking
+ */
+a:active
+{
+    /*
+    color: #00FFFF;
+    background-color: #000000;
+    */
+    color: Black;
+    text-decoration: underline;
+}
+
+/*
+ * Visited
+ */
+a:visited
+{
+    /*
+    color: #00FFFF;
+    background-color: #000000;
+    */
+    color: Black;
+}
+
+
+/*******************************************************************************
+ * General class
+ ******************************************************************************/
+.clear_both
+{
+    clear: both;
+}
+
+.input_text
+{
+    width: 100%;
+}
+
+.input_submit
+{
+    width: 100%;
+    height: 3em;
+}
+
+.textarea
+{
+    width: 100%;
+    height: 10em;
+}
+
+.description
+{
+    color: Gray;
+}
 
 .comment_entry_header
 {
@@ -57,7 +173,165 @@
     text-decoration: none;
 }
 
+.border_frame
+{
+    margin: 0.2em 0em;
+    padding: 0.2em 0.6em;
+    /*
+    border: solid Brown 3px;
+    */
+    border: solid Gray 2px;
+}
 
+.markdown-body
+{
+    box-sizing: border-box;
+
+    margin: 0.3em auto;
+
+    min-width: 10em;
+    /*
+    max-width: 80em;
+    */
+}
+
+/*******************************************************************************
+ * Header
+ ******************************************************************************/
+
+#header
+{
+    background-color: Brown;
+}
+
+#site_name
+{
+}
+
+#site_name h1
+{
+    margin: 0em;
+    padding: 0em;
+
+    font-size: 2em;
+    font-weight: bolder;
+    font-family: Sans-serif;
+}
+
+#site_name h1 a
+{
+    /*
+    */
+    color: White;
+    text-decoration: none;
+}
+
+#site_description
+{
+    color: White;
+}
+
+/*******************************************************************************
+ * Position
+ ******************************************************************************/
+#position
+{
+    font-size: 0.8em;
+}
+
+
+/*******************************************************************************
+ * Section
+ ******************************************************************************/
+#section
+{
+    /*
+    background-color: Brown;
+    */
+}
+
+
+#section h2
+{
+    /*
+    margin: 0em;
+    padding: 0em;
+
+    color: White;
+    */
+}
+
+/*******************************************************************************
+ * Menu
+ ******************************************************************************/
+#menu
+{
+}
+
+#user_operation
+{
+}
+
+#menu_list
+{
+    /*
+    float: left;
+    width: 100%;
+
+    background-color: Brown;
+    */
+}
+
+#menu_list ul
+{
+    /*
+    float: left;
+    width: 100%;
+    */
+
+    margin: 0em;
+    padding: 0em;
+
+    list-style-type: none;
+}
+
+#menu_list ul li
+{
+    /*
+    float: left;
+    */
+    display: inline-block;
+
+    /*
+    width: 20%;
+    */
+    min-width: 10em;
+    line-height: 2em;
+
+    padding: 2px 0px;
+
+    text-align: center;
+}
+
+#menu_list ul li a
+{
+    /*
+    */
+    display: block;
+
+    padding: 0px 5px;
+
+    color: White;
+    background-color: Gray;
+    text-decoration: none;
+}
+
+#menu_list ul li a:hover, a:active
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
+}
 
 
 #content

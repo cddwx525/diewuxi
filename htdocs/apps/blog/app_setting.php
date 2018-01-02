@@ -6,6 +6,10 @@ class app_setting
     const APP_SPACE_NAME = __NAMESPACE__;
 
     const APP_DEFAULT_NAME = "Simpleblog when no database";
+    
+    const SITE_NAME = "Site name when no database.";
+    const SITE_DESCRIPTION = "Site description when no database.";
+    const SITE_BEGIN_YEAR = "Begin year such as 2017 when no database";
 
     const DB_HOST = "localhost";
     const DB_NAME = "simpleblog";
@@ -19,7 +23,7 @@ class app_setting
     const MAX_FILE_SIZE = 5000000;
 
     const SPECIAL_ACTIONS = array(
-            "DEFAULT" => array("home", "show"),
+            "DEFAULT" => array(__NAMESPACE__, "guest/home.show", ""),
         );
 
     const META_TABLE = "option";

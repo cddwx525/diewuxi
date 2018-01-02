@@ -40,15 +40,14 @@ class base
         $this->meta_data["settings"]["cookies_time"] = app_setting::COOKIES_TIME;
         $this->meta_data["settings"]["max_file_size"] = app_setting::MAX_FILE_SIZE;
 
-        $main_app_base_controller_class_name = MAIN_APP . "\\lib\\controllers\\base";
-        $main_app_base_controller = new $main_app_base_controller_class_name();
+        $main_app_setting_class_name = MAIN_APP . "\\app_setting";
+        $this->meta_data["main_app"]["app_space_name"] = $main_app_setting_class_name::APP_SPACE_NAME;
+        $this->meta_data["main_app"]["app_default_name"] = $main_app_setting_class_name::APP_DEFAULT_NAME;
+        $this->meta_data["main_app"]["special_actions"] = $main_app_setting_class_name::SPECIAL_ACTIONS;
+        $this->meta_data["main_app"]["site_name"] = $main_app_setting_class_name::SITE_NAME;
 
-        $this->meta_data["main_app"]["app_space_name"] = $main_app_base_controller->meta_data["settings"]["app_space_name"];
-        $this->meta_data["main_app"]["app_default_name"] = $main_app_base_controller->meta_data["settings"]["app_default_name"];
-        $this->meta_data["main_app"]["app_name"] = $main_app_base_controller->meta_data["settings"]["app_name"];
-
-        $this->meta_data["main_app"]["app_description"] = $main_app_base_controller->meta_data["settings"]["app_description"];
-        $this->meta_data["main_app"]["begin_year"] = $main_app_base_controller->meta_data["settings"]["begin_year"];
+        $this->meta_data["main_app"]["site_description"] = $main_app_setting_class_name::SITE_DESCRIPTION;
+        $this->meta_data["main_app"]["site_begin_year"] = $main_app_setting_class_name::SITE_BEGIN_YEAR;
     }
 
 

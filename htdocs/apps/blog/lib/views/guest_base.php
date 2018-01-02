@@ -13,7 +13,6 @@ abstract class guest_base extends base
         $items = $this->get_items($result);
 
         $css = array();
-        $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "css/main.css") . "\">";
         $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
 
         if (isset($items["css"]))
@@ -37,7 +36,7 @@ abstract class guest_base extends base
     {
         $items = $this->get_items($result);
 
-        $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["options"]["blog_name"] . " - " . $result["meta_data"]["main_app"]["app_name"] . "</title>";
+        $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
 
         return $title;
     }
@@ -50,8 +49,8 @@ abstract class guest_base extends base
         $items = $this->get_items($result);
 
         $position_link_list = array();
-        $position_link_list[] = "<a href=\"" . $url->get(array($result["meta_data"]["main_app"]["app_space_name"], "home.show", ""), array(), "") . "\">Home</a>";
-        $position_link_list[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/home.show", ""), array(), "") . "\">" . $result["meta_data"]["options"]["blog_name"] . "</a>";
+        $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">Home</a>";
+        $position_link_list[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/home.show", ""), array(), "") . "\">" . $result["meta_data"]["settings"]["app_default_name"] . "</a>";
 
         $position_link = implode(" > ", $position_link_list);
         $position_link = $position_link . $items["position"];
@@ -72,7 +71,7 @@ abstract class guest_base extends base
 
         $menu = "<div id=\"section\" class=\"border_frame\">
 <div id=\"section_head\">
-<h2>" . $result["meta_data"]["options"]["blog_name"] . "</h2>
+<h2>" . $result["meta_data"]["settings"]["app_default_name"] . "</h2>
 </div>
 
 <div id=\"menu\">
