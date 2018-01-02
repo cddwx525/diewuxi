@@ -28,7 +28,7 @@ abstract class base
     public function get_head($result)
     {
         $meta_http_equiv = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
-        $meta_viewport = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />";
+        //$meta_viewport = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />";
 
         $description = $this->get_description($result);
         $keywords = $this->get_keywords($result);
