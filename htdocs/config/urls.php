@@ -25,8 +25,8 @@ class urls
         );
 
         $url_map = array();
-        $url_map = array_merge($url_map(), $main_app_urls);
-        $url_map = array_merge($url_map(), $other_app_url);
+        $url_map = array_merge($url_map, $main_app_urls);
+        $url_map = array_merge($url_map, $other_app_url);
 
         return $url_map;
     }
