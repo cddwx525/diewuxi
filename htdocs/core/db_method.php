@@ -8,9 +8,10 @@ class db_method
 
     public function __construct()
     {
-        $this->connect(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
-        $this->create_table();
         $this->table = $this->table_name;
+        $app_setting = $this->get_app_setting();
+        $this->connect($app_setting::DB_HOST, $app_setting::DB_NAME, $app_setting::DB_USER, $app_setting::DB_PASSWORD);
+        $this->check_table($app_setting::META_TABLE, $app_setting::SQL);
     }
 
     private function connect($host, $dbname, $user, $pass)
@@ -33,17 +34,17 @@ class db_method
         }
     }
 
-    private function create_table()
+    private function check_table($meta_table, $sql)
     {
         try
         {
-            $this->handle->query("SELECT * FROM `" . app_setting::$meta_table . "`");
+            $this->handle->query("SELECT * FROM `" . $meta_table . "`");
         }
         catch (\PDOException $e)
         {
             try
             {
-                $this->handle->query(app_setting::$sql);
+                $this->handle->query($sql);
             }
             catch (\PDOException $e)
             {

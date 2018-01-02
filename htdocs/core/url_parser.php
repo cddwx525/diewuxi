@@ -3,7 +3,7 @@ include CONFIG_PATH . "/urls.php";
 
 class url_parser
 {
-    protected $url_map = array();
+    public $url_map = array();
 
     public function __construct()
     {
@@ -53,12 +53,17 @@ class url_parser
     }
 
 
-    function get($url_record, $parameter, $anchor)
+    /*
+     * Get dynamic urls.
+     */
+    function get($url_record, $parameters, $anchor)
     {
-        //return $this->full_url_map();
         $one_full_url_record = $this->search_url_record($url_record);
+
+        //print "<pre>";
         //print_r($one_full_url_record);
-        //exit();
+        //print "</pre>";
+
         if ($one_full_url_record != FALSE)
         {
             $final_url = array();
@@ -68,7 +73,7 @@ class url_parser
                 $final_url[] = $url_string;
                 if ($one_full_url_record[2][$i] != "")
                 {
-                    $final_url[] = $parameter[$one_full_url_record[2][$i]];
+                    $final_url[] = $parameters[$one_full_url_record[2][$i]];
                 }
                 else
                 {
@@ -88,18 +93,42 @@ class url_parser
         }
         else
         {
-            echo "Get url [" . $url_record[0] . "->" . $url_record[1] . "->" . $url_record[2] . "] wrong!";
-            exit();
+            echo "[ERROR] Get url \"" . $url_record[0] . "->" . $url_record[1] . "->" . $url_record[2] . "\" wrong in url_parser->get()";
+            //exit();
         }
     }
 
 
-    public function get_static($filename)
+    /*
+     * Get static link.
+     */
+    public function get_static($app_name, $filename)
     {
-        return $this->root_url() . "/apps/" . APP_NAME . "/static/" . $filename;
+        return $this->root_url() . "/apps/" . $app_name . "/static/" . $filename;
     }
 
 
+    /*
+     * Get static  link, relate.
+     */
+    public function get_static_relate($app_name, $filename)
+    {
+        return "/apps/" . $app_name . "/static/" . $filename;
+    }
+
+
+    /*
+     * Get static file.
+     */
+    public function get_static_file($app_name, $filename)
+    {
+        return ROOT_PATH . "/apps/" . $app_name . "/static/" . $filename;
+    }
+
+
+    /*
+     * Get root url, http or https.
+     */
     public function root_url()
     {
         if (empty($_SERVER["HTTPS"]))
@@ -113,6 +142,9 @@ class url_parser
     }
 
 
+    /*
+     * Recursive match URI.
+     */
     private function parse_uri($url_map, $target_string, $original_string)
     {
         foreach ($url_map as $one_map)
@@ -122,6 +154,7 @@ class url_parser
                 if (is_array($one_map[3][0]) === TRUE)
                 {
                     $new_string = substr($target_string, strlen($matches[0]));
+                    // The return here is necessary.
                     return $this->parse_uri($one_map[3], $new_string, $original_string);
                 }
                 else
@@ -137,11 +170,16 @@ class url_parser
                     return array(
                         "app_name" => $one_map[3][0],
                         "controller_type" => $one_map[3][1],
+                        "special_flag" => "",
                         "controller_name" => $one_map[3][2],
-                        "method" => $one_map[3][3],
-                        "target" => $one_map[3][4],
-                        "url_parameters" => $match_variable,
-                        "url" => $this->root_url() . $original_string,
+                        "action_name" => $one_map[3][3],
+                        "method" => $one_map[3][4],
+                        "target" => $one_map[3][5],
+                        "parameters" => array(
+                            "get" => $match_variable,
+                            "post" => $_POST,
+                            "url" => $this->root_url() . $original_string,
+                        ),
                     );
                 }
             }
@@ -150,39 +188,62 @@ class url_parser
             }
         }
 
+        // Not match.
         return array(
             "app_name" => MAIN_APP,
             "controller_type" => "SPECIAL",
-            "controller_name" => "NOT_FOUND",
+            "special_flag" => "NOT_FOUND",
+            "controller_name" => "",
+            "action_name" => "",
             "method" => "",
             "target" => "",
-            "url_parameters" => array(),
-            "url" => $this->root_url() . $original_string,
+            "parameters" => array(
+                "get" => array(),
+                "post" => $_POST,
+                "url" => $this->root_url() . $original_string,
+            ),
         );
     }
 
 
-    private function full_url_map()
+    /*
+     * Unlimit levels.
+     */
+    public function full_url_map($init_url_map, $pattern, $url, $parameters, $full_url_map)
     {
-        $full_url_map = array();
-        foreach ($this->url_map as $key => $value)
+        foreach ($init_url_map as $one_value)
         {
-            if (is_array($value[3][0]) === FALSE)
+            if (is_array($one_value[3][0]) === TRUE)
             {
-                $full_url_map[] = $value;
+                /*
+                 * Have sub level.
+                 */
+                $local_pattern = $pattern . substr($one_value[0], 1);
+                $local_url = array($url[0] . $one_value[1][0]);
+                $local_parameters = array("");
+
+                $sub_url_map = $one_value[3];
+
+                // That is it, NOT $full_url_map[] = $this->full_url_map(...)
+                $full_url_map = array_merge($full_url_map, $this->full_url_map($sub_url_map, $local_pattern, $local_url, $local_parameters, array()));
             }
             else
             {
-                foreach ($value[3] as $sub_url_map)
-                {
-                    $full_url_map[] = array(
-                        $value[0] . $sub_url_map[0],
-                        array_merge($value[1], $sub_url_map[1]),
-                        array_merge($value[2], $sub_url_map[2]),
-                        $sub_url_map[3],
-                        $sub_url_map[4],
-                    );
-                }
+                /*
+                 * Last level.
+                 */
+                $local_pattern = $pattern . substr($one_value[0], 1);
+                $local_url = $one_value[1];
+                $local_url[0] = $url[0] . $one_value[1][0];
+                $local_parameters = $one_value[2];
+
+                $full_url_map[] = array(
+                    $local_pattern,
+                    $local_url,
+                    $local_parameters,
+                    $one_value[3],
+                    $one_value[4],
+                );
             }
         }
 
@@ -190,9 +251,18 @@ class url_parser
     }
 
 
+    public function get_full_url_map()
+    {
+        return $this->full_url_map($this->url_map, "^", array(""), array(""), array());
+    }
+
+
+    /*
+     * Search urls record.
+     */
     private function search_url_record($url_record)
     {
-        foreach ($this->full_url_map() as $one_full_url_record)
+        foreach ($this->get_full_url_map() as $one_full_url_record)
         {
             if ($url_record === $one_full_url_record[4])
             {

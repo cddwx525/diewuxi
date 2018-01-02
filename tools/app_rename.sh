@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# * apps directory, namespace and use, hardcode views
+# * config/urls.php
 
 set -o errexit
 

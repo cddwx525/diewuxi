@@ -7,6 +7,7 @@
 #
 #   例如:
 #   script_name.sh "xxxx" "BLOGNAME" "admin/*.php include/*.php ./*.php"
+#
 #   更复杂的例子，注意引用的方法，其结果要符合 sed 的正则表达式
 #   replace_string.sh "require(\$_SERVER\['DOCUMENT_ROOT'\] \. '\/include\/site_define\.php');" "require \$_SERVER\['DOCUMENT_ROOT'\] \. \\\"\/include\/site_define\.php\\\";" "htdocs/*.php htdocs/admin/*.php"
 #
@@ -24,6 +25,13 @@ set -e
 original="${1}"
 target="${2}"
 directory="${3}"
+
+help ()
+{
+    cat << EOF
+Useage: $(basename ${0}) {original} {target} {directory}
+EOF
+}
 
 replace ()
 {
@@ -53,7 +61,7 @@ replace ()
 
 if test "${#}" -ne 3
 then
-    echo "Useage: ""$(basename ${0})"": {original} {target} {directory}"
+    help
     exit
 fi
 

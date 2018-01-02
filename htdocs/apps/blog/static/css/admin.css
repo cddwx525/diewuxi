@@ -1,0 +1,41 @@
+/*
+ *
+ *
+ *
+ */
+
+#article_list_table table,
+#category_list_table table,
+#tag_list_table table,
+#media_list_table table,
+#comment_list_table table
+{
+    width: 100%;
+    border-collapse:collapse;
+}
+
+#article_list_table table, th, td,
+#category_list_table table, th, td,
+#tag_list_table table, th, td,
+#comment_list_table table, th, td
+{
+    border-style: solid;
+    border-color: blue;
+    border-width: 1px;
+}
+
+#site_user
+{
+
+}
+
+#site_user_name
+{
+    font-weight: bold;
+    color: Brown;
+}
+
+#media_link
+{
+    width: 50em;
+}

@@ -1,6 +1,8 @@
 <?php
 //include APP_PATH . "/{main_app_name}/urls.php";
 //include APP_PATH . "/{other_app_name}/urls.php";
+include APP_PATH . "/main/urls.php";
+include APP_PATH . "/blog/urls.php";
 
 class urls
 {
@@ -8,27 +10,20 @@ class urls
     {
         //${main_app_name}_urls = new {main_app_name}\urls();
         //${other_app_name}_urls = new {other_app_name}\urls();
+        $main_urls = new main\urls();
+        $blog_urls = new blog\urls();
 
-        $app_url_map = array(
-        //    array(
-        //        "^/{other_app_name}",
-        //        array("/{other_app_name}"),
-        //        array(""),
-        //        ${other_app_name}_urls->url_map(),
-        //    ),
+        $other_app_url = array(
+            array(
+                "^/blog",
+                array("/blog"),
+                array(""),
+                $blog_urls->url_map(),
+            ),
         );
 
         $url_map = array();
-
-        /*
-         * Add main app urls
-         */
-        //$url_map = array_merge($url_map, ${main_app_name}_urls->url_map());
-
-        /*
-         * Add other app urls
-         */
-        //$url_map = array_merge($url_map, ${other_app}_url_map);
+        $url_map = array_merge($main_urls->url_map(), $other_app_url);
 
         return $url_map;
     }
