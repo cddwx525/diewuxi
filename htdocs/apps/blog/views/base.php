@@ -38,7 +38,7 @@ abstract class base
 
         $head = array();
         $head[] = $meta_http_equiv;
-        //$head[] = $meta_viewport;
+        $head[] = $meta_viewport;
         if (! empty($description))
         {
             $head[] = $description;

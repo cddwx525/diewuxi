@@ -291,6 +291,7 @@ class comment extends admin_base
                 "view_name" => $view_name,
                 "state" => "UNCOMPLETE",
                 "parameters" => $parameters,
+                "article" => $article,
             );
         }
         else
@@ -369,6 +370,7 @@ class comment extends admin_base
                 "view_name" => $view_name,
                 "state" => "COMMENT_ADD_FAIL",
                 "parameters" => $parameters,
+                "article" => $article,
             );
         }
 

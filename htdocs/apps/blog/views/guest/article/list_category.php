@@ -60,7 +60,7 @@ class list_category extends guest_base
         }
 
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Articles in category [" . htmlspecialchars($category["name"]) . "]</h3>
 </div>
 

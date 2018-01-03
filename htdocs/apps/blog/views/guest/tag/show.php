@@ -19,7 +19,7 @@ class show extends guest_base
         $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.list_all", ""), array(), "") . "\">All tags</a> > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.show", ""), array("id" => $tag["id"]), "") . "\">" . htmlspecialchars($tag["name"]) . "</a>";
 
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Tag: [" . htmlspecialchars($tag["name"]) . "]</h3>
 </div>
 

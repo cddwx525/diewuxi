@@ -183,6 +183,18 @@ a:visited
     border: solid Gray 2px;
 }
 
+.content_title
+{
+    color: White;
+    background-color: Brown;
+}
+
+.content_title h3
+{
+    margin: 0px;
+    padding: 0px;
+}
+
 .markdown-body
 {
     box-sizing: border-box;
@@ -239,6 +251,29 @@ a:visited
     font-size: 0.8em;
 }
 
+#position a
+{
+    display: inline-block;
+    
+    padding: 0px 2px;
+
+    color: White;
+    background-color: Gray;
+    text-decoration: none;
+}
+
+#position a:hover, a:active
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
+}
+
+a.highlight
+{
+    color: White;
+    background-color: Brown;
+}
 
 /*******************************************************************************
  * Section
@@ -415,7 +450,9 @@ a:visited
 
 #side #category_list .category
 {
-    font-size: 0.8em;
+    /*
+    font-size: 1em;
+    */
 }
 
 #main_container

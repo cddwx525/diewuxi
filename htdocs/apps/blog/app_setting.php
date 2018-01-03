@@ -5,7 +5,7 @@ class app_setting
 {
     const APP_SPACE_NAME = __NAMESPACE__;
 
-    const APP_DEFAULT_NAME = "Simpleblog when no database";
+    const APP_DEFAULT_NAME = "App name when no database";
     
     const SITE_NAME = "Site name when no database.";
     const SITE_DESCRIPTION = "Site description when no database.";
@@ -24,6 +24,7 @@ class app_setting
 
     const SPECIAL_ACTIONS = array(
             "DEFAULT" => array(__NAMESPACE__, "guest/home.show", ""),
+            "NOT_FOUND" => array(__NAMESPACE__, "common/not_found.show", ""),
         );
 
     const META_TABLE = "option";

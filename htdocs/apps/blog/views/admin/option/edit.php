@@ -17,7 +17,7 @@ class edit extends admin_base
 
         $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/settings.show", ""), array(), "") . "\">Setting</a> > Edit option";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Edit option</h3>
 </div>
 

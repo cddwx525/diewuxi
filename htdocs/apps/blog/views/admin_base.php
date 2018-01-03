@@ -4,7 +4,7 @@ namespace blog\lib\views;
 use blog\lib\url;
 use blog\lib\views\base;
 
-abstract class login_base extends base
+abstract class admin_base extends base
 {
     public function get_css($result)
     {
@@ -14,6 +14,7 @@ abstract class login_base extends base
 
         $css = array();
         $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
+        $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/admin.css") . "\">";
 
         if (isset($items["css"]))
         {
@@ -36,7 +37,7 @@ abstract class login_base extends base
     {
         $items = $this->get_items($result);
 
-        $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+        $title = "<title>" . $items["title"] . " - Administration - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
 
         return $title;
     }
@@ -78,9 +79,22 @@ abstract class login_base extends base
 
 <div id=\"menu\">
 
+<div id=\"user_operation\">
+<ul>
+<li>User: [" . $result["meta_data"]["session"]["user"]["name"] . "]</li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/authentication.logout", ""), array(), "") . "\">Logout</a></li>
+</ul>
+</div>
+
 <div id=\"menu_list\">
 <ul>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/home.show", ""), array(), "") . "\">Home</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/home.show", ""), array(), "") . "\">Home</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/article.list_all", ""), array(), "") . "\">Articles</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/category.list_all", ""), array(), "") . "\">Cateories</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/tag.list_all", ""), array(), "") . "\">Tags</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/comment.list_all", ""), array(), "") . "\">Comments</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/media.list_all", ""), array(), "") . "\">Medias</a></li>
+<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/settings.show", ""), array(), "") . "\">Settings</a></li>
 </ul>
 </div>
 </div>

@@ -21,7 +21,7 @@ class home extends guest_base
 
         $position = "";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Home</h3>
 </div>
 

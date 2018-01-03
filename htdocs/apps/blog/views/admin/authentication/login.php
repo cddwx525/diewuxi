@@ -43,7 +43,7 @@ class login extends login_base
 <p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Home</a></p>";
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Login</h3>
 </div>
 

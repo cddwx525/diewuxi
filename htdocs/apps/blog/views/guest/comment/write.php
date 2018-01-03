@@ -30,7 +30,7 @@ class write extends guest_base
         }
 
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Comment</h3>
 </div>
 

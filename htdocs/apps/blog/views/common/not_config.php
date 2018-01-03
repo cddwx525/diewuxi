@@ -16,7 +16,7 @@ class not_config extends simple
 
         $position = " > Not configed";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Not Configed!</h3>
 </div>
 

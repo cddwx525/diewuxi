@@ -17,7 +17,7 @@ class write extends admin_base
         $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
 
 
-        $title = "Write comment under \"" . $article["title"] . "\"";
+        $title = "Write comment under [" . $article["title"] . "]";
         $position = " > Write comment";
 
         if ($comment["author"] === "1")
@@ -38,7 +38,7 @@ class write extends admin_base
 <p>Under article [<a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</p>
 <p>Reply to :</p>
 
-<div id=\"" . $comment["id"] . "\" class=\"comment_entry\">
+<div id=\"" . $comment["id"] . "\" class=\"comment_entry border_frame\">
 
 <div class=\"comment_entry_header\">
 " . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span>

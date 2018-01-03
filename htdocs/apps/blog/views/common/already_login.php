@@ -16,7 +16,7 @@ class already_login extends simple
 
         $position = " > Already login";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Already login!</h3>
 </div>
 

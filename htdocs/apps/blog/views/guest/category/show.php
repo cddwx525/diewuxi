@@ -33,7 +33,7 @@ class show extends guest_base
             $subcategory_links = implode(", ", $subcategory_links);
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Category: [" . htmlspecialchars($category["name"]) . "]</h3>
 </div>
 

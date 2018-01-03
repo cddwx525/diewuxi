@@ -48,7 +48,7 @@ class show extends admin_base
         if (empty($comments))
         {
             $comment_list = "<div id=\"comment_list\">
-<h2>Comments [" . $comment_count . "]</h2>
+<h3>Comments [" . $comment_count . "]</h3>
 <p>There is no comments now.</p>
 </div>";
         }

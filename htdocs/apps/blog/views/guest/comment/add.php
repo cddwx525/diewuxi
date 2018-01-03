@@ -31,7 +31,7 @@ class add extends guest_base
 <p><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.show", ""), array("id" => $article["id"]), "") . "\">Return to article</a></p>"; 
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Add comment under: [<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</h3>
 </div>
 

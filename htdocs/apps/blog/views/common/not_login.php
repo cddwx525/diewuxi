@@ -16,7 +16,7 @@ class not_login extends simple
 
         $position = " > Not login";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Not Login!</h3>
 </div>
 

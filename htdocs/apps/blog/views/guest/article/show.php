@@ -25,7 +25,7 @@ class show extends guest_base
 <script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML\"></script>";
         $title = $article["title"];
 
-        $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/article.list_all", ""), array(), "") . "\">Articles</a> > <a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>";
+        $position = " > <a href=\"" . $url->get(array($app_space_name, "guest/article.list_all", ""), array(), "") . "\">Articles</a> > <a href=\"" . $url->get(array($app_space_name, "guest/article.show", ""), array("id" => $article["id"]), "") . "\" class=\"highlight\">" . htmlspecialchars($article["title"]) . "</a>";
 
 
         if (empty($article["tag"]))
@@ -107,7 +107,7 @@ class show extends guest_base
 </ul>";
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Article: [" . htmlspecialchars($article["title"]) . "]</h3>
 </div>
 
@@ -130,7 +130,7 @@ class show extends guest_base
 <div id=\"article_maintext\" class=\"markdown-body\">" . $article["content"] . "</div>
 </div>
 
-<div id=\"content_title\" class=\"border_frame\">
+<div class=\"content_title border_frame\">
 <h3>Comments [" . $comment_count . "]</h3>
 </div>
 
@@ -138,7 +138,7 @@ class show extends guest_base
 " . $comment_list . "
 </div>
 
-<div id=\"content_title\" class=\"border_frame\">
+<div class=\"content_title border_frame\">
 <h3>Write comment(* is necessary, and email is not shown to public)</h3>
 </div>
 

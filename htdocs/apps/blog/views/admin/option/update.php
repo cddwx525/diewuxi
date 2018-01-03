@@ -30,7 +30,7 @@ class update extends admin_base
 <p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Go home</a></p>"; 
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Update option</h3>
 </div>
 

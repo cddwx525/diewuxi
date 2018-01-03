@@ -33,7 +33,7 @@ class list_all extends guest_base
             $tag_list = implode(" ", $tag_list);
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>All tags</h3>
 </div>
 

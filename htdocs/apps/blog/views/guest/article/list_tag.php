@@ -59,7 +59,7 @@ class list_tag extends guest_base
             $article_list = implode("\n", $article_list);
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Articles in tag [" . htmlspecialchars($tag["name"]) . "]</h3>
 </div>
 

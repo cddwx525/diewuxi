@@ -31,7 +31,7 @@ class save extends simple
 <p><a href=\"" . $url->get(array($app_space_name, "guest/home.show", ""), array(), "") . "\">Home</a></p>";
         }
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>Save config</h3>
 </div>
 

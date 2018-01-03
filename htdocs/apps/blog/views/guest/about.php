@@ -21,7 +21,7 @@ class about extends guest_base
 
         $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/about.show", ""), array(), "") . "\">About</a>";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
+        $content = "<div class=\"content_title border_frame\">
 <h3>About</h3>
 </div>
 

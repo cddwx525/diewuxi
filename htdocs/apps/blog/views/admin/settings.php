@@ -19,8 +19,8 @@ class settings extends admin_base
 
         $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/settings.show", ""), array(), "") . "\">Setting</a>";
 
-        $content = "<div id=\"content_title\" class=\"border_frame\">
-<h2>Setting</h2>
+        $content = "<div class=\"content_title border_frame\">
+<h3>Setting</h3>
 </div>
 
 <div id=\"content\" class=\"border_frame\">

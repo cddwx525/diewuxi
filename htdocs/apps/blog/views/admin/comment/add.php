@@ -17,7 +17,7 @@ class add extends admin_base
 
 
         $title = "Comment under " . $article["title"];
-        $position = " > Comment";
+        $position = " > Add comment";
 
         if ($state != "SUCCESS")
         {
@@ -31,7 +31,7 @@ class add extends admin_base
         }
 
         $content = "<div class=\"content_title border_frame\" >
-<h3>Comment</h3>
+<h3>Comment under: [<a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</h3>
 </div>
 
 <div class=\"message border_frame\">
