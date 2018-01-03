@@ -35,10 +35,13 @@ class base
 
         $this->meta_data["settings"]["app_space_name"] = app_setting::APP_SPACE_NAME;
         $this->meta_data["settings"]["app_default_name"] = app_setting::APP_DEFAULT_NAME;
+
         $this->meta_data["settings"]["session_regenerate_time"] = app_setting::SESSION_REGENERATE_TIME;
         $this->meta_data["settings"]["session_old_last_time"] = app_setting::SESSION_OLD_LAST_TIME;
         $this->meta_data["settings"]["cookies_time"] = app_setting::COOKIES_TIME;
         $this->meta_data["settings"]["max_file_size"] = app_setting::MAX_FILE_SIZE;
+
+        $this->meta_data["settings"]["special_actions"] = app_setting::SPECIAL_ACTIONS;
 
         $main_app_setting_class_name = MAIN_APP . "\\app_setting";
         $this->meta_data["main_app"]["app_space_name"] = $main_app_setting_class_name::APP_SPACE_NAME;

@@ -18,9 +18,7 @@ class base
         $this->meta_data["settings"]["app_space_name"] = app_setting::APP_SPACE_NAME;
         $this->meta_data["settings"]["app_default_name"] = app_setting::APP_DEFAULT_NAME;
 
-        $this->meta_data["settings"]["site_name"] = app_setting::SITE_NAME;
-        $this->meta_data["settings"]["site_description"] = app_setting::SITE_DESCRIPTION;
-        $this->meta_data["settings"]["site_begin_year"] = app_setting::SITE_BEGIN_YEAR;
+        $this->meta_data["settings"]["special_actions"] = app_setting::SPECIAL_ACTIONS;
 
         $main_app_setting_class_name = MAIN_APP . "\\app_setting";
         $this->meta_data["main_app"]["app_space_name"] = $main_app_setting_class_name::APP_SPACE_NAME;

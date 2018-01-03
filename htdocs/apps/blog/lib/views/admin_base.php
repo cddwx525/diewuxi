@@ -10,36 +10,33 @@ abstract class admin_base extends base
     {
         $url = new url();
 
+        $html_view = MAIN_APP . "\\lib\\views\\html";
         $items = $this->get_items($result);
 
         $css = array();
-        $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
-        $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/admin.css") . "\">";
+        $css[] = $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/admin.css");
 
         if (isset($items["css"]))
         {
-            foreach ($items["css"] as $one_css)
-            {
-                $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $one_css . "\">";
-            }
+            $items["css"] = array_merge($css, $items["css"]);
         }
         else
         {
+            $items["css"] = $css;
         }
 
-        $css = implode("\n", $css);
-
-        return $css;
+        return $html_view::get_css_html($result, $items);
     }
 
 
     public function get_title($result)
     {
+        $html_view = MAIN_APP . "\\lib\\views\\html";
         $items = $this->get_items($result);
 
-        $title = "<title>" . $items["title"] . " - Administration - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+        $items["title"] = $items["title"] . " - Administration - ";
 
-        return $title;
+        return $html_view::get_title_html($result, $items);
     }
 
 
@@ -47,21 +44,14 @@ abstract class admin_base extends base
     {
         $url = new url();
 
+        $html_view = MAIN_APP . "\\lib\\views\\html";
         $items = $this->get_items($result);
 
-        $position_link_list = array();
-        $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">Home</a>";
-        $position_link_list[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/home.show", ""), array(), "") . "\">" . $result["meta_data"]["settings"]["app_default_name"] . "</a>";
-        $position_link_list[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/home.show", ""), array(), "") . "\">Administration</a>";
+        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/home.show", ""), array(), "") . "\">Administration</a>";
 
-        $position_link = implode(" > ", $position_link_list);
-        $position_link = $position_link . $items["position"];
+        $items["position"] = $position . $items["position"];
 
-        $positon = "<div id=\"position\" class=\"border_frame\">
-<span>Current position: </span>" . $position_link . "
-</div>";
-
-        return $positon;
+        return $html_view::get_position_html($result, $items);
     }
 
 
@@ -69,48 +59,49 @@ abstract class admin_base extends base
     {
         $url = new url();
 
+        $html_view = MAIN_APP . "\\lib\\views\\html";
+
         $items = $this->get_items($result);
+        
+        $items["menu_list"] = array(
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/home.show", ""), array(), ""),
+                "Home",
+            ),
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/article.list_all", ""), array(), ""),
+                "Articles",
+            ),
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/category.list_all", ""), array(), ""),
+                "Cateories",
+            ),
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/tag.list_all", ""), array(), ""),
+                "Tags",
+            ),
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/comment.list_all", ""), array(), ""),
+                "Comments",
+            ),
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/media.list_all", ""), array(), ""),
+                "Medias",
+            ),
+            array(
+                $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/settings.show", ""), array(), ""),
+                "Settings",
+            ),
+        );
 
-        $menu = "<div id=\"section\" class=\"border_frame\">
-
-<div id=\"section_head\">
-<h2>" . $result["meta_data"]["settings"]["app_default_name"] . "</h2>
-</div>
-
-<div id=\"menu\">
-
-<div id=\"user_operation\">
+        $items["user_operation"] = "<div id=\"user_operation\">
 <ul>
 <li>User: [" . $result["meta_data"]["session"]["user"]["name"] . "]</li>
 <li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/authentication.logout", ""), array(), "") . "\">Logout</a></li>
 </ul>
-</div>
-
-<div id=\"menu_list\">
-<ul>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/home.show", ""), array(), "") . "\">Home</a></li>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/article.list_all", ""), array(), "") . "\">Articles</a></li>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/category.list_all", ""), array(), "") . "\">Cateories</a></li>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/tag.list_all", ""), array(), "") . "\">Tags</a></li>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/comment.list_all", ""), array(), "") . "\">Comments</a></li>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/media.list_all", ""), array(), "") . "\">Medias</a></li>
-<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/settings.show", ""), array(), "") . "\">Settings</a></li>
-</ul>
-</div>
-</div>
 </div>";
 
-        return $menu;
-    }
-
-
-    public function get_main($result)
-    {
-        $url = new url();
-
-        $items = $this->get_items($result);
-
-        return $items["main"];
+        return $html_view::get_menu_html($result, $items);
     }
 }
 ?>
