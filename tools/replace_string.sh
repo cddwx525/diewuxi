@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Description:
 #   sed 前端, 替换字符串
