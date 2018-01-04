@@ -101,5 +101,10 @@ class list_all extends admin_base
         }
         return implode("\n", $list);
     }
+
+    public function get_string($result)
+    {
+        return "[text]";
+    }
 }
 ?>

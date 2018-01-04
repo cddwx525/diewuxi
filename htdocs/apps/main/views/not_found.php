@@ -31,5 +31,12 @@ class not_found extends base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "################################################################################
+This is text mode of not found page.
+################################################################################";
+    }
 }
 ?>

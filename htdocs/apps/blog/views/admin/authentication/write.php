@@ -45,5 +45,10 @@ class write extends login_base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "[text]";
+    }
 }
 ?>

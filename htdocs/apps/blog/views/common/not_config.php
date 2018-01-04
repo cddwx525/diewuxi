@@ -32,5 +32,10 @@ class not_config extends simple
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "[text]";
+    }
 }
 ?>

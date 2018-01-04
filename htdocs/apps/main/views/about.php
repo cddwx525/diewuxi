@@ -34,5 +34,10 @@ class about extends base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "About page.";
+    }
 }
 ?>

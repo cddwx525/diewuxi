@@ -8,6 +8,20 @@ abstract class base extends html
 {
     abstract public function get_items($result);
 
+    public function get_string($result)
+    {
+        return "[Undefine, default text.]";
+    }
+
+
+    public function get_text($result)
+    {
+        $html_view = MAIN_APP . "\\lib\\views\\html";
+        $items = $this->get_string($result);
+
+        return $items;
+    }
+
 
     public function get_description($result)
     {

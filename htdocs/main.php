@@ -24,20 +24,6 @@ function start_process($url_parser, $original_string)
 {
     $dynamic_match = $url_parser->dynamic_match($original_string);
 
-    /*
-    print "<pre>";
-    print_r($dynamic_match);
-    print_r("<hr />");
-    //print_r($url_parser->url_map);
-    //print "<hr />";
-    //print_r($url_parser->get_full_url_map());
-    //print "<hr />";
-    //print_r($url_parser->get(array("blog", "admin/home.show", ""), array(), ""));
-    //print "<hr />";
-    print "</pre>";
-    exit();
-     */
-
     $app_setting_class_name = $dynamic_match["app_name"] . "\\app_setting";
     $app_setting = new $app_setting_class_name();
 
@@ -53,32 +39,19 @@ function start_process($url_parser, $original_string)
     {
     }
 
-    // Filter redirect.
-    if ($dynamic_match["method"] != "")
-    {
-        // $method != "", need redirct.
-        if ($dynamic_match["method"] === "301")
-        {
-            //header($_SERVER["SERVER_PROTOCOL"] . "404 Not Found");
-            header("Location: " . $url_parser->get($dynamic_match["target"], array(), ""), TRUE, 301);
-            exit();
-        }
-        else if ($dynamic_match["method"] === "302")
-        {
-            header("Location: " . $url_parser->get($dynamic_match["target"], array(), ""), TRUE, 302);
-            exit();
-        }
-        else
-        {
-        }
-    }
-    else
-    {
-    }
-
-    $controller_class_name = $app_setting::APP_SPACE_NAME . "\\controllers\\" . str_replace("/", "\\", $dynamic_match["controller_name"]);
-    $controller = new $controller_class_name();
-    $result = $controller->$dynamic_match["action_name"]($dynamic_match["parameters"]);
+    /*
+    print "<pre>";
+    print_r($dynamic_match);
+    print_r("<hr />");
+    //print_r($url_parser->url_map);
+    //print "<hr />";
+    //print_r($url_parser->get_full_url_map());
+    //print "<hr />";
+    //print_r($url_parser->get(array("blog", "admin/home.show", ""), array(), ""));
+    //print "<hr />";
+    print "</pre>";
+    exit();
+     */
 
     /*
     print_r("<pre>");
@@ -92,9 +65,41 @@ function start_process($url_parser, $original_string)
     exit();
     */
 
-    $view_class_name = $app_setting::APP_SPACE_NAME . "\\views\\" . str_replace("/", "\\", $result["view_name"]);
-    $view = new $view_class_name();
-    $view->layout($result);
+
+    // Filter redirect.
+    if ($dynamic_match["method"] === "301")
+    {
+        //header($_SERVER["SERVER_PROTOCOL"] . "404 Not Found");
+        header("Location: " . $url_parser->get($dynamic_match["target"], array(), ""), TRUE, 301);
+        exit();
+    }
+    else if ($dynamic_match["method"] === "302")
+    {
+        header("Location: " . $url_parser->get($dynamic_match["target"], array(), ""), TRUE, 302);
+        exit();
+    }
+    else
+    {
+        $controller_class_name = $app_setting::APP_SPACE_NAME . "\\controllers\\" . str_replace("/", "\\", $dynamic_match["controller_name"]);
+        $controller = new $controller_class_name();
+        $result = $controller->$dynamic_match["action_name"]($dynamic_match["parameters"]);
+
+
+        $view_class_name = $app_setting::APP_SPACE_NAME . "\\views\\" . str_replace("/", "\\", $result["view_name"]);
+        $view = new $view_class_name();
+
+        if ($dynamic_match["method"] === "text")
+        {
+            $view->text($result);
+        }
+        else if ($dynamic_match["method"] === "")
+        {
+            $view->layout($result);
+        }
+        else
+        {
+        }
+    }
 }
 
 

@@ -46,6 +46,23 @@ class urls
                 array($app_name, "one_page.show", "",),
             ),
 
+            /*
+             * Text mode.
+             */
+            array(
+                "^/home\?mode=text$",
+                array("/home?mode=text"),
+                array(""),
+                array($app_name, "COMMON", "home", "show", "text", ""),
+                array($app_name, "home.show", "text",),
+            ),
+            array(
+                "^/about\?mode=text$",
+                array("/about?mode=text"),
+                array(""),
+                array($app_name, "COMMON", "about", "show", "text", ""),
+                array($app_name, "about.show", "text",),
+            ),
         );
     }
 }

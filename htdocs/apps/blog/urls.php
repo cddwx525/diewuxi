@@ -515,6 +515,25 @@ class urls
                         array($app_name, "COMMON", "admin/comment", "delete", "", "",),
                         array($app_name, "admin/comment.delete", "",),
                     ),
+
+                    /*
+                     * Text mode
+                     */
+                    array(
+                        "^/articles\?mode=text&action=list_category&category_id=(?P<category_id>\d+)$",
+                        array("/articles?mode=text&action=list_category&category_id=",),
+                        array("category_id",),
+                        array($app_name, "COMMON", "admin/article", "list_category", "text", ""),
+                        array($app_name, "admin/article.list_category", "text",),
+                    ),
+
+                    array(
+                        "^/comments\?mode=text&action=list_all$",
+                        array("/comments?mode=text&action=list_all"),
+                        array(""),
+                        array($app_name, "COMMON", "admin/comment", "list_all", "text", "",),
+                        array($app_name, "admin/comment.list_all", "text",),
+                    ),
                 ),
             ),
         );

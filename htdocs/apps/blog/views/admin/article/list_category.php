@@ -78,5 +78,21 @@ class list_category extends admin_base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        $parameters = $result["parameters"];
+        $category = $result["category"];
+        $articles = $result["articles"];
+
+        $articles_list_text = array();
+        foreach ($articles as $one_article)
+        {
+            $articles_list_text[] = $one_article["title"];
+        }
+        $articles_list_text = implode("\n", $articles_list_text);
+
+        return $articles_list_text;
+    }
 }
 ?>

@@ -76,5 +76,10 @@ class list_category extends guest_base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "list category";
+    }
 }
 ?>

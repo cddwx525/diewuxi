@@ -79,5 +79,10 @@ class list_all extends admin_base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "[text]";
+    }
 }
 ?>

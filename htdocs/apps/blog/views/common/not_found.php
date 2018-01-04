@@ -31,5 +31,10 @@ class not_found extends simple
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "Not Found!";
+    }
 }
 ?>

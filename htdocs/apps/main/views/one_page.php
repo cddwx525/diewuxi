@@ -39,5 +39,10 @@ class one_page extends base
             "main" => $main,
         );
     }
+
+    public function get_string($result)
+    {
+        return "one page";
+    }
 }
 ?>
