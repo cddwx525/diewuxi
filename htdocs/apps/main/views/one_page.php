@@ -13,7 +13,7 @@ class one_page extends base
 
         $title = "One page";
 
-        $position = "";
+        $position = " > One page";
 
         $content = "<div class=\"content_title border_frame\">
 <h3>One page</h3>

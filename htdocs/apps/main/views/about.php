@@ -12,7 +12,7 @@ class about extends base
 
         $title = "About";
 
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "about.show", ""), array(), "") . "\">About</a>";
+        $position = " > About";
 
         $content = "<div class=\"content_title border_frame\">
 <h3>About</h3>

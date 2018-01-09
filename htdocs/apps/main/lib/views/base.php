@@ -106,7 +106,7 @@ abstract class base extends html
             ),
             array(
                 $url->get(array($result["meta_data"]["settings"]["app_space_name"], "one_page.show", ""), array(), ""),
-                "One_age",
+                "One age",
             ),
             array(
                 $url->get(array($result["meta_data"]["settings"]["app_space_name"], "about.show", ""), array(), ""),

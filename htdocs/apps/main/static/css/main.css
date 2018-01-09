@@ -14,13 +14,14 @@
 
 body
 {      
+    margin-left: auto;
+    margin-right: auto;
     /*
-    margin: 0em;
     padding: 0.6em;
     */
 
+    width: 1024px;
     /*
-    width: 100%;
     border: solid Brown 1px;
     */
 
