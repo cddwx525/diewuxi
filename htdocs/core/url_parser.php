@@ -93,7 +93,7 @@ class url_parser
         }
         else
         {
-            echo "[ERROR] Get url \"" . $url_record[0] . "->" . $url_record[1] . "->" . $url_record[2] . "\" wrong in url_parser->get()";
+            echo "[ERROR] Get URL \"" . $url_record[0] . "->" . $url_record[1] . "->" . $url_record[2] . "\" wrong in url_parser->get() <br />";
             //exit();
         }
     }
