@@ -428,13 +428,6 @@ class db_method
 
     public function delete()
     {
-        // Strange，$this->filter has value, but still print message.
-        //if ($this->filter === "");
-        //{
-        //    var_dump( "WHERE `article_id` = ?" === "");
-        //    print "Are you want delete all?";
-        //    exit();
-        //}
         $sql = sprintf("DELETE FROM `%s` %s", $this->table, $this->filter);
         $this->filter = "";
 
