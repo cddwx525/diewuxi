@@ -1,5 +1,5 @@
 <?php
-define("VERSION", "1.0");
+define("VERSION", "1.0.1");
 define("DEBUG", TRUE);
 define("STATIC_FILE", TRUE);
 
