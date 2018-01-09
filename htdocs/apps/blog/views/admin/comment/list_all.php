@@ -19,9 +19,18 @@ class list_all extends admin_base
         $position = " > All comments";
 
         $list = array();
-        foreach ($comments as $comment)
+        foreach ($comments as $key => $comment)
         {
-            $list[] = "<tr>
+            if (($key + 1)% 2 === 0)
+            {
+                $alternate = "even";
+            }
+            else
+            {
+                $alternate = "odd";
+            }
+
+            $list[] = "<tr class=\"" . $alternate . "\">
 <td>" . htmlspecialchars($comment["user"]) . "</td>
 <td>" . $comment["author"] . "</td>
 <td>" . htmlspecialchars($comment["mail"]) . "</td>

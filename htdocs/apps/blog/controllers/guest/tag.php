@@ -61,6 +61,10 @@ class tag extends guest_base
     }
 
 
+    /**
+     * Function show.
+     *
+     */
     public function show($parameters)
     {
         $url = new url();
@@ -105,6 +109,81 @@ class tag extends guest_base
 
         // Get tag record.
         $tag = $table_tag->select_by_id((int) $parameters["get"]["id"])["record"];
+
+        // Add article count to tag.
+        $where = array(
+            array(
+                "field" => "tag_id",
+                "value" => (int) $tag["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $tag["article_count"] = $table_article_tag->where($where)->select_count()["record"];
+
+        $view_name = "guest/tag/show";
+
+        return array(
+            "meta_data" => $this->meta_data,
+            "view_name" => $view_name,
+            "state" => "Y",
+            "parameters" => $parameters,
+            "tag" => $tag,
+        );
+    }
+
+
+    /**
+     * Function slug show.
+     *
+     */
+    public function slug_show($parameters)
+    {
+        $url = new url();
+        $table_tag = new tag_model();
+        $table_article_tag = new article_tag_model();
+
+        //Filter config.
+        if ($this->config === FALSE)
+        {
+            $view_name = "common/not_config";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+
+        // Filter wrong tag slug.
+        $where = array(
+            array(
+                "field" => "slug",
+                "value" => $parameters["get"]["tag_slug"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $tag = $table_tag->where($where)->select_first()["record"];
+        if ($tag === FALSE)
+        {
+            $view_name = "common/not_found";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
 
         // Add article count to tag.
         $where = array(

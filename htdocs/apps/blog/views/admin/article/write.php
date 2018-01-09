@@ -57,7 +57,7 @@ class write extends admin_base
 <p>* Title(vchar(128)):</p>
 <p><input type=\"text\" name=\"title\" value=\"\" class=\"input_text\" /></p>
 
-<p>Slug(vchar(128)):</p>
+<p>* Slug(vchar(128)):</p>
 <p><input type=\"text\" name=\"slug\" value=\"\" class=\"input_text\" /></p>
 
 <p>* Date(datetime):</p>

@@ -51,6 +51,9 @@ class category extends guest_base
     }
 
 
+    /**
+     * Function show.
+     */
     public function show($parameters)
     {
         $url = new url();
@@ -106,6 +109,7 @@ class category extends guest_base
             ),
         );
         $category["article_count"] = $table_article->where($where)->select_count()["record"];
+        $category["full_slug"] = $this->get_full_category_slug($category, $table_category);
 
         // Add son categories data to category.
         $where = array(
@@ -130,6 +134,94 @@ class category extends guest_base
         );
     }
 
+
+    /**
+     * Function slug show.
+     */
+    public function slug_show($parameters)
+    {
+        $url = new url();
+        $table_category = new category_model();
+        $table_article = new article_model();
+
+        //Filter config.
+        if ($this->config === FALSE)
+        {
+            $view_name = "common/not_config";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+
+        // Filter wrong category slug.
+        $where = array(
+            array(
+                "field" => "slug",
+                "value" => $parameters["get"]["category_slug"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $category = $table_category->where($where)->select_first()["record"];
+        if ($category === FALSE)
+        {
+            $view_name = "common/not_found";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+        // Add article_count data to category.
+        $where = array(
+            array(
+                "field" => "category_id",
+                "value" => (int) $category["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $category["article_count"] = $table_article->where($where)->select_count()["record"];
+
+        // Add full slug.
+        $category["full_slug"] = $this->get_full_category_slug($category, $table_category);
+
+        // Add son categories data to category.
+        $where = array(
+            array(
+                "field" => "parent_id",
+                "value" => (int) $category["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $category["son"] = $table_category->where($where)->select()["record"];
+
+
+        $view_name = "guest/category/show";
+
+        return array(
+            "meta_data" => $this->meta_data,
+            "view_name" => $view_name,
+            "state" => "Y",
+            "parameters" => $parameters,
+            "category" => $category,
+        );
+    }
 
     private function category_hierarchy($categories, $table_category, $table_article)
     {

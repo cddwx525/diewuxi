@@ -20,8 +20,17 @@ class list_category extends admin_base
         $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">Category: " . htmlspecialchars($category["name"]) . "</a>";
 
         $list = array();
-        foreach ($articles as $article)
+        foreach ($articles as $key => $article)
         {
+            if (($key + 1)% 2 === 0)
+            {
+                $alternate = "even";
+            }
+            else
+            {
+                $alternate = "odd";
+            }
+
             if (empty($article["tag"]))
             {
                 $article_tags = "<span>NULL</span>";
@@ -36,9 +45,10 @@ class list_category extends admin_base
                 $article_tags = implode(", ", $article_tags);
             }
 
-            $list[] = "<tr>
+            $list[] = "<tr class=\"" . $alternate . "\">
 <td>" . $article["id"] . "</td>
 <td>" . htmlspecialchars($article["title"]) . "</td>
+<td>" . htmlspecialchars($article["slug"]) . "</td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $article["category"]["id"]), "") . "\">" . htmlspecialchars($article["category"]["name"]) . "</a></td>
 <td>" . $article_tags . "</td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/media.list_article", ""), array("article_id" => $article["id"]), "") . "\">" . $article["media_count"] . "</a></td>
@@ -59,6 +69,7 @@ class list_category extends admin_base
 <tr>
 <th>Id</th>
 <th>Title</th>
+<th>Slug</th>
 <th>Category</th>
 <th>Tags</th>
 <th>Medias</th>

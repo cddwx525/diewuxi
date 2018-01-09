@@ -45,6 +45,7 @@ class article extends guest_base
         {
             // Add category data.
             $article["category"] = $table_category->select_by_id((int) $article["category_id"])["record"];
+            $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
 
             // Add tags data.
             $where = array(
@@ -79,6 +80,9 @@ class article extends guest_base
     }
 
 
+    /**
+     *
+     */
     public function list_category($parameters)
     {
         $url = new url();
@@ -176,6 +180,107 @@ class article extends guest_base
         );
     }
 
+
+    /**
+     * Function slug_list.
+     */
+    public function slug_list($parameters)
+    {
+        $url = new url();
+        $table_article = new article_model();
+        $table_category = new category_model();
+        $table_tag = new tag_model();
+        $table_article_tag = new article_tag_model();
+
+        //Filter config.
+        if ($this->config === FALSE)
+        {
+            $view_name = "common/not_config";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+
+        $this->parameters = $parameters;
+
+        $verify_result = $this->verify_full_category_slug($parameters["get"]["full_category_slug"], $table_category);
+        if ($verify_result["state"] != "Y")
+        {
+            //print_r($verify_result);
+            return $verify_result;
+        }
+        else
+        {
+        }
+
+        // Get category.
+        $category = $verify_result["category"];
+        $category["full_slug"] = $this->get_full_category_slug($category, $table_category);
+
+        // Get articles belonged to category.
+        $where = array(
+            array(
+                "field" => "category_id",
+                "value" => (int) $category["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $articles = $table_article->where($where)->select()["record"];
+
+        // Add relate data to article.
+        foreach ($articles as $key => $article)
+        {
+            // Add category.
+            $article["category"] = $category;
+            $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
+
+            // Add tags.
+            $where = array(
+                array(
+                    "field" => "article_id",
+                    "value" => (int) $article["id"],
+                    "operator" => "=",
+                    "condition" => "",
+                ),
+            );
+            $article_tag_relations = $table_article_tag->where($where)->select()["record"];
+            $article_tag = array();
+            foreach ($article_tag_relations as $article_tag_relation)
+            {
+                $article_tag[] = $table_tag->select_by_id((int) $article_tag_relation["tag_id"])["record"];
+            }
+            $article["tag"] = $article_tag;
+
+            $articles[$key] = $article;
+        }
+
+        $view_name = "guest/article/list_category";
+
+
+        return array(
+            "meta_data" => $this->meta_data,
+            "view_name" => $view_name,
+            "state" => "Y",
+            "parameters" => $parameters,
+            "category" => $category,
+            "articles" => $articles,
+        );
+    }
+
+
+
+    /*
+     * Function list_tag.
+     */
     public function list_tag($parameters)
     {
         $url = new url();
@@ -244,6 +349,9 @@ class article extends guest_base
             // Add category data.
             $article["category"] = $table_category->select_by_id((int) $article["category_id"])["record"];
 
+            // Add full slug.
+            $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
+
             // Add tags data.
             $where = array(
                 array(
@@ -278,6 +386,131 @@ class article extends guest_base
     }
 
 
+    /*
+     * Function slug_list_tag.
+     */
+    public function slug_list_tag($parameters)
+    {
+        $url = new url();
+        $table_article = new article_model();
+        $table_category = new category_model();
+        $table_tag = new tag_model();
+        $table_article_tag = new article_tag_model();
+
+        //Filter config.
+        if ($this->config === FALSE)
+        {
+            $view_name = "common/not_config";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+        if (
+            (! isset($parameters["get"]["tag_id"])) ||
+            ($parameters["get"]["tag_id"] === "") ||
+            ($table_tag->select_by_id((int) $parameters["get"]["tag_id"])["record"] === FALSE)
+        )
+        {
+        }
+        else
+        {
+        }
+
+        // Filter wrong tag_id.
+        $where = array(
+            array(
+                "field" => "slug",
+                "value" => $parameters["get"]["tag_slug"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $tag = $table_tag->where($where)->select_first()["record"];
+        if ($tag === FALSE)
+        {
+            $view_name = "common/not_found";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+        // Get article_tag_relations.
+        $where = array(
+            array(
+                "field" => "tag_id",
+                "value" => (int) $tag["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $article_tag_relations = $table_article_tag->where($where)->select()["record"];
+
+        // Get articles belonged to tag.
+        $articles = array();
+        foreach ($article_tag_relations as $article_tag_relation)
+        {
+            // Get one article.
+            $article = $table_article->select_by_id((int) $article_tag_relation["article_id"])["record"];
+
+            // Add category data.
+            $article["category"] = $table_category->select_by_id((int) $article["category_id"])["record"];
+
+            // Add full slug.
+            $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
+
+            // Add tags data.
+            $where = array(
+                array(
+                    "field" => "article_id",
+                    "value" => (int) $article["id"],
+                    "operator" => "=",
+                    "condition" => "",
+                ),
+            );
+            $article_tag_relations_second = $table_article_tag->where($where)->select()["record"];
+            $article_tag = array();
+            foreach ($article_tag_relations_second as $article_tag_relation_second)
+            {
+                $article_tag[] = $table_tag->select_by_id((int) $article_tag_relation_second["tag_id"])["record"];
+            }
+            $article["tag"] = $article_tag;
+
+            $articles[] = $article;
+        }
+
+        $view_name = "guest/article/list_tag";
+
+
+        return array(
+            "meta_data" => $this->meta_data,
+            "view_name" => $view_name,
+            "state" => "Y",
+            "parameters" => $parameters,
+            "tag" => $tag,
+            "articles" => $articles,
+        );
+    }
+
+
+    /**
+     * Function show.
+     *
+     */
     public function show($parameters)
     {
         $url = new url();
@@ -328,6 +561,112 @@ class article extends guest_base
 
         // Add category data.
         $article["category"] = $table_category->select_by_id((int) $article["category_id"])["record"];
+
+        // Add tags data.
+        $where = array(
+            array(
+                "field" => "article_id",
+                "value" => (int) $article["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $article_tag_relations = $table_article_tag->where($where)->select()["record"];
+        $article_tag = array();
+        foreach ($article_tag_relations as $article_tag_relation)
+        {
+            $article_tag[] = $table_tag->select_by_id((int) $article_tag_relation["tag_id"])["record"];
+        }
+        $article["tag"] = $article_tag;
+
+        // Convert markdown to html.
+        $article["content"] = MarkdownExtra::defaultTransform($article["content"]);
+
+        // Get comment count.
+        $where = array(
+            array(
+                "field" => "article_id",
+                "value" => (int) $article["id"],
+                "operator" => "=",
+                "condition" => "AND",
+            ),
+            array(
+                "field" => "target_id",
+                "operator" => "IS NULL",
+                "condition" => "",
+            ),
+        );
+        $comment_count = $table_comment->where($where)->select_count()["record"];
+
+        // Get comments.
+        $comments = $this->comment_hierarchy($table_comment->where($where)->order(array("`number` ASC"))->select()["record"], $table_comment);
+
+        $view_name = "guest/article/show";
+
+
+        return array(
+            "meta_data" => $this->meta_data,
+            "view_name" => $view_name,
+            "state" => "Y",
+            "parameters" => $parameters,
+            "article" => $article,
+            "comment_count" => $comment_count,
+            "comments" => $comments,
+        );
+    }
+
+
+    /*
+     * Function Slug show.
+     */
+    public function slug_show($parameters)
+    {
+        $url = new url();
+        $table_article = new article_model();
+        $table_category = new category_model();
+        $table_tag = new tag_model();
+        $table_comment = new comment_model();
+        $table_article_tag = new article_tag_model();
+
+        //Filter config.
+        if ($this->config === FALSE)
+        {
+            $view_name = "common/not_config";
+
+            return array(
+                "meta_data" => $this->meta_data,
+                "view_name" => $view_name,
+                "state" => "Y",
+                "parameters" => $parameters,
+            );
+        }
+        else
+        {
+        }
+
+
+        $this->parameters = $parameters;
+
+        $verify_result = $this->verify_full_article_slug($parameters["get"]["full_article_slug"], $table_article, $table_category);
+        if ($verify_result["state"] != "Y")
+        {
+            //print_r($verify_result);
+            return $verify_result;
+        }
+        else
+        {
+        }
+
+        $article = $verify_result["article"];
+
+        // Add full slug.
+        $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
+
+        // Add category data.
+        $category = $table_category->select_by_id((int) $article["category_id"])["record"];
+        $category["full_slug"] = $this->get_full_category_slug($category, $table_category);
+        $category["all_levels"] = $this->get_full_category_list($category, $table_category);
+        $article["category"] = $category;
 
         // Add tags data.
         $where = array(

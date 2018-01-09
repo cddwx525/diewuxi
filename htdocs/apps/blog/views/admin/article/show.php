@@ -134,7 +134,7 @@ class show extends admin_base
 <li><span>Keywords: </span><span class=\"description\">" . $article["keywords"] . "</span></li>
 <li><span>Category: </span><span><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $article["category_id"]), "") . "\">" . htmlspecialchars($article["category"]["name"]) . "</a></span></li>
 <li><span>Tag: </span><span>" . $article_tag_links . "</span></li>
-<li><span>Link: </span><span class=\"description\">" . $url->get(array($app_space_name, "guest/article.show", ""), array("id" => $article["id"]), "") . "</span></li>
+<li><span>Link: </span><span class=\"description\">" . $url->get(array($app_space_name, "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "</span></li>
 <li><span>License: </span><span class=\"description\"><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></span></li>
 </ul>
 </div>

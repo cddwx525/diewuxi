@@ -63,6 +63,7 @@ class article extends admin_base
         {
             // Add category data.
             $article["category"] = $table_category->select_by_id((int) $article["category_id"])["record"];
+            $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
 
             // Add tags data.
             $where = array(
@@ -480,6 +481,9 @@ class article extends admin_base
         // Add category data.
         $article["category"] = $table_category->select_by_id((int) $article["category_id"])["record"];
 
+        // Add category data.
+        $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
+
         // Add tags data.
         $where = array(
             array(
@@ -705,6 +709,8 @@ class article extends admin_base
             ($parameters["post"]["date"] === "") ||
             (! isset($parameters["post"]["title"])) ||
             ($parameters["post"]["title"] === "") ||
+            (! isset($parameters["post"]["slug"])) ||
+            ($parameters["post"]["slug"] === "") ||
             (! isset($parameters["post"]["content"])) ||
             ($parameters["post"]["content"] === "") ||
             (! isset($parameters["post"]["keywords"])) ||
@@ -1177,6 +1183,8 @@ class article extends admin_base
             ($parameters["post"]["date"] === "") ||
             (! isset($parameters["post"]["title"])) ||
             ($parameters["post"]["title"] === "") ||
+            (! isset($parameters["post"]["slug"])) ||
+            ($parameters["post"]["slug"] === "") ||
             (! isset($parameters["post"]["content"])) ||
             ($parameters["post"]["content"] === "") ||
             (! isset($parameters["post"]["keywords"])) ||

@@ -272,6 +272,9 @@ class category extends admin_base
     }
 
 
+    /*
+     * Add
+     */
     public function add($parameters)
     {
         $table_category = new category_model();
@@ -343,6 +346,8 @@ class category extends admin_base
         if (
             (! isset($parameters["post"]["name"])) ||
             ($parameters["post"]["name"] === "") ||
+            (! isset($parameters["post"]["slug"])) ||
+            ($parameters["post"]["slug"] === "") ||
             (! isset($parameters["post"]["parent"])) ||
             ($parameters["post"]["parent"] === "")
         )
@@ -639,6 +644,8 @@ class category extends admin_base
         if (
             (! isset($parameters["post"]["name"])) ||
             ($parameters["post"]["name"] === "") ||
+            (! isset($parameters["post"]["slug"])) ||
+            ($parameters["post"]["slug"] === "") ||
             (! isset($parameters["post"]["parent"])) ||
             ($parameters["post"]["parent"] === "")
         )

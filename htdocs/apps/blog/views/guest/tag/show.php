@@ -16,7 +16,7 @@ class show extends guest_base
 
         $title = "Tag: [" . htmlspecialchars($tag["name"]) . "]";
 
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.list_all", ""), array(), "") . "\">All tags</a> > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.show", ""), array("id" => $tag["id"]), "") . "\">" . htmlspecialchars($tag["name"]) . "</a>";
+        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.list_all", ""), array(), "") . "\">All tags</a> > " . htmlspecialchars($tag["name"]);
 
 
         $content = "<div class=\"content_title border_frame\">
@@ -28,7 +28,7 @@ class show extends guest_base
 <li><span>Name: </span><span class=\"description\">" . htmlspecialchars($tag["name"]) . "</span></li>
 <li><span>Slug: </span><span class=\"description\">" . htmlspecialchars($tag["slug"]) . "</span></li>
 <li><span>Description: </span><span class=\"description\">" . htmlspecialchars($tag["description"]) . "</span></li>
-<li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_tag", ""), array("tag_id" => $tag["id"]), "") . "\">" . $tag["article_count"] . "</a></span></li>
+<li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list_tag", ""), array("tag_slug" => $tag["slug"]), "") . "\">" . $tag["article_count"] . "</a></span></li>
 </ul>
 </div>";
 

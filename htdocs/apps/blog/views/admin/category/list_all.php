@@ -21,8 +21,17 @@ class list_all extends admin_base
 
 
         $list = array();
-        foreach ($categories as $category)
+        foreach ($categories as $key => $category)
         {
+            if (($key + 1)% 2 === 0)
+            {
+                $alternate = "even";
+            }
+            else
+            {
+                $alternate = "odd";
+            }
+
             if ($category["parent"] === NULL)
             {
                 $category_parent_link = "NULL";
@@ -32,8 +41,9 @@ class list_all extends admin_base
                 $category_parent_link = "<a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $category["parent"]["id"]), "") . "\">" . htmlspecialchars($category["parent"]["name"]) . "</a>";
             }
 
-            $list[] = "<tr>
+            $list[] = "<tr class=\"" . $alternate . "\">
 <td>" . htmlspecialchars($category["name"]) . "</td>
+<td>" . htmlspecialchars($category["slug"]) . "</td>
 <td>" . $category_parent_link . "</td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">" . $category["article_count"] . "</a></td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/category.delete_confirm", ""), array("id" => $category["id"]), "") . "\">Delete</a> <a href=\"" . $url->get(array($app_space_name, "admin/category.edit", ""), array("id" => $category["id"]), "") . "\">Edit</a> <a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $category["id"]), "") . "\">View</a></td>
@@ -49,6 +59,7 @@ class list_all extends admin_base
 <table class=\"table table-hover\">
 <tr>
 <th>Name</th>
+<th>Slug</th>
 <th>Parent</th>
 <th>Articles</th>
 <th>Operate</th>

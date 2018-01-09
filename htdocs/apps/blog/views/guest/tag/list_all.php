@@ -16,7 +16,7 @@ class list_all extends guest_base
 
         $title = "All tags";
 
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.list_all", ""), array(), "") . "\">All tags</a>";
+        $position = " > All tags";
 
 
         if (empty($tags))
@@ -28,7 +28,7 @@ class list_all extends guest_base
             $tag_list = array();
             foreach ($tags as $one_tag)
             {
-                $tag_list[] = "<span class=\"tag\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.show", ""), array("id" => $one_tag["id"]), "") . "\">". htmlspecialchars($one_tag["name"]) . " [" . $one_tag["article_count"] . "]</a></span>";
+                $tag_list[] = "<span class=\"tag\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.slug_show", ""), array("tag_slug" => $one_tag["slug"]), "") . "\">". htmlspecialchars($one_tag["name"]) . " [" . $one_tag["article_count"] . "]</a></span>";
             }
             $tag_list = implode(" ", $tag_list);
         }

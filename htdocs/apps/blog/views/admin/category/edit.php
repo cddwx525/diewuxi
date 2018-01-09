@@ -37,7 +37,7 @@ class edit extends admin_base
 <p>* Name(vchar(64)):</p>
 <p><input type=\"text\" name=\"name\" value=\"" . $category["name"] . "\" class=\"input_text\" /></p>
 
-<p>Slug(vchar(64)):</p>
+<p>* Slug(vchar(64)):</p>
 <p><input type=\"text\" name=\"slug\" value=\"" . $category["slug"] . "\" class=\"input_text\" /></p>
 
 <p>Parent(vchar(64)):</p>
@@ -45,7 +45,7 @@ class edit extends admin_base
 " . $category_names . "
 <p><input type=\"text\" name=\"parent\" value=\"" . $category["parent"] . "\" class=\"input_text\" /></p>
 
-<p>* Description(text):</p>
+<p>Description(text):</p>
 <p><textarea name=\"description\" class=\"textarea\">" . $category["description"] . "</textarea></p>
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>

@@ -16,7 +16,7 @@ class show extends guest_base
 
         $title = "Category: [" . $category["name"] . "]";
 
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.list_all", ""), array(), "") . "\">All categories</a> > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.show", ""), array("id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a>";
+        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.list_all", ""), array(), "") . "\">All categories</a> > " . htmlspecialchars($category["name"]);
 
 
         if (empty($category["son"]))
@@ -28,7 +28,7 @@ class show extends guest_base
             $subcategory_links = array();
             foreach ($category["son"] as $son)
             {
-                $subcategory_links[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.show", ""), array("id" => $son["id"]), "") . "\">" . htmlspecialchars($son["name"]) . "</a>";
+                $subcategory_links[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.slug_show", ""), array("category_slug" => $son["slug"]), "") . "\">" . htmlspecialchars($son["name"]) . "</a>";
             }
             $subcategory_links = implode(", ", $subcategory_links);
         }
@@ -43,7 +43,7 @@ class show extends guest_base
 <li><span>Slug: </span><span class=\"description\">" . htmlspecialchars($category["slug"]) . "</span></li>
 <li><span>Description: </span><span class=\"description\">" . htmlspecialchars($category["description"]) . "</span></li>
 <li><span>Sons: </span><span class=\"description\">" . $subcategory_links . "</span></li>
-<li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">" . $category["article_count"] . "</a></span></li>
+<li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . $category["article_count"] . "</a></span></li>
 </ul>
 </div>";
 

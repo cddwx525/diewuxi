@@ -17,12 +17,58 @@
 #article_list_table table, th, td,
 #category_list_table table, th, td,
 #tag_list_table table, th, td,
+#media_list_table table, th, td,
 #comment_list_table table, th, td
 {
     border-style: solid;
     border-color: blue;
     border-width: 1px;
 }
+
+
+#article_list_table table, th,
+#category_list_table table, th,
+#tag_list_table table, th,
+#media_list_table table, th,
+#comment_list_table table, th
+{
+    color: Brown;
+    background-color: White;
+}
+
+
+#article_list_table table .odd,
+#category_list_table table .odd,
+#tag_list_table table .odd,
+#media_list_table table .odd,
+#comment_list_table table .odd 
+{
+    color: Black;
+    background-color: LightGray;
+}
+
+
+#article_list_table table .even,
+#category_list_table table .even,
+#tag_list_table table .even,
+#media_list_table table .even,
+#comment_list_table table .even 
+{
+    color: Black;
+    background-color: White;
+}
+
+
+#article_list_table table, tr:hover td,
+#category_list_table table, tr:hover td,
+#tag_list_table table, tr:hover td,
+#media_list_table table, tr:hover td,
+#comment_list_table table, tr:hover td
+{
+    color: White;
+    background-color: Gray;
+}
+
 
 #site_user
 {
@@ -38,4 +84,14 @@
 #media_link
 {
     width: 50em;
+}
+
+#media_content
+{
+    text-align: center;
+}
+
+#media_content img
+{
+    width: 60%;
 }

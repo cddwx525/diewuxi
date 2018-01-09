@@ -62,7 +62,7 @@ class edit extends admin_base
 <p>* Title(vchar(128)):</p>
 <p><input type=\"text\" name=\"title\" value=\"" . $article["title"] . "\" class=\"input_text\" /></p>
 
-<p>Slug(vchar(128)):</p>
+<p>* Slug(vchar(128)):</p>
 <p><input type=\"text\" name=\"slug\" value=\"" . $article["slug"] . "\" class=\"input_text\" /></p>
 
 <p>* Date(datetime):</p>

@@ -44,7 +44,7 @@ class write extends admin_base
 <p>* Name(vchar(64)):</p>
 <p><input type=\"text\" name=\"name\" value=\"\" class=\"input_text\" /></p>
 
-<p>Slug(vchar(64)):</p>
+<p>* Slug(vchar(64)):</p>
 <p><input type=\"text\" name=\"slug\" value=\"\" class=\"input_text\" /></p>
 
 <p>* Parent(vchar(64))(chose one from above or \"NULL\"):</p>

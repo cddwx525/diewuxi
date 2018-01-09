@@ -19,7 +19,7 @@ abstract class guest_base extends base
         $tag_list = array();
         foreach ($result["meta_data"]["tags"] as $one_tag)
         {
-            $tag_list[] = "<span class=\"tag\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_tag", ""), array("tag_id" => $one_tag["id"]), "") . "\">". htmlspecialchars($one_tag["name"]) . " [" . $one_tag["article_count"] . "]</a></span>";
+            $tag_list[] = "<span class=\"tag\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list_tag", ""), array("tag_slug" => $one_tag["slug"]), "") . "\">". htmlspecialchars($one_tag["name"]) . " [" . $one_tag["article_count"] . "]</a></span>";
         }
         $tag_list = implode(" ", $tag_list);
 
@@ -66,14 +66,14 @@ abstract class guest_base extends base
         {
             if (isset($category["son"]))
             {
-                $list[] = $indent . "<li class=\"category\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a>[" . $category["article_count"] . "]</li>
+                $list[] = $indent . "<li class=\"category\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . htmlspecialchars($category["name"]) . "[" . $category["article_count"] . "]</a></li>
 " . $indent . "<ul>
 " . $this->category_output($category["son"], $result, $url, $indent . $indent_constant, $indent_constant) . "
 " . $indent . "</ul>";
             }
             else
             {
-                $list[] = $indent . "<li class=\"category\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a>[" . $category["article_count"] . "]</li>";
+                $list[] = $indent . "<li class=\"category\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . htmlspecialchars($category["name"]) . "[" . $category["article_count"] . "]</a></li>";
             }
         }
         return implode("\n", $list);

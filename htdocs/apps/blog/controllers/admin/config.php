@@ -135,13 +135,13 @@ class config extends initial
         $data_page = array(
             array(
                 "id"            => 1,
-                "slug"          => "",
+                "slug"          => "default-page-1",
                 "date"          => date("Y-m-d H:i:s"),
                 "content"       => "This is default page 1",
             ),
             array(
                 "id"            => 2,
-                "slug"          => "",
+                "slug"          => "default-page-2",
                 "date"          => date("Y-m-d H:i:s"),
                 "content"       => "This is default page 2",
             ),

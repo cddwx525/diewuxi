@@ -152,8 +152,15 @@ class html
         $url = new url();
 
         $css = array();
-        $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "css/main.css") . "\">";
-        $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
+        if ($result["meta_data"]["settings"]["app_space_name"] === MAIN_APP)
+        {
+            $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
+        }
+        else
+        {
+            $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "css/main.css") . "\">";
+            $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
+        }
 
         if (isset($items["css"]))
         {
@@ -166,7 +173,7 @@ class html
         {
         }
 
-        $css = implode("\n", array_unique($css));
+        $css = implode("\n", $css);
 
         return $css;
     }
@@ -174,7 +181,14 @@ class html
 
     public static function get_title_html($result, $items)
     {
-        $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+        if ($result["meta_data"]["settings"]["app_space_name"] === MAIN_APP)
+        {
+            $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+        }
+        else
+        {
+            $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+        }
 
         return $title;
     }
@@ -207,8 +221,15 @@ class html
         $url = new url();
 
         $position_link_list = array();
-        $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">Home</a>";
-        $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["settings"]["special_actions"]["DEFAULT"], array(), "") . "\">" . $result["meta_data"]["settings"]["app_default_name"] . "</a>";
+        if ($result["meta_data"]["settings"]["app_space_name"] === MAIN_APP)
+        {
+            $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">Home</a>";
+        }
+        else
+        {
+            $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">Home</a>";
+            $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["settings"]["special_actions"]["DEFAULT"], array(), "") . "\">" . $result["meta_data"]["settings"]["app_default_name"] . "</a>";
+        }
 
         $position_link = implode(" > ", $position_link_list);
         $position_link = $position_link . $items["position"];

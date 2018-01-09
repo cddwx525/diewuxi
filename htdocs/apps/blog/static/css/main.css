@@ -14,13 +14,14 @@
 
 body
 {      
+    margin-left: auto;
+    margin-right: auto;
     /*
-    margin: 0em;
     padding: 0.6em;
     */
 
+    width: 1024px;
     /*
-    width: 100%;
     border: solid Brown 1px;
     */
 
@@ -150,27 +151,6 @@ a:visited
 
 .comment_entry_information
 {
-}
-
-.tag a
-{
-    display: inline-block;
-
-    margin: 1px;
-    padding: 1px;
-    /*
-    border: solid LightGray 1px;
-    */
-    color: White;
-    background-color: Gray;
-    text-decoration: none;
-}
-
-.tag a:hover, a:active
-{
-    color: White;
-    background-color: Brown;
-    text-decoration: none;
 }
 
 .border_frame
@@ -446,14 +426,47 @@ a.highlight
     /*
     list-style-type: none;
     */
+    padding-left: 2em;
 }
 
-#side #category_list .category
+#side #category_list .category a
 {
     /*
     font-size: 1em;
     */
+    display: inline-block;
+
+    margin: 1px;
+    padding: 1px;
+    /*
+    border: solid LightGray 1px;
+    */
+    color: Black;
+    background-color: LightGray;
+    text-decoration: none;
 }
+
+#side #tag_list .tag a
+{
+    display: inline-block;
+
+    margin: 1px;
+    padding: 1px;
+    /*
+    border: solid LightGray 1px;
+    */
+    color: Black;
+    background-color: LightGray;
+    text-decoration: none;
+}
+
+#side #tag_list .tag a:hover, a:active
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
+}
+
 
 #main_container
 {
@@ -466,4 +479,25 @@ a.highlight
 #main
 {
     margin: 0em 0.1em;
+}
+
+#main #tag_list .tag a
+{
+    display: inline-block;
+
+    margin: 1px;
+    padding: 1px;
+    /*
+    border: solid LightGray 1px;
+    */
+    color: Black;
+    background-color: LightGray;
+    text-decoration: none;
+}
+
+#main #tag_list .tag a:hover, a:active
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
 }

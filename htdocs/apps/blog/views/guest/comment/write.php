@@ -17,7 +17,7 @@ class write extends guest_base
 
         $title = "Write comment under [" . $article["title"] . "]";
 
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_category", ""), array("category_id" => $article["category_id"]), "") . "\">Category: " . htmlspecialchars($article["category"]["name"]) . "</a> > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a> > Write comment";
+        $position = " > Write comment";
 
 
         if ($comment["author"] === "1")
@@ -35,7 +35,7 @@ class write extends guest_base
 </div>
 
 <div class=\"border_frame\">
-<p>Under article [<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</p>
+<p>Under article [<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</p>
 <p>Reply to :</p>
 
 <div id=\"" . $comment["id"] . "\" class=\"comment_entry border_frame\">

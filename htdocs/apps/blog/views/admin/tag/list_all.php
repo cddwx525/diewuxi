@@ -19,10 +19,20 @@ class list_all extends admin_base
         $position = " > All tags";
 
         $list = array();
-        foreach ($tags as $tag)
+        foreach ($tags as $key => $tag)
         {
-            $list[] = "<tr>
+            if (($key + 1)% 2 === 0)
+            {
+                $alternate = "even";
+            }
+            else
+            {
+                $alternate = "odd";
+            }
+
+            $list[] = "<tr class=\"" . $alternate . "\">
 <td>" . htmlspecialchars($tag["name"]) . "</td>
+<td>" . htmlspecialchars($tag["slug"]) . "</td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/article.list_tag", ""), array("tag_id" => $tag["id"]), "") . "\">" . $tag["article_count"] . "</a></td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/tag.delete_confirm", ""), array("id" => $tag["id"]), "") . "\">Delete</a> <a href=\"" . $url->get(array($app_space_name, "admin/tag.edit", ""), array("id" => $tag["id"]), "") . "\">Edit</a> <a href=\"" . $url->get(array($app_space_name, "admin/tag.show", ""), array("id" => $tag["id"]), "") . "\">View</a></td>
 </tr>";
@@ -37,6 +47,7 @@ class list_all extends admin_base
 <table class=\"table table-hover\">
 <tr>
 <th>Name</th>
+<th>Slug</th>
 <th>Articles</th>
 <th>Operate</th>
 </tr>

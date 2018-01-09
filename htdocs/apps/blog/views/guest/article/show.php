@@ -25,7 +25,15 @@ class show extends guest_base
 <script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML\"></script>";
         $title = $article["title"];
 
-        $position = " > <a href=\"" . $url->get(array($app_space_name, "guest/article.list_all", ""), array(), "") . "\">Articles</a> > <a href=\"" . $url->get(array($app_space_name, "guest/article.show", ""), array("id" => $article["id"]), "") . "\" class=\"highlight\">" . htmlspecialchars($article["title"]) . "</a>";
+
+        $categories_link_list = array();
+        foreach ($article["category"]["all_levels"]  as $category)
+        {
+            $categories_link_list[] = "<a href=\"" . $url->get(array($app_space_name, "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a>";
+        }
+
+
+        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_all", ""), array(), "") . "\">All articles</a> > " . implode(" > ", $categories_link_list) . " > " . htmlspecialchars($article["title"]);
 
 
         if (empty($article["tag"]))
@@ -37,7 +45,7 @@ class show extends guest_base
             $article_tag_links = array();
             foreach ($article["tag"] as $tag)
             {
-                $article_tag_links[] = "<a href=\"" . $url->get(array($app_space_name, "guest/tag.show", ""), array("id" => $tag["id"]), "") . "\">" . htmlspecialchars($tag["name"]) . "</a>";
+                $article_tag_links[] = "<a href=\"" . $url->get(array($app_space_name, "guest/tag.slug_show", ""), array("tag_slug" => $tag["slug"]), "") . "\">" . htmlspecialchars($tag["name"]) . "</a>";
             }
             $article_tag_links = implode(", ", $article_tag_links);
         }
@@ -107,6 +115,7 @@ class show extends guest_base
 </ul>";
         }
 
+
         $content = "<div class=\"content_title border_frame\">
 <h3>Article: [" . htmlspecialchars($article["title"]) . "]</h3>
 </div>
@@ -120,9 +129,9 @@ class show extends guest_base
 <li><span>Slug: </span><span class=\"description\">" . $article["slug"] . "</span></li>
 <li><span>Description: </span><span class=\"description\">" . $article["description"] . "</span></li>
 <li><span>Keywords: </span><span class=\"description\">" . $article["keywords"] . "</span></li>
-<li><span>Category: </span><span><a href=\"" . $url->get(array($app_space_name, "guest/category.show", ""), array("id" => $article["category_id"]), "") . "\">" . htmlspecialchars($article["category"]["name"]) . "</a></span></li>
+<li><span>Category: </span><span>" . implode(" > ", $categories_link_list) . "</span></li>
 <li><span>Tag: </span><span>" . $article_tag_links . "</span></li>
-<li><span>Link: </span><span class=\"description\">" . $url->get(array($app_space_name, "guest/article.show", ""), array("id" => $article["id"]), "") . "</span></li>
+<li><span>Link: </span><span class=\"description\">" . $url->get(array($app_space_name, "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "</span></li>
 <li><span>License: </span><span class=\"description\"><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></span></li>
 </ul>
 </div>

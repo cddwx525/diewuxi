@@ -61,6 +61,9 @@ class comment extends guest_base
         // Add category data to article.
         $article["category"] = $table_category->select_by_id($article["category_id"])["record"];
 
+        // Add full slug.
+        $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
+
         // Get comment record.
         $comment = $table_comment->select_by_id((int) $parameters["get"]["target_id"])["record"];
 
@@ -131,6 +134,9 @@ class comment extends guest_base
 
         // Add category data to article.
         $article["category"] = $table_category->select_by_id($article["category_id"])["record"];
+
+        // Add full slug.
+        $article["full_slug"] = $this->get_full_article_slug($article, $table_article, $table_category);
 
         // Filter uncomplete.
         if (

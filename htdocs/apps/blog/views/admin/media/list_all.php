@@ -19,9 +19,18 @@ class list_all extends admin_base
         $position = " > All medias";
 
         $list = array();
-        foreach ($medias as $media)
+        foreach ($medias as $key => $media)
         {
-            $list[] = "<tr>
+            if (($key + 1)% 2 === 0)
+            {
+                $alternate = "even";
+            }
+            else
+            {
+                $alternate = "odd";
+            }
+
+            $list[] = "<tr class=\"" . $alternate . "\">
 <td>" . $media["date"] . "</td>
 <td>" . $media["file"] . "</td>
 <td><a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $media["article_id"]), "") . "\">" . htmlspecialchars($media["article"]["title"]) . "</a></td>
