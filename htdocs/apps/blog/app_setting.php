@@ -6,7 +6,7 @@ class app_setting
     const APP_SPACE_NAME = __NAMESPACE__;
 
     const APP_DEFAULT_NAME = "Simplelbog";
-    const APP_VERSION = "1.0.1";
+    const APP_VERSION = "1.0.3";
     
     const SITE_NAME = "Site name when no database.";
     const SITE_DESCRIPTION = "Site description when no database.";
