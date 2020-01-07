@@ -18,11 +18,8 @@ class write extends login_base
 
         $position = " > Login write";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Login write</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Login write</h3>
 
-<div id=\"login_write\" class=\"border_frame\">
 <form action=\"" . $url->get(array($app_space_name, "admin/authentication.login", ""), array(), "") . "\" method=\"post\">
 <label>Username:</label>
 <p><input type=\"text\" name=\"name\" value=\"\" class=\"input_text\" /></p>
@@ -34,10 +31,9 @@ class write extends login_base
 <p><input type=\"checkbox\" name=\"remember\" value=\"TRUE\" /></p>
 
 <p><input type=\"submit\" name=\"\" value=\"Login\" class=\"input_submit\" /></p>
-</form>
-</div>";
+</form>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

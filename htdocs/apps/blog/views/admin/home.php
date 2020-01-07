@@ -17,15 +17,11 @@ class home extends admin_base
 
         $position = "";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Administration homepage.</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Administration homepage.</h3>
 
-<div id=\"content\" class=\"border_frame\">
-<p>This is home page.</p>
-</div>";
+<p>This is home page.</p>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

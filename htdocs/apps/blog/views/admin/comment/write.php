@@ -22,7 +22,7 @@ class write extends admin_base
 
         if ($comment["author"] === "1")
         {
-            $author_part = "<span class=\"author\">[Author]</span>";
+            $author_part = "<span class=\"text-warning\">[Author]</span>";
         }
         else
         {
@@ -30,33 +30,27 @@ class write extends admin_base
         }
 
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Comment</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Comment</h3>
 
-<div class=\"border_frame\">
 <p>Under article [<a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</p>
 <p>Reply to :</p>
 
-<div id=\"" . $comment["id"] . "\" class=\"comment_entry border_frame\">
+<div id=\"" . $comment["id"] . "\">
 
-<div class=\"comment_entry_header\">
-" . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span>
+<div class=\"bg-info\">
+" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span>
 </div>
 
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
+<div>" . htmlspecialchars($comment["content"]) . "</div>
 
-<div class=\"comment_entry_information\">
-<span class=\"description\">" . $comment["date"] . "</span>
-</div>
-</div>
+<div>
+<span class=\"text-muted\">" . $comment["date"] . "</span>
 </div>
 
-<div class=\"content_title border_frame\" >
-<h3>Write comment(* is necessary, and email is not shown to public)</h3>
 </div>
 
-<div id=\"write_comment\" class=\"border_frame\">
+<h3 class=\"bg-primary\">Write comment(* is necessary, and email is not shown to public)</h3>
+
 <form action=\"" . $url->get(array($app_space_name, "admin/comment.add", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
 <p><input type=\"hidden\" name=\"article_id\" value=\"" . $article["id"] . "\" /></p>
@@ -78,10 +72,9 @@ class write extends admin_base
 <p><textarea name=\"content\" class=\"textarea\"></textarea></p>
 
 <p><input type=\"submit\" name=\"send\" value=\"Send\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

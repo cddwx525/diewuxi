@@ -21,24 +21,20 @@ class add extends admin_base
 
         if ($state != "SUCCESS")
         {
-            $message = "<p class=\"failure\">[" . $state . "], Comment failed!</p>
+            $message = "<p class=\"text-warning\">[" . $state . "], Comment failed!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">Return to article</a></p>"; 
         }
         else
         {
-            $message = "<p class=\"success\">Comment have been added successfully!</p>
+            $message = "<p class=\"text-success\">Comment have been added successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">Return to article</a></p>"; 
         }
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Comment under: [<a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Comment under: [" . htmlspecialchars($article["title"]) . "]</h3>
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
+" . $message;
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . $content . "\n" . "</div>";
+        $main = "<div>" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

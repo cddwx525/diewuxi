@@ -19,19 +19,14 @@ class logout extends login_base
         $position = " > Logout";
 
 
-        $message = "<p class=\"success\">Logout successfully!</p>
+        $message = "<p class=\"text-success\">Logout successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "guest/home.show", ""), array(), "") . "\">Home</a></p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Re login</a></p>";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Logout</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Logout</h3>
+" . $message;
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

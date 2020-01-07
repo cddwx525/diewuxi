@@ -23,30 +23,25 @@ class delete extends admin_base
         {
             if ($state === "PASSWORD_FAIL")
             {
-                $message = "<p class=\"failure\">Password wrong!</p>
+                $message = "<p class=\"text-warning\">Password wrong!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/article.delete_confirm", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
             }
             else
             {
-                $message = "<p class=\"failure\">[" . $state . "], Article deleted wrong!</p>
+                $message = "<p class=\"text-warning\">[" . $state . "], Article deleted wrong!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/article.delete_confirm", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
             }
         }
         else
         {
-            $message = "<p class=\"success\">Article have been deleted successfully!</p>
+            $message = "<p class=\"text-success\">Article have been deleted successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/article.list_all", ""), array(), "") . "\">Article list</a></p>"; 
         }
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Delete article</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Delete article</h3>
+" . $message;
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

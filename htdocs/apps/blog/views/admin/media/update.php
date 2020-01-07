@@ -20,25 +20,21 @@ class update extends admin_base
 
         if ($state != "SUCCESS")
         {
-            $message = "<p class=\"failure\">[" . $state . "], Update failed!</p>
+            $message = "<p class=\"text-warning\">[" . $state . "], Update failed!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/media.edit", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
         }
         else
         {
-            $message = "<p class=\"success\">Media have been updated successfully!</p>
+            $message = "<p class=\"text-success\">Media have been updated successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/media.show", ""), array("id" => $parameters["post"]["id"]), "") . "\">View</a></p> 
 <p><a href=\"" . $url->get(array($app_space_name, "admin/media.list_all", ""), array(), "") . "\">Media lsit</a></p>"; 
         }
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Update media</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Update media</h3>
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
+" . $message;
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

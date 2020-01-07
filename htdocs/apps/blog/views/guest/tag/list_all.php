@@ -28,20 +28,15 @@ class list_all extends guest_base
             $tag_list = array();
             foreach ($tags as $one_tag)
             {
-                $tag_list[] = "<span class=\"tag\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.slug_show", ""), array("tag_slug" => $one_tag["slug"]), "") . "\">". htmlspecialchars($one_tag["name"]) . " [" . $one_tag["article_count"] . "]</a></span>";
+                $tag_list[] = "<span><a class=\"tag\" href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.slug_show", ""), array("tag_slug" => $one_tag["slug"]), "") . "\">". htmlspecialchars($one_tag["name"]) . " [" . $one_tag["article_count"] . "]</a></span>";
             }
             $tag_list = implode(" ", $tag_list);
         }
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>All tags</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">All tags</h3>
+" . $tag_list;
 
-<div id=\"tag_list\" class=\"border_frame\">
-" . $tag_list . "
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

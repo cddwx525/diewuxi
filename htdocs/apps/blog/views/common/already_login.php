@@ -16,11 +16,9 @@ class already_login extends simple
 
         $position = " > Already login";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Already login!</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Already login!</h3>
 
-<div class=\"border_frame\">
+<div class=\"bg-warning\">
 <p>Go to home: <a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Home</a></p>
 </div>";
 

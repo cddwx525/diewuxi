@@ -19,11 +19,8 @@ class write extends simple
         $position = " > Write config";
 
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Writet config</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Writet config</h3>
 
-<div id=\"config_write\" class=\"border_frame\">
 <p>Write option(* must be write)</p>
 
 <form action=\"". $url->get(array($app_space_name, "admin/config.save", ""), array(), "") . "\" method=\"post\">
@@ -40,10 +37,9 @@ class write extends simple
 <p><input type=\"password\" name=\"password\" value=\"\" class=\"input_text\" /></p>
 
 <p><input type=\"submit\" name=\"save\" value=\"Save\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

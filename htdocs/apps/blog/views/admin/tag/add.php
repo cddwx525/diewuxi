@@ -20,25 +20,21 @@ class add extends admin_base
 
         if ($state != "SUCCESS")
         {
-            $message = "<p class=\"failure\">[" . $state . "], Add failed!</p>
+            $message = "<p class=\"text-warning\">[" . $state . "], Add failed!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/tag.write", ""), array(), "") . "\">Return</a></p>"; 
         }
         else
         {
-            $message = "<p class=\"success\">Tag have been added successfully!</p>
+            $message = "<p class=\"text-success\">Tag have been added successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/tag.show", ""), array("id" => $result["tag_add"]["last_id"]), "") . "\">View</a></p> 
 <p><a href=\"" . $url->get(array($app_space_name, "admin/tag.list_all", ""), array(), "") . "\">Tag list</a></p>"; 
         }
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Add tag</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Add tag</h3>
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
+" . $message;
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

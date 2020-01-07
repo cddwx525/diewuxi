@@ -40,12 +40,9 @@ class list_article extends admin_base
         }
         $list = implode("\n", $list);
 
-        $media_list = "<div class=\"content_title border_frame\" >
-<h3>Medias in article [" . htmlspecialchars($article["title"]) . "]</h3>
-</div>
+        $media_list = "<h3 class=\"bg-primary\">Medias in article [" . htmlspecialchars($article["title"]) . "]</h3>
 
-<div id=\"media_list_table\" class=\"border_frame\">
-<table class=\"table table-hover\">
+<table class=\"table\">
 <tr>
 <th>Date</th>
 <th>File</th>
@@ -53,10 +50,9 @@ class list_article extends admin_base
 <th>Operate</th>
 </tr>
 " . $list . "
-</table>
-</div>";
+</table>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $media_list . "\n" . "</div>";
+        $main = "<div>" . "\n" . $media_list . "\n" . "</div>";
 
         return array(
             "title" => $title,

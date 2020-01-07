@@ -21,13 +21,13 @@ class about extends guest_base
 
         $position = " > About";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>About</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">About</h3>
 
-<div class=\"border_frame markdown-body\">" . $about_page_page["content"] . "</div>";
+<div class=\"markdown-body\">
+" . $about_page_page["content"] . "
+</div>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "css" => $css,

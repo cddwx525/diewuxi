@@ -51,12 +51,9 @@ class list_all extends admin_base
         }
         $list = implode("\n", $list);
 
-        $category_list = "<div class=\"content_title border_frame\" >
-<h3>Category list:</h3>
-</div>
+        $category_list = "<h3 class=\"bg-primary\">Category list:</h3>
 
-<div id=\"category_list_table\" class=\"border_frame\">
-<table class=\"table table-hover\">
+<table class=\"table\">
 <tr>
 <th>Name</th>
 <th>Slug</th>
@@ -65,20 +62,15 @@ class list_all extends admin_base
 <th>Operate</th>
 </tr>
 " . $list . "
-</table>
-</div>";
+</table>";
 
-        $category_relation = "<div class=\"content_title border_frame\" >
-<h3>Category relation:</h3>
-</div>
+        $category_relation = "<h3 class=\"bg-primary\">Category relation:</h3>
 
-<div id=\"category_relation\" class=\"border_frame\">
 <ul>
 " . $this->category_output($result, $category_sturcture, array(), $url, "") . "
-</ul>
-</div>";
+</ul>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">
+        $main = "<div>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/category.write", ""), array(), "") . "\">Write an category</a></p>
 " . $category_list . "
 " . $category_relation . "

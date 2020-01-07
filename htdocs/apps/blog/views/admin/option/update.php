@@ -21,24 +21,20 @@ class update extends admin_base
 
         if ($state != "SUCCESS")
         {
-            $message = "<p class=\"failure\">[" . $state . "], Update failed!</p>
+            $message = "<p class=\"text-warning\">[" . $state . "], Update failed!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/option.edit", ""), array(), "") . "\">Return</a></p>"; 
         }
         else
         {
-            $message = "<p class=\"success\">Option have been updated successfully!</p>
+            $message = "<p class=\"text-success\">Option have been updated successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Go home</a></p>"; 
         }
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Update option</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Update option</h3>
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
+" . $message;
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

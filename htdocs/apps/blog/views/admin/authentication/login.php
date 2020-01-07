@@ -23,35 +23,30 @@ class login extends login_base
         {
             if ($state === "UNCOMPLETE")
             {
-                $message = "<p class=\"failure\">Username or password is uncomplete.</p>
+                $message = "<p class=\"text-warning\">Username or password is uncomplete.</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Return</a></p>"; 
             }
             else if (($state === "PASSWORD_WRONG") || ($state === "USERNAME_WRONG"))
             {
-                $message = "<p class=\"failure\">Username or password is wrong.</p>
+                $message = "<p class=\"text-warning\">Username or password is wrong.</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Return</a></p>"; 
             }
             else
             {
-                $message = "<p class=\"failure\">[" . $state . "], Login wrong.</p>
+                $message = "<p class=\"text-warning\">[" . $state . "], Login wrong.</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Return</a></p>"; 
             }
         }
         else
         {
-            $message = "<p class=\"success\">Login successfully.</p>
+            $message = "<p class=\"text-success\">Login successfully.</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Home</a></p>";
         }
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Login</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Login</h3>
+" . $message;
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

@@ -22,7 +22,7 @@ class write extends guest_base
 
         if ($comment["author"] === "1")
         {
-            $author_part = "<span class=\"author\">[Author]</span>";
+            $author_part = "<span class=\"text-warning\">[Author]</span>";
         }
         else
         {
@@ -30,33 +30,23 @@ class write extends guest_base
         }
 
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Comment</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Comment</h3>
 
-<div class=\"border_frame\">
 <p>Under article [<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "\">" . htmlspecialchars($article["title"]) . "</a>]</p>
 <p>Reply to :</p>
 
-<div id=\"" . $comment["id"] . "\" class=\"comment_entry border_frame\">
-
-<div class=\"comment_entry_header\">
+<div id=\"" . $comment["id"] . "\">
+<div class=\"bg-info\">
 " . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span>
 </div>
 
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
+<div>" . htmlspecialchars($comment["content"]) . "</div>
 
-<div class=\"comment_entry_information\">
-<span class=\"description\">" . $comment["date"] . "</span>
-</div>
-</div>
+<span class=\"text-info\">" . $comment["date"] . "</span>
 </div>
 
-<div class=\"content_title border_frame\" >
-<h3>Write comment(* is necessary, and email is not shown to public)</h3>
-</div>
+<h3 class=\"bg-primary\">Write comment(* is necessary, and email is not shown to public)</h3>
 
-<div id=\"write_comment\" class=\"border_frame\">
 <form action=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.add", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"article_id\" value=\"" . $article["id"] . "\" /></p>
 <p><input type=\"hidden\" name=\"target_id\" value=\"" . $comment["id"] . "\" /></p>
@@ -74,10 +64,9 @@ class write extends guest_base
 <p><textarea name=\"content\" class=\"textarea\" ></textarea></p>
 
 <p><input type=\"submit\" name=\"send\" value=\"Send\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

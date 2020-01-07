@@ -17,12 +17,7 @@ class edit extends admin_base
 
         $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/settings.show", ""), array(), "") . "\">Setting</a> > Edit option";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Edit option</h3>
-</div>
-
-<div id=\"edit\" class=\"border_frame\">
-<h4>Edit option(* must be write)</h4>
+        $content = "<h3 class=\"bg-primary\">Edit option(* must be write)</h3>
 
 <form action=\"". $url->get(array($app_space_name, "admin/option.update", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $result["form_stamp"] . "\" /></p>
@@ -40,11 +35,9 @@ class edit extends admin_base
 <p><input type=\"text\" name=\"about_page\" value=\"" . $options["about_page"] . "\" class=\"input_text\" /></p>
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-</form >
+</form >";
 
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

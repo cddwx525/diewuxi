@@ -21,25 +21,21 @@ class save extends simple
 
         if ($state != "SUCCESS")
         {
-            $message = "<p class=\"success\">[" . $state . "], Save failed!</p>
+            $message = "<p class=\"text-warning\">[" . $state . "], Save failed!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/config.write", ""), array(), "") . "\">Re config</a></p>";
         }
         else
         {
-            $message = "<p class=\"success\">Configs have been saved successfully!</p>
+            $message = "<p class=\"text-success\">Configs have been saved successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Admin Home</a></p> 
 <p><a href=\"" . $url->get(array($app_space_name, "guest/home.show", ""), array(), "") . "\">Home</a></p>";
         }
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Save config</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Save config</h3>
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
+" . $message;
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

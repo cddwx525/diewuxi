@@ -21,13 +21,13 @@ class home extends guest_base
 
         $position = "";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Home</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Home</h3>
 
-<div class=\"border_frame markdown-body\">" . $home_page_page["content"] . "</div>";
+<div class=\"markdown-body\">
+" . $home_page_page["content"] . "
+</div>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "css" => $css,

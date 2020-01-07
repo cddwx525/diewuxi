@@ -52,12 +52,9 @@ class list_tag extends admin_base
         }
         $list = implode("\n", $list);
 
-        $article_list = "<div class=\"content_title border_frame\" >
-<h3>Articles in tag [" . htmlspecialchars($tag["name"]) . "]</h3>
-</div>
+        $article_list = "<h3 class=\"bg-primary\">Articles in tag [" . htmlspecialchars($tag["name"]) . "]</h3>
 
-<div id=\"article_list_table\" class=\"border_frame\">
-<table class=\"table table-hover\">
+<table class=\"table\">
 <tr>
 <th>Id</th>
 <th>Title</th>
@@ -70,10 +67,9 @@ class list_tag extends admin_base
 <th>Operate</th>
 </tr>
 " . $list . "
-</table>
-</div>";
+</table>";
     
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $article_list . "\n" . "</div>";
+        $main = "<div>" . "\n" . $article_list . "\n" . "</div>";
 
         return array(
             "title" => $title,

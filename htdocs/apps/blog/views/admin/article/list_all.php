@@ -58,12 +58,9 @@ class list_all extends admin_base
         }
         $list = implode("\n", $list);
 
-        $article_list = "<div class=\"content_title border_frame\" >
-<h3>All articles</h3>
-</div>
+        $article_list = "<h3 class=\"bg-primary\">All articles</h3>
 
-<div id=\"article_list_table\" class=\"border_frame\">
-<table class=\"table table-hover\">
+<table class=\"table\">
 <tr>
 <th>Id</th>
 <th>Title</th>
@@ -76,10 +73,9 @@ class list_all extends admin_base
 <th>Operate</th>
 </tr>
 " . $list . "
-</table>
-</div>";
+</table>";
     
-        $main = "<div id=\"main\" class=\"border_frame\">
+        $main = "<div>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/article.write", ""), array(), "") . "\">Write an article</a></p>
 " .$article_list . "
 </div>";

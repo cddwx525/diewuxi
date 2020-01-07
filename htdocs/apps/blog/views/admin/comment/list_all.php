@@ -42,12 +42,9 @@ class list_all extends admin_base
         }
         $list = implode("\n", $list);
 
-        $comment_list = "<div class=\"content_title border_frame\" >
-<h3>All comments</h3>
-</div>
+        $comment_list = "<h3 class=\"bg-primary\">All comments</h3>
 
-<div id=\"comment_list_table\" class=\"border_frame\">
-<table class=\"table table-hover\">
+<table class=\"table\">
 <tr>
 <th>User</th>
 <th>Author</th>
@@ -58,10 +55,9 @@ class list_all extends admin_base
 <th>Operate</th>
 </tr>
 " . $list . "
-</table>
-</div>";
+</table>";
     
-        $main = "<div id=\"main\" class=\"border_frame\">" . $comment_list . " </div>";
+        $main = "<div>" . "\n" . $comment_list . "\n" . "</div>";
 
         return array(
             "title" => $title,

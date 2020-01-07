@@ -30,11 +30,8 @@ class write extends admin_base
 </ul>";
         }
 
-        $category_write = "<div class=\"content_title border_frame\" >
-<h3>Write category(* must be write)</h3>
-</div>
+        $category_write = "<h3 class=\"bg-primary\">Write category(* must be write)</h3>
 
-<div id=\"write\" class=\"border_frame\">
 <p>Availiable categories:</p>
 " . $category_names . "
 
@@ -54,11 +51,9 @@ class write extends admin_base
 <p><textarea name=\"description\" class=\"textarea\"></textarea></p>
 
 <p><input type=\"submit\" name=\"add\" value=\"Add\" class=\"input_submit\" /></p>
-</form >
+</form >";
 
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $category_write . "\n" . "</div>";
+        $main = "<div>" . "\n" . $category_write . "\n" . "</div>";
 
         return array(
             "title" => $title,

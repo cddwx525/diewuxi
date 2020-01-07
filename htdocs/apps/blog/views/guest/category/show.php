@@ -33,21 +33,19 @@ class show extends guest_base
             $subcategory_links = implode(", ", $subcategory_links);
         }
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Category: [" . htmlspecialchars($category["name"]) . "]</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Category: [" . htmlspecialchars($category["name"]) . "]</h3>
 
-<div id=\"category_infomation\" class=\"border_frame\">
+<div class=\"bg-info\">
 <ul>
-<li><span>Name: </span><span class=\"description\">" . htmlspecialchars($category["name"]) . "</span></li>
-<li><span>Slug: </span><span class=\"description\">" . htmlspecialchars($category["slug"]) . "</span></li>
-<li><span>Description: </span><span class=\"description\">" . htmlspecialchars($category["description"]) . "</span></li>
-<li><span>Sons: </span><span class=\"description\">" . $subcategory_links . "</span></li>
+<li><span>Name: </span><span class=\"text-muted\">" . htmlspecialchars($category["name"]) . "</span></li>
+<li><span>Slug: </span><span class=\"text-muted\">" . htmlspecialchars($category["slug"]) . "</span></li>
+<li><span>Description: </span><span class=\"text-muted\">" . htmlspecialchars($category["description"]) . "</span></li>
+<li><span>Sons: </span><span>" . $subcategory_links . "</span></li>
 <li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . $category["article_count"] . "</a></span></li>
 </ul>
 </div>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

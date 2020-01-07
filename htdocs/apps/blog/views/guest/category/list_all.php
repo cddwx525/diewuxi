@@ -30,15 +30,10 @@ class list_all extends guest_base
 </ul>";
         }
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>All categories</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">All categories</h3>
+" . $category_list;
 
-<div id=\"category_list\" class=\"border_frame\">
-" . $category_list . "
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,
@@ -46,6 +41,7 @@ class list_all extends guest_base
             "main" => $main,
         );
     }
+
 
     private function category_output($categories, $result, $url, $indent, $indent_constant)
     {

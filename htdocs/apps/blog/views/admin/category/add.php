@@ -20,25 +20,20 @@ class add extends admin_base
 
         if ($state != "SUCCESS")
         {
-            $message = "<p class=\"failure\">[" . $state . "], Add failed!</p>
+            $message = "<p class=\"text-warning\">[" . $state . "], Add failed!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/category.write", ""), array(), "") . "\">Return</a></p>"; 
         }
         else
         {
-            $message = "<p class=\"success\">Category have been added successfully!</p>
+            $message = "<p class=\"text-success\">Category have been added successfully!</p>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $result["category_add"]["last_id"]), "") . "\">View</a></p> 
 <p><a href=\"" . $url->get(array($app_space_name, "admin/category.list_all", ""), array(), "") . "\">Category list</a></p>"; 
         }
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Add category</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Add category</h3>
+" . $message;
 
-<div class=\"message border_frame\">
-" . $message . "
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

@@ -16,15 +16,13 @@ class not_login extends simple
 
         $position = " > Not login";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Not Login!</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Not Login!</h3>
 
-<div class=\"border_frame\">
+<div class=\"bg-warning\">
 <p>Go to login: <a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Login</a></p>
 </div>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

@@ -19,19 +19,16 @@ class show extends admin_base
         $position = " > Tag information";
 
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Tag: " . htmlspecialchars($tag["name"]) . "</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Tag: " . htmlspecialchars($tag["name"]) . "</h3>
 
-<div class=\"border_frame\">
-<ul>
-<li><span>Name: </span><span class=\"description\">" . htmlspecialchars($tag["name"]) . "</span></li>
-<li><span>Slug: </span><span class=\"description\">" . htmlspecialchars($tag["slug"]) . "</span></li>
-<li><span>Description: </span><span class=\"description\">" . htmlspecialchars($tag["description"]) . "</span></li>
+<ul class=\"bg-info\">
+<li><span>Name: </span><span class=\"text-muted\">" . htmlspecialchars($tag["name"]) . "</span></li>
+<li><span>Slug: </span><span class=\"text-muted\">" . htmlspecialchars($tag["slug"]) . "</span></li>
+<li><span>Description: </span><span class=\"text-muted\">" . htmlspecialchars($tag["description"]) . "</span></li>
 <li><span>Articles: </span><span><a href=\"" . $url->get(array($app_space_name, "admin/article.list_tag", ""), array("tag_id" => $tag["id"]), "") . "\">" . $tag["article_count"] . "</a></span></li>
-</ul>
-</div>";
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . "\n" .$content . "\n" . "</div>";
+</ul>";
+
+        $main = "<div>" . "\n" . "\n" .$content . "\n" . "</div>";
 
         return array(
             "title" => $title,

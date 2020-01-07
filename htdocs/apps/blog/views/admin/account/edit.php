@@ -19,11 +19,8 @@ class edit extends admin_base
         $title = "Edit account setting";
         $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/settings.show", ""), array(), "") . "\">Setting</a> > Edit account setting";
 
-        $account_edit = "<div class=\"content_title border_frame\">
-<h3>Edit account(* must be write)</h3>
-</div>
+        $account_edit = "<h3 class=\"bg-primary\">Edit account(* must be write)</h3>
 
-<div id=\"edit\" class=\"border_frame\">
 <form action=\"". $url->get(array($app_space_name, "admin/account.update", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
 
@@ -40,10 +37,9 @@ class edit extends admin_base
 <p><input type=\"password\" name=\"current_password\" value=\"\" class=\"input_text\" /></p>
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $account_edit . "\n" . "</div>";
+        $main = "<div>" . "\n" . $account_edit . "\n" . "</div>";
 
         return array(
             "title" => $title,

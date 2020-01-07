@@ -16,11 +16,9 @@ class not_config extends simple
 
         $position = " > Not configed";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Not Configed!</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Not Configed!</h3>
 
-<div class=\"border_frame\">
+<div class=\"bg-warning\">
 <p>Go to config: <a href=\"" . $url->get(array($app_space_name, "admin/config.write", ""), array(), "") . "\">Config</a></p>
 </div>";
 

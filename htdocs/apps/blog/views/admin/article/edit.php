@@ -47,11 +47,7 @@ class edit extends admin_base
             $article_tag_names = implode(", ", $article_tag_names);
 
 
-        $article_edit = "<div class=\"content_title border_frame\" >
-<h3>Edit article</h3>
-</div>
-
-<div id=\"edit\" class=\"border_frame\">
+        $content = "<h3 class=\"bg-primary\">Edit article</h3>
 
 <p>Edit article(* must be write)</p>
 
@@ -88,11 +84,9 @@ class edit extends admin_base
 <p><textarea name=\"description\" class=\"textarea\">" . $article["description"] . "</textarea></p>
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-</form >
+</form >";
 
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $article_edit . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

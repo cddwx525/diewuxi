@@ -46,11 +46,8 @@ class write extends admin_base
             $tag_names = implode(", ", $tag_names);
         }
 
-        $article_write = "<div class=\"content_title border_frame\" >
-<h3>Write article(* must be write)</h3>
-</div>
+        $article_write = "<h3 class=\"bg-primary\">Write article(* must be write)</h3>
 
-<div id=\"write\" class=\"border_frame\">
 <form action=\"". $url->get(array($app_space_name, "admin/article.add", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
 
@@ -83,11 +80,9 @@ class write extends admin_base
 <p><textarea name=\"description\" class=\"textarea\"></textarea></p>
 
 <p><input type=\"submit\" name=\"add\" value=\"Add\" class=\"input_submit\" /></p>
-</form >
+</form >";
 
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $article_write . "\n" . "</div>";
+        $main = "<div>" . "\n" . $article_write . "\n" . "</div>";
 
         return array(
             "title" => $title,
@@ -95,6 +90,7 @@ class write extends admin_base
             "main" => $main,
         );
     }
+
 
     private function category_output($result, $categories, $list, $url, $indent)
     {

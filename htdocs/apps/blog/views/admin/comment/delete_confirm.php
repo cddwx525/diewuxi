@@ -19,21 +19,18 @@ class delete_confirm extends admin_base
         $position = " > Confirm delete comment";
 
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Confirm delete comment</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Confirm delete comment</h3>
 
-<div id=\"information\" class=\"border_frame\">
 <p>The information of the comment are:</p>
 
-<div class=\"comment_entry_header\">
-<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span>
+<div class=\"bg-info\">
+<span>" . htmlspecialchars($comment["user"]) . "</span>
 </div>
 
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
+<div>" . htmlspecialchars($comment["content"]) . "</div>
 
-<div class=\"comment_entry_information\">
-<span class=\"description\">" . $comment["date"] . "</span>
+<div>
+<span class=\"text-muted\">" . $comment["date"] . "</span>
 </div>
 
 <form action=\"" . $url->get(array($app_space_name, "admin/comment.delete", ""), array(), "") . "\" method=\"post\">
@@ -41,11 +38,9 @@ class delete_confirm extends admin_base
 
 <p>Please input the password to confirm the action: </p>
 <p><input type=\"password\" name=\"password\" value=\"\" id=\"\" /> <input type=\"submit\" name=\"confirm\" value=\"Confirm\" /></p>
-</form>
+</form>";
 
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

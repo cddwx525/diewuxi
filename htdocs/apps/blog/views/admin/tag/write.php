@@ -33,11 +33,8 @@ class write extends admin_base
             $tag_names = implode(" ", $tag_names);
         }
 
-        $tag_write = "<div class=\"content_title border_frame\" >
-<h3>Write tag(* must be write)</h3>
-</div>
+        $tag_write = "<h3 class=\"bg-primary\">Write tag(* must be write)</h3>
 
-<div id=\"write\" class=\"border_frame\">
 <p>Availiable tags:</p>
 " . $tag_names . "
 
@@ -54,10 +51,9 @@ class write extends admin_base
 <p><textarea name=\"description\" class=\"textarea\"></textarea></p>
 
 <p><input type=\"submit\" name=\"add\" value=\"Add\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $tag_write . "\n" . "</div>";
+        $main = "<div>" . "\n" . $tag_write . "\n" . "</div>";
 
         return array(
             "title" => $title,

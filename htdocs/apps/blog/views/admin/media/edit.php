@@ -20,11 +20,8 @@ class edit extends admin_base
         $title = "Edit media";
         $position = " > Edit media";
 
-        $media_edit = "<div class=\"content_title border_frame\" >
-<h3>Edit media(* must be write)</h3>
-</div>
+        $media_edit = "<h3 class=\"bg-primary\">Edit media(* must be write)</h3>
 
-<div id=\"edit\" class=\"border_frame\">
 <form enctype=\"multipart/form-data\" action=\"". $url->get(array($app_space_name, "admin/media.update", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
 <p><input type=\"hidden\" name=\"id\" value=\"" . $media["id"] . "\" /></p>
@@ -41,10 +38,9 @@ class edit extends admin_base
 <p><input type=\"text\" name=\"article_id\" value=\"" . $media["article_id"] . "\" class=\"input_text\" /></p>
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $media_edit . "\n" . "</div>";
+        $main = "<div>" . "\n" . $media_edit . "\n" . "</div>";
 
         return array(
             "title" => $title,

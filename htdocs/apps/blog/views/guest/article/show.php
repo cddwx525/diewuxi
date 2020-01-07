@@ -66,20 +66,24 @@ class show extends guest_base
                 {
                     if ($comment["author"] === "1")
                     {
-                        $author_part = "<span class=\"author\">[Author]</span>";
+                        $author_part = "<span class=\"text-warning\">[Author]</span>";
                     }
                     else
                     {
                         $author_part = "";
                     }
 
-                    $list[] = "<li id=\"" . $comment["id"] . "\"><div class=\"comment_entry border_frame\">
-<div class=\"comment_entry_header\">
-" . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span><span class=\"floor\">[" . $comment["number"] . "#]</span>
+                    $list[] = "<li id=\"" . $comment["id"] . "\"><div>
+<div class=\"bg-info\">
+" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span><span class=\"pull-right\">[" . $comment["number"] . "#]</span>
 </div>
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
-<div class=\"comment_entry_information\"><span class=\"description\">" . $comment["date"] . "</span> <span class=\"description\"><a href=\"" . $url->get(array($app_space_name, "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"] ), "") . "\">Reply</a></span>
+
+<div>" . htmlspecialchars($comment["content"]) . "</div>
+
+<div>
+<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($app_space_name, "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"] ), "") . "\">Reply</a></span>
 </div>
+
 </div></li>
 
 <ul>
@@ -90,68 +94,60 @@ class show extends guest_base
                 {
                     if ($comment["author"] === "1")
                     {
-                        $author_part = "<span class=\"author\">[Author]</span>";
+                        $author_part = "<span class=\"text-warning\">[Author]</span>";
                     }
                     else
                     {
                         $author_part = "";
                     }
 
-                    $list[] = "<li id=\"" . $comment["id"] . "\"><div class=\"comment_entry border_frame\">
-<div class=\"comment_entry_header\">
-" . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span><span class=\"floor\">[" . $comment["number"] . "#]</span>
+                    $list[] = "<li id=\"" . $comment["id"] . "\"><div>
+<div class=\"bg-info\">
+" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span><span class=\"pull-right\">[" . $comment["number"] . "#]</span>
 </div>
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
-<div class=\"comment_entry_information\">
-<span class=\"description\">" . $comment["date"] . "</span> <span class=\"description\"><a href=\"" . $url->get(array($app_space_name, "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
+
+<div>" . htmlspecialchars($comment["content"]) . "</div>
+
+<div>
+<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($app_space_name, "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
 </div>
+
 </div></li>";
                 }
             }
             $list = implode("\n", $list);
 
-            $comment_list = "<ul>
+            $comment_list = "<ul class=\"list-unstyled\">
 " . $list . "
 </ul>";
         }
 
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Article: [" . htmlspecialchars($article["title"]) . "]</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Article: [" . htmlspecialchars($article["title"]) . "]</h3>
+<h3 class=\"article_title\">" . htmlspecialchars($article["title"]) . "</h3>
 
-<div id=\"article\" class=\"border_frame\">
-<h3 id=\"article_title\">" . htmlspecialchars($article["title"]) . "</h3>
-
-<div id=\"article_information\">
+<div class=\"bg-info\">
 <ul>
-<li><span>Date: </span><span class=\"description\">" . $article["date"] . "</span></li>
-<li><span>Slug: </span><span class=\"description\">" . $article["slug"] . "</span></li>
-<li><span>Description: </span><span class=\"description\">" . $article["description"] . "</span></li>
-<li><span>Keywords: </span><span class=\"description\">" . $article["keywords"] . "</span></li>
+<li><span>Date: </span><span class=\"text-muted\">" . $article["date"] . "</span></li>
+<li><span>Slug: </span><span class=\"text-muted\">" . $article["slug"] . "</span></li>
+<li><span>Description: </span><span class=\"text-muted\">" . $article["description"] . "</span></li>
+<li><span>Keywords: </span><span class=\"text-muted\">" . $article["keywords"] . "</span></li>
 <li><span>Category: </span><span>" . implode(" > ", $categories_link_list) . "</span></li>
 <li><span>Tag: </span><span>" . $article_tag_links . "</span></li>
-<li><span>Link: </span><span class=\"description\">" . $url->get(array($app_space_name, "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "</span></li>
-<li><span>License: </span><span class=\"description\"><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></span></li>
+<li><span>Link: </span><span class=\"text-success\">" . $url->get(array($app_space_name, "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "</span></li>
+<li><span>License: </span><span class=\"text-warning\"><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></span></li>
 </ul>
 </div>
 
-<div id=\"article_maintext\" class=\"markdown-body\">" . $article["content"] . "</div>
+<div class=\"markdown-body\">
+" . $article["content"] . "
 </div>
 
-<div class=\"content_title border_frame\">
-<h3>Comments [" . $comment_count . "]</h3>
-</div>
-
-<div id=\"comment_list\" class=\"border_frame\">
+<h3 class=\"bg-primary\">Comments [" . $comment_count . "]</h3>
 " . $comment_list . "
-</div>
 
-<div class=\"content_title border_frame\">
-<h3>Write comment(* is necessary, and email is not shown to public)</h3>
-</div>
+<h3 class=\"bg-primary\">Write comment(* is necessary, and email is not shown to public)</h3>
 
-<div id=\"write_comment\" class=\"border_frame\">
 <form action=\"" . $url->get(array($app_space_name, "guest/comment.add", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"article_id\" value=\"" . $article["id"] . "\" /></p>
 <p><input type=\"hidden\" name=\"target_id\" value=\"" . "NULL" . "\" /></p>
@@ -169,11 +165,10 @@ class show extends guest_base
 <p><textarea name=\"content\" class=\"textarea\"></textarea></p>
 
 <p><input type=\"submit\" name=\"send\" value=\"Send\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "description" => $description,
@@ -186,6 +181,8 @@ class show extends guest_base
         );
     }
 
+
+
     private function comment_output($comments, $article, $result, $url, $indent, $indent_constant)
     {
         $list = array();
@@ -195,23 +192,24 @@ class show extends guest_base
             {
                 if ($comment["author"] === "1")
                 {
-                    $author_part = "<span class=\"author\">[Author]</span>";
+                    $author_part = "<span class=\"text-warning\">[Author]</span>";
                 }
                 else
                 {
                     $author_part = "";
                 }
 
-                $list[] = $indent . "<li id=\"" . $comment["id"] . "\"><div class=\"comment_entry border_frame\">
-<div class=\"comment_entry_header\">
-" . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span>
+                $list[] = $indent . "<li id=\"" . $comment["id"] . "\"><div>
+<div class=\"bg-info\">
+" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span>
 </div>
 
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
+<div>" . htmlspecialchars($comment["content"]) . "</div>
 
-<div class=\"comment_entry_information\">
-<span class=\"description\">" . $comment["date"] . "</span> <span class=\"description\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
+<div>
+<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
 </div>
+
 </div></li>
 " . $indent . "<ul>
 " . $this->comment_output($comment["reply"], $article, $result, $url, $indent . $indent_constant, $indent_constant) . "
@@ -221,23 +219,24 @@ class show extends guest_base
             {
                 if ($comment["author"] === "1")
                 {
-                    $author_part = "<span class=\"author\">[Author]</span>";
+                    $author_part = "<span class=\"text-warning\">[Author]</span>";
                 }
                 else
                 {
                     $author_part = "";
                 }
 
-                $list[] = $indent . "<li id=\"" . $comment["id"] . "\"><div class=\"comment_entry border_frame\">
-<div class=\"comment_entry_header\">
-" . $author_part . "<span class=\"user\">" . htmlspecialchars($comment["user"]) . "</span>
+                $list[] = $indent . "<li id=\"" . $comment["id"] . "\"><div>
+<div class=\"bg-info\">
+" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span>
 </div>
 
-<div class=\"comment_entry_content\">" . htmlspecialchars($comment["content"]) . "</div>
+<div>" . htmlspecialchars($comment["content"]) . "</div>
 
-<div class=\"comment_entry_information\">
-<span class=\"description\">" . $comment["date"] . "</span> <span class=\"description\"><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
+<div>
+<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
 </div>
+
 </div></li>";
             }
         }

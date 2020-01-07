@@ -20,11 +20,8 @@ class write extends admin_base
         $position = " > Write media</a>";
 
 
-        $media_write = "<div class=\"content_title border_frame\" >
-<h3>Write media(* must be write)</h3>
-</div>
+        $media_write = "<h3 class=\"bg-primary\">Write media(* must be write)</h3>
 
-<div id=\"write\" class=\"border_frame\">
 <form enctype=\"multipart/form-data\" action=\"". $url->get(array($app_space_name, "admin/media.add", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
 
@@ -40,10 +37,9 @@ class write extends admin_base
 <p><input type=\"text\" name=\"article_id\" value=\"\" class=\"input_text\" /></p>
 
 <p><input type=\"submit\" name=\"add\" value=\"Add\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $media_write . "\n" . "</div>";
+        $main = "<div>" . "\n" . $media_write . "\n" . "</div>";
 
         return array(
             "title" => $title,

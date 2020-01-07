@@ -34,20 +34,16 @@ class delete_confirm extends admin_base
             $article_tag_names = implode(" ", $article_tag_names);
         }
 
-        $content = "<div class=\"content_title border_frame\" >
-<h3>Confirm delete article</h3>
-</div>
-
-<div class=\"message border_frame\">
+        $content = "<h3 class=\"bg-primary\">Confirm delete article</h3>
 <p>The information of the article are:</p>
 
-<div id=\"article_information\">
+<div id=\"bg-info\">
 <ul>
-<li><span>Title: </span><span class=\"description\">" . htmlspecialchars($article["title"]) . "</span></li>
-<li><span>Category: </span><span class=\"description\"><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $article["category"]["id"]), "") . "\">" . htmlspecialchars($article["category"]["name"]) . "</a></span></li>
-<li><span>Tag: </span><span class=\"description\">" . $article_tag_names . "</span></li>
-<li><span>Date: </span><span class=\"description\">" . $article["date"] . "</span></li>
-<li><span>Comments count: </span><span class=\"description\">" . $comment_count . "</span></li>
+<li><span>Title: </span><span class=\"text-muted\">" . htmlspecialchars($article["title"]) . "</span></li>
+<li><span>Category: </span><span><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $article["category"]["id"]), "") . "\">" . htmlspecialchars($article["category"]["name"]) . "</a></span></li>
+<li><span>Tag: </span><span class=\"text-muted\">" . $article_tag_names . "</span></li>
+<li><span>Date: </span><span class=\"text-muted\">" . $article["date"] . "</span></li>
+<li><span>Comments count: </span><span class=\"text-muted\">" . $comment_count . "</span></li>
 </ul>
 </div>
 
@@ -56,11 +52,9 @@ class delete_confirm extends admin_base
 
 <p>Please input the password to confirm the action: </p>
 <p><input type=\"password\" name=\"password\" value=\"\" id=\"\" /> <input type=\"submit\" name=\"confirm\" value=\"Confirm\" /></p>
-</form>
+</form>";
 
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

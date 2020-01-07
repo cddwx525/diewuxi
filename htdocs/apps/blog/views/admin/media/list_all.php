@@ -39,12 +39,9 @@ class list_all extends admin_base
         }
         $list = implode("\n", $list);
 
-        $media_list = "<div class=\"content_title border_frame\" >
-<h3>All medias</h3>
-</div>
+        $media_list = "<h3 class=\"bg-primary\">All medias</h3>
 
-<div id=\"media_list_table\" class=\"border_frame\">
-<table class=\"table table-hover\">
+<table class=\"table\">
 <tr>
 <th>Date</th>
 <th>File</th>
@@ -52,10 +49,9 @@ class list_all extends admin_base
 <th>Operate</th>
 </tr>
 " . $list . "
-</table>
-</div>";
+</table>";
     
-        $main = "<div id=\"main\" class=\"border_frame\">
+        $main = "<div>
 <p><a href=\"" . $url->get(array($app_space_name, "admin/media.write", ""), array(), "") . "\">Write an media</a></p>
 " .$media_list . "
 </div>";

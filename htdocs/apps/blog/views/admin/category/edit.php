@@ -24,11 +24,7 @@ class edit extends admin_base
 " . $this->category_output($result, $categories, array(), $url, "") . "
 </ul>";
 
-        $category_edit = "<div class=\"content_title border_frame\" >
-<h3>Edit category(* must be write)</h3>
-</div>
-
-<div id=\"edit\" class=\"border_frame\">
+        $category_edit = "<h3 class=\"bg-primary\">Edit category(* must be write)</h3>
 
 <form action=\"". $url->get(array($app_space_name, "admin/category.update", ""), array(), "") . "\" method=\"post\">
 <p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
@@ -50,10 +46,9 @@ class edit extends admin_base
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
 
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $category_edit . "\n" . "</div>";
+        $main = "<div>" . "\n" . $category_edit . "\n" . "</div>";
 
         return array(
             "title" => $title,

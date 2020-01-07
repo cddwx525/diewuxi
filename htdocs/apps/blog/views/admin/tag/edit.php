@@ -34,11 +34,8 @@ class edit extends admin_base
             $tag_names = implode(" ", $tag_names);
         }
 
-        $tag_edit = "<div class=\"content_title border_frame\" >
-<h3>Edit tag(* must be write)</h3>
-</div>
+        $tag_edit = "<h3 class=\"bg-primary\">Edit tag(* must be write)</h3>
 
-<div id=\"edit\" class=\"border_frame\">
 <p>Availiable tags:</p>
 " . $tag_names . "
 
@@ -56,10 +53,9 @@ class edit extends admin_base
 <p><textarea name=\"description\" class=\"textarea\">" . $tag["description"] . "</textarea></p>
 
 <p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-</form >
-</div>";
+</form >";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $tag_edit . "\n" . "</div>";
+        $main = "<div>" . "\n" . $tag_edit . "\n" . "</div>";
 
         return array(
             "title" => $title,
