@@ -53,19 +53,6 @@ function start_process($url_parser, $original_string)
     exit();
      */
 
-    /*
-    print_r("<pre>");
-    //var_dump($controller->config);
-    //print_r("<hr />");
-    //var_dump($controller->authentication);
-    //print_r("<hr />");
-    //print_r($result);
-    //print_r("<hr />");
-    print_r("</pre>");
-    exit();
-    */
-
-
     // Filter redirect.
     if ($dynamic_match["method"] === "301")
     {
@@ -83,6 +70,19 @@ function start_process($url_parser, $original_string)
         $controller_class_name = $app_setting::APP_SPACE_NAME . "\\controllers\\" . str_replace("/", "\\", $dynamic_match["controller_name"]);
         $controller = new $controller_class_name();
         $result = $controller->$dynamic_match["action_name"]($dynamic_match["parameters"]);
+
+
+        /*
+        print_r("<pre>");
+        //var_dump($controller->config);
+        //print_r("<hr />");
+        //var_dump($controller->authentication);
+        //print_r("<hr />");
+        print_r($result["meta_data"]);
+        //print_r("<hr />");
+        print_r("</pre>");
+        exit();
+        */
 
 
         $view_class_name = $app_setting::APP_SPACE_NAME . "\\views\\" . str_replace("/", "\\", $result["view_name"]);
