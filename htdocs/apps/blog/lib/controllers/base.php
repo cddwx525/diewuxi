@@ -43,7 +43,7 @@ class base
 
         $this->meta_data["settings"]["special_actions"] = app_setting::SPECIAL_ACTIONS;
 
-        $main_app_setting_class_name = MAIN_APP . "\\app_setting";
+        $main_app_setting_class_name = "main\\app_setting";
         $this->meta_data["main_app"]["app_space_name"] = $main_app_setting_class_name::APP_SPACE_NAME;
         $this->meta_data["main_app"]["app_default_name"] = $main_app_setting_class_name::APP_DEFAULT_NAME;
         $this->meta_data["main_app"]["special_actions"] = $main_app_setting_class_name::SPECIAL_ACTIONS;
