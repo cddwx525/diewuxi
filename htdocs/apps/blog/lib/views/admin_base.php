@@ -10,7 +10,7 @@ abstract class admin_base extends base
     {
         $url = new url();
 
-        $html_view = MAIN_APP . "\\lib\\views\\html";
+        $html_view = "main\\lib\\views\\html";
         $items = $this->get_items($result);
 
         $css = array();
@@ -31,7 +31,7 @@ abstract class admin_base extends base
 
     public function get_title($result)
     {
-        $html_view = MAIN_APP . "\\lib\\views\\html";
+        $html_view = "main\\lib\\views\\html";
         $items = $this->get_items($result);
 
         $items["title"] = $items["title"] . " - Administration - ";
@@ -44,7 +44,7 @@ abstract class admin_base extends base
     {
         $url = new url();
 
-        $html_view = MAIN_APP . "\\lib\\views\\html";
+        $html_view = "main\\lib\\views\\html";
         $items = $this->get_items($result);
 
         $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/home.show", ""), array(), "") . "\">Administration</a>";
@@ -59,7 +59,7 @@ abstract class admin_base extends base
     {
         $url = new url();
 
-        $html_view = MAIN_APP . "\\lib\\views\\html";
+        $html_view = "main\\lib\\views\\html";
 
         $items = $this->get_items($result);
         
@@ -94,7 +94,7 @@ abstract class admin_base extends base
             ),
         );
 
-        $items["user_operation"] = "<div id=\"user_operation\">
+        $items["user_operation"] = "<div>
 <ul>
 <li>User: [" . $result["meta_data"]["session"]["user"]["name"] . "]</li>
 <li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "admin/authentication.logout", ""), array(), "") . "\">Logout</a></li>
