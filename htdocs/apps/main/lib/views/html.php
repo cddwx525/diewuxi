@@ -5,9 +5,9 @@ use main\lib\url;
 
 class html
 {
-    /***************************************************************************
+    /**
      *
-     **************************************************************************/
+     */
     public function text($result)
     {
         $text = $this->get_text($result);
@@ -15,9 +15,9 @@ class html
         print $text;
     }
 
-    /***************************************************************************
+    /**
      *
-     **************************************************************************/
+     */
     public function layout($result)
     {
         $head = $this->get_head($result);
@@ -34,13 +34,15 @@ class html
 </html>";
     }
 
-    /***************************************************************************
+
+    /**
      *
-     **************************************************************************/
+     */
     public function get_head($result)
     {
-        $meta_http_equiv = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
-        $meta_viewport = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />";
+        $meta_content_type = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
+        $meta_xua = "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">";
+        $meta_viewport = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />";
 
         $description = $this->get_description($result);
         $keywords = $this->get_keywords($result);
@@ -49,8 +51,9 @@ class html
         $title = $this->get_title($result);
 
         $head = array();
-        $head[] = $meta_http_equiv;
-        //$head[] = $meta_viewport;
+        $head[] = $meta_content_type;
+        $head[] = $meta_xua;
+        $head[] = $meta_viewport;
         if (! empty($description))
         {
             $head[] = $description;
@@ -75,9 +78,9 @@ class html
     }
 
 
-    /***************************************************************************
+    /**
      *
-     **************************************************************************/
+     */
     public function get_body($result)
     {
         $body = array();
@@ -86,15 +89,19 @@ class html
         $body[] = $this->get_menu($result);
         $body[] = $this->get_main($result);
         $body[] = $this->get_footer($result);
+        $body[] = $this->get_end_js($result);
 
-        $body = implode("\n\n", $body);
+        $body = implode("\n", $body);
+        $body ="<div class=\"container-fluid\">\n" . $body . "\n</div>";
 
         return $body;
     }
 
 
-
-
+    /**
+     * Static functions
+     *
+     */
     public static function get_description_html($result, $items)
     {
         if (isset($items["description"]))
@@ -151,17 +158,28 @@ class html
     {
         $url = new url();
 
-        $css = array();
-        if ($result["meta_data"]["settings"]["app_space_name"] === MAIN_APP)
+        $css_list = array();
+        $css_list[] = $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "bootstrap/css/bootstrap.min.css");
+        if ($result["meta_data"]["settings"]["app_space_name"] === "main")
         {
-            $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
+            $css_list[] = $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css");
         }
         else
         {
-            $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "css/main.css") . "\">";
-            $css[] = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css") . "\">";
+            $css_list[] = $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "css/main.css");
+            $css_list[] = $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/main.css");
         }
 
+        if (isset($items["css"]))
+        {
+            $items["css"] = array_merge($css_list, $items["css"]);
+        }
+        else
+        {
+            $items["css"] = $css_list;
+        }
+
+        $css = array();
         if (isset($items["css"]))
         {
             foreach ($items["css"] as $one_css)
@@ -181,47 +199,40 @@ class html
 
     public static function get_title_html($result, $items)
     {
-        if ($result["meta_data"]["settings"]["app_space_name"] === MAIN_APP)
+        if ($result["meta_data"]["settings"]["app_space_name"] === "main")
         {
-            $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+            $items["title"] = $items["title"] . " - " . $result["meta_data"]["main_app"]["site_name"];
         }
         else
         {
-            $title = "<title>" . $items["title"] . " - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"] . "</title>";
+            $items["title"] = $items["title"] . " - " . $result["meta_data"]["settings"]["app_default_name"] . " - " . $result["meta_data"]["main_app"]["site_name"];
         }
+
+        $title = "<title>" . $items["title"] . "</title>";
 
         return $title;
     }
-
 
 
     public static function get_header_html($result, $items)
     {
         $url = new url();
 
-        $header = "<div id=\"header\" class=\"border_frame\">
-<div id=\"site_name\">
+        $header = "<div class=\"bg-info\">
 <h1><a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">" . $result["meta_data"]["main_app"]["site_name"] . "</a></h1>
-</div>
-
-<div id=\"site_description\">
 <p>" . $result["meta_data"]["main_app"]["site_description"] . "</p>
-</div>
 </div>";
 
         return $header;
     }
 
 
-    /*
-     * Position part.
-     */
     public static function get_position_html($result, $items)
     {
         $url = new url();
 
         $position_link_list = array();
-        if ($result["meta_data"]["settings"]["app_space_name"] === MAIN_APP)
+        if ($result["meta_data"]["settings"]["app_space_name"] === "main")
         {
             $position_link_list[] = "<a href=\"" . $url->get($result["meta_data"]["main_app"]["special_actions"]["DEFAULT"], array(), "") . "\">Home</a>";
         }
@@ -234,7 +245,7 @@ class html
         $position_link = implode(" > ", $position_link_list);
         $position_link = $position_link . $items["position"];
 
-        $position = "<div id=\"position\" class=\"border_frame\">
+        $position = "<div>
 <span>Current position: </span>" . $position_link . "
 </div>";
 
@@ -242,12 +253,11 @@ class html
     }
 
 
-    /*
-     * Menu part.
-     */
     public static function get_menu_html($result, $items)
     {
         $url = new url();
+
+        $menu = array();
         
         $menu_list_link = array();
         foreach ($items["menu_list"] as $one_menu)
@@ -256,40 +266,44 @@ class html
         }
         $menu_list_link = implode("\n", $menu_list_link);
 
+        $menu[] = "<div class=\"bg-info\">
+<h2>" . $result["meta_data"]["settings"]["app_default_name"] . "</h2>";
+
         if (isset($items["user_operation"]))
         {
-            $user_operation = $items["user_operation"];
+            $menu[] = $items["user_operation"];
         }
         else
         {
-            $user_operation = "";
         }
 
-        $menu = "<div id=\"section\" class=\"border_frame\">
+        $menu[] = "</div>";
 
-<div id=\"section_head\">
-<h2>" . $result["meta_data"]["settings"]["app_default_name"] . "</h2>
+        $menu[] = "<div role=\"navigation\" class=\"navbar navbar-inverse\">
+<div class=\"container-fluid\">
+
+<div class=\"navbar-header\">
+<button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" aria-expanded=\"false\">
+<span class=\"sr-only\">Toggle navigation</span>
+<span class=\"icon-bar\"></span>
+<span class=\"icon-bar\"></span>
+<span class=\"icon-bar\"></span>
+</button>
 </div>
 
-" . $user_operation . "
-
-<div id=\"menu\">
-
-<div id=\"menu_list\">
-<ul>
+<div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">
+<ul class=\"nav navbar-nav\">
 " . $menu_list_link . "
 </ul>
 </div>
+
 </div>
 </div>";
 
-        return $menu;
+        return implode("\n", $menu);
     }
 
 
-    /*
-     * Main part.
-     */
     public static function get_main_html($result, $items)
     {
         $main = $items["main"]; 
@@ -298,18 +312,28 @@ class html
     }
 
 
-    /*
-     * Foot part.
-     */
     public static function get_footer_html($result, $items)
     {
         $url = new url();
 
-        $footer = "<div id=\"footer\" class=\"border_frame\">
-<p>" . $result["meta_data"]["main_app"]["site_name"] . " " . $result["meta_data"]["main_app"]["site_begin_year"] . "--" . date("Y") . "</p>
+        $footer = "<div class=\"row\">
+<div class=\"col-md-12\">
+<div class=\"block_box bg-info\">
+<p class=\"text-right\">" . $result["meta_data"]["main_app"]["site_name"] . " " . $result["meta_data"]["main_app"]["site_begin_year"] . "--" . date("Y") . "</p>
+</div>
+</div>
 </div>";
 
         return $footer;
+    }
+
+
+    public static function get_end_js_html($result, $items)
+    {
+        $url = new url();
+
+        return "<script src=\"" . $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "jquery/jquery-1.12.4.min.js") . "\"></script>
+<script src=\"" . $url->get_static($result["meta_data"]["main_app"]["app_space_name"], "bootstrap/js/bootstrap.min.js") . "\"></script>";
     }
 }
 ?>
