@@ -127,3 +127,27 @@ URL map example
                     * core/url_parser.php
         * apps/{<app_name>}/lib/url.php
             * core/url_parser.php
+
+# Example app
+
+## main
+
+Static pages.
+
+## simpleblog
+
+Dynamic pages.
+
+### Feature
+
+* Add, update, delete, get function for article, category, tag
+* Edit about and home page
+* Edit article with markdown syntax
+* Unlimit category hierarchy list
+* Unlimit comment hierarchy list
+* Article-tag many-to-many relation
+* All left-align HTML code
+* Cookies or session based login remember
+* XSRF check
+* Cookies token steal check
+* Media managent
