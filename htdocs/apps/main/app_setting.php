@@ -6,7 +6,7 @@ class app_setting
     const APP_SPACE_NAME = __NAMESPACE__;
 
     const APP_DEFAULT_NAME = "Main app";
-    const APP_VERSION = "1.0";
+    const APP_VERSION = "1.0.1";
 
     const SITE_NAME = "Site name when no database.";
     const SITE_DESCRIPTION = "Site description when no database.";
