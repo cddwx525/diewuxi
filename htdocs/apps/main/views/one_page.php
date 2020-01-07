@@ -15,11 +15,8 @@ class one_page extends base
 
         $position = " > One page";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>One page</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">One page</h3>
 
-<div id=\"content\" class=\"border_frame\">
 <h3>Title 1</h3>
 <p>Some text.</p>
 
@@ -28,10 +25,9 @@ class one_page extends base
 <li>item</li>
 <li>item</li>
 <li>item</li>
-</ul>
-</div>";
+</ul>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

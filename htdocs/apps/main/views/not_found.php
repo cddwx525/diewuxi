@@ -15,15 +15,11 @@ class not_found extends base
 
         $position = " > Not Found";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Not Found!</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Not Found!</h3>
 
-<div class=\"border_frame\">
-<p>Your request page: \"" . $result["parameters"]["url"] . "\" is not found on this server.</p>
-</div>";
+<p>Your request page: \"" . $result["parameters"]["url"] . "\" is not found on this server.</p>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

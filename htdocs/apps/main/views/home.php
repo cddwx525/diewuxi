@@ -15,11 +15,8 @@ class home extends base
 
         $position = "";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>Home</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">Home</h3>
 
-<div id=\"content\" class=\"border_frame\">
 <h3>Title 1</h3>
 <p>Some text.</p>
 
@@ -28,10 +25,9 @@ class home extends base
 <li>item</li>
 <li>item</li>
 <li>item</li>
-</ul>
-</div>";
+</ul>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,

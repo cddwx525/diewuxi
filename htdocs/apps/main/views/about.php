@@ -14,19 +14,14 @@ class about extends base
 
         $position = " > About";
 
-        $content = "<div class=\"content_title border_frame\">
-<h3>About</h3>
-</div>
+        $content = "<h3 class=\"bg-primary\">About</h3>
 
-<div id=\"content\" class=\"border_frame\">
 <h3>Title 1</h3>
-<p>Some text</p>
 
 <h3>Title 2</h3>
-<p>some text.</p>
-</div>";
+<p>some text.</p>";
 
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
+        $main = "<div>" . "\n" . $content . "\n" . "</div>";
 
         return array(
             "title" => $title,
