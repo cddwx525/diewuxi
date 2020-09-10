@@ -160,9 +160,20 @@ If not, next action, see below.
 
 * Create a controller object and run action accroding `dynamic_match` result
 
+The action run with data `parameters` in `dynamic_match`.
 Return a array which contains some data, such as `view_name`, model data.
 
+    return array(
+        "meta_data" => $this->meta_data,
+        "view_name" => $view_name,
+        "state" => "Y",
+        "parameters" => $parameters,
+        ...
+    );
+
 * Create a view object accroding return value of above action
+
+The action run with data `parameters` in `dynamic_match`.
 
 * Make the view
 
