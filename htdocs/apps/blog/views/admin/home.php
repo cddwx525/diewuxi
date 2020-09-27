@@ -1,38 +1,40 @@
 <?php
 namespace blog\views\admin;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
 
 class home extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
-
-        $parameters = $result["parameters"];
-
-
-        $title = "Home";
-
-        $position = "";
-
-        $content = "<h3 class=\"bg-primary\">Administration homepage.</h3>
-
-<p>This is home page.</p>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->title = "Home";
+        $this->position = array("Home");
+        $this->main = html::tag(
+            "div",
+            html::inline_tag("h3", "Administration Home", array()) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag("p", "This is home page.", array()),
+                array()
+            ),
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "[text]";
+        $this->text = "";
     }
 }
 ?>

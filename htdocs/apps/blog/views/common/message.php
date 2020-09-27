@@ -3,9 +3,9 @@ namespace blog\views\common;
 
 use swdf\helpers\html;
 use swdf\helpers\url;
-use blog\views\layouts\guest_base;
+use blog\views\layouts\common_base;
 
-class message extends guest_base
+class message extends common_base
 {
     /**
      *
@@ -27,8 +27,8 @@ class message extends guest_base
                 "div",
                 html::inline_tag(
                     "p",
-                    $this->data["message"] . " Comment failed!",
-                    array("class" => "text-error")
+                    $this->data["message"],
+                    array("class" => "text-warning text-center")
                 ),
                 array()
             ),
@@ -43,7 +43,7 @@ class message extends guest_base
      */
     protected function set_text()
     {
-        $this->text = $this->data["message"] . "Comment failed!";
+        $this->text = $this->data["message"];
     }
 }
 ?>

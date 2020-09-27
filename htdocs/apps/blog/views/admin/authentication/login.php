@@ -1,63 +1,62 @@
 <?php
 namespace blog\views\admin\authentication;
 
-use blog\lib\url;
-use blog\lib\views\login_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\common_base;
 
-class login extends login_base
+class login extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Login";
+        $this->position = array("Login");
 
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Login";
-
-        $position = " > Login";
-
-        if ($state != "SUCCESS")
-        {
-            if ($state === "UNCOMPLETE")
-            {
-                $message = "<p class=\"text-warning\">Username or password is uncomplete.</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Return</a></p>"; 
-            }
-            else if (($state === "PASSWORD_WRONG") || ($state === "USERNAME_WRONG"))
-            {
-                $message = "<p class=\"text-warning\">Username or password is wrong.</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Return</a></p>"; 
-            }
-            else
-            {
-                $message = "<p class=\"text-warning\">[" . $state . "], Login wrong.</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/authentication.write", ""), array(), "") . "\">Return</a></p>"; 
-            }
-        }
-        else
-        {
-            $message = "<p class=\"text-success\">Login successfully.</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Home</a></p>";
-        }
-
-        $content = "<h3 class=\"bg-primary\">Login</h3>
-" . $message;
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Login",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    "Login successfully!",
+                    array()
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "Administrator home",
+                        url::get(
+                            array(\swdf::$app->name, "admin/home.show", ""),
+                            array(),
+                            ""
+                        ),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "[text]";
+        $this->text = "";
     }
 }
 ?>

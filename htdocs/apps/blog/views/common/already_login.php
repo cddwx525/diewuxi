@@ -1,39 +1,53 @@
 <?php
 namespace blog\views\common;
 
-use blog\lib\url;
-use blog\lib\views\simple;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\common_base;
 
-class already_login extends simple
+class already_login extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
+        $this->title = "Already login";
+        $this->position = array("Already login");
 
-
-        $title = "Already login";
-
-        $position = " > Already login";
-
-        $content = "<h3 class=\"bg-primary\">Already login!</h3>
-
-<div class=\"bg-warning\">
-<p>Go to home: <a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Home</a></p>
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Already login!",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "Go to administration home",
+                        url::get(array(\swdf::$app->name, "admin/home.show",""), array(), ""),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "[text]";
+        $this->text = "Already login!";
     }
 }
 ?>

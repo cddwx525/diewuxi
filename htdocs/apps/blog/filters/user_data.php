@@ -3,7 +3,7 @@ namespace blog\filters;
 
 use blog\models\user;
 
-class login_state
+class user_data
 {
     /**
      *
@@ -11,7 +11,39 @@ class login_state
      */
     public function run()
     {
-        return $this->get_is_login();
+        return $this->set_data();
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function set_data()
+    {
+        $user_model = new user();
+
+        if ($this->get_is_login())
+        {
+            $where = array(
+                array(
+                    "field" => "name",
+                    "value" => $_SESSION["name"],
+                    "operator" => "=",
+                    "condition" => "",
+                ),
+            );
+            $user = $user_model->where($where)->select_first()["record"];
+            $user = $user_model->get_user($user);
+
+            \swdf::$app->data["admin"] = $user;
+
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
     }
 
 

@@ -2,9 +2,8 @@
 namespace blog\controllers\guest;
 
 use swdf\base\controller;
-use blog\filters\config_state;
 use blog\filters\init;
-use blog\filters\full_category_slug;
+use blog\filters\side_data;
 use blog\models\article as article_model;
 use blog\models\category;
 use blog\models\tag;
@@ -23,18 +22,18 @@ class article extends controller
     {
         return array(
             array(
-                "class" => config_state::class,
+                "class" => init::class,
                 "actions" => array(),
                 "rule" => array(
                     "true" => TRUE,
                     "false" => array(
-                        "common/not_conig",
+                        "common/not_config",
                         array()
                     )
                 ),
             ),
             array(
-                "class" => init::class,
+                "class" => side_data::class,
                 "actions" => array(),
                 "rule" => array(
                     "true" => TRUE,

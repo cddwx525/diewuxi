@@ -1,50 +1,49 @@
 <?php
 namespace blog\views\admin\authentication;
 
-use blog\lib\url;
-use blog\lib\views\login_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\common_base;
 
-class write extends login_base
+class write extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Login write";
+        $this->position = array("Login write");
 
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-        $title = "Login write";
-
-        $position = " > Login write";
-
-        $content = "<h3 class=\"bg-primary\">Login write</h3>
-
-<form action=\"" . $url->get(array($app_space_name, "admin/authentication.login", ""), array(), "") . "\" method=\"post\">
-<label>Username:</label>
-<p><input type=\"text\" name=\"name\" value=\"\" class=\"input_text\" /></p>
-
-<label>Password:</label>
-<p><input type=\"password\" name=\"password\" value=\"\" class=\"input_text\" /></p>
-
-<label>Remember me</label>
-<p><input type=\"checkbox\" name=\"remember\" value=\"TRUE\" /></p>
-
-<p><input type=\"submit\" name=\"\" value=\"Login\" class=\"input_submit\" /></p>
-</form>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Login write",
+                array()
+            ) . "\n\n" .
+            "<form action=\"" . url::get(array(\swdf::$app->name, "admin/authentication.login", ""), array(), "") . "\" method=\"post\">" . "\n" .
+            "<label>Username:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"name\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
+            "<label>Password:</label>" . "\n" .
+            "<p><input type=\"password\" name=\"password\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
+            "<label>Remember me</label>" . "\n" .
+            "<p><input type=\"checkbox\" name=\"remember\" value=\"TRUE\" /></p>" . "\n\n" .
+            "<p><input type=\"submit\" name=\"\" value=\"Login\" class=\"input-submit\" /></p>" . "\n" .
+            "</form>",
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "[text]";
+        $this->text = "";
     }
 }
 ?>

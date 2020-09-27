@@ -2,8 +2,6 @@
 namespace blog\filters;
 
 use blog\models\option;
-use blog\models\tag;
-use blog\models\category;
 
 class init
 {
@@ -13,11 +11,7 @@ class init
      */
     public function run()
     {
-        $this->set_options();
-        $this->set_common();
-
-
-        return TRUE;
+        return $this->init();
     }
 
 
@@ -25,31 +19,26 @@ class init
      *
      *
      */
-    public function set_options()
+    public function init()
     {
         $option_model = new option();
-
-        $options = array();
 
         foreach ($option_model->select()["record"] as $one_option)
         {
             \swdf::$app->data["options"][$one_option["name"]] = $one_option["value"];
         }
-    }
 
-
-    /**
-     *
-     *
-     */
-    public function set_common()
-    {
-        $category_model = new category();
-        $tag_model = new tag();
-
-
-        \swdf::$app->data["category_tree"] = $category_model->get_tree();
-        \swdf::$app->data["tags"] = $tag_model->get_tags();
+        if (
+            (isset(\swdf::$app->data["options"]["flag"])) &&
+            (\swdf::$app->data["options"]["flag"] === "on")
+        )
+        {
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
     }
 }
 ?>

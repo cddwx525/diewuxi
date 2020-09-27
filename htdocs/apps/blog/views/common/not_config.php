@@ -1,39 +1,53 @@
 <?php
 namespace blog\views\common;
 
-use blog\lib\url;
-use blog\lib\views\simple;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\common_base;
 
-class not_config extends simple
+class not_config extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
+        $this->title = "Not configed";
+        $this->position = array("Not configed");
 
-
-        $title = "Not configed";
-
-        $position = " > Not configed";
-
-        $content = "<h3 class=\"bg-primary\">Not Configed!</h3>
-
-<div class=\"bg-warning\">
-<p>Go to config: <a href=\"" . $url->get(array($app_space_name, "admin/config.write", ""), array(), "") . "\">Config</a></p>
-</div>";
-
-        $main = "<div id=\"main\" class=\"border_frame\">" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Not configed!",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "Go to config",
+                        url::get(array(\swdf::$app->name, "admin/config.write",""), array(), ""),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "[text]";
+        $this->text = "Not Found!";
     }
 }
 ?>

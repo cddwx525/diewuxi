@@ -2,8 +2,8 @@
 namespace blog\controllers\guest;
 
 use swdf\base\controller;
-use blog\filters\config_state;
 use blog\filters\init;
+use blog\filters\side_data;
 use blog\models\article;
 use blog\models\comment as comment_model;
 
@@ -17,18 +17,18 @@ class comment extends controller
     {
         return array(
             array(
-                "class" => config_state::class,
+                "class" => init::class,
                 "actions" => array(),
                 "rule" => array(
                     "true" => TRUE,
                     "false" => array(
-                        "common/not_conig",
+                        "common/not_config",
                         array()
                     )
                 ),
             ),
             array(
-                "class" => init::class,
+                "class" => side_data::class,
                 "actions" => array(),
                 "rule" => array(
                     "true" => TRUE,
