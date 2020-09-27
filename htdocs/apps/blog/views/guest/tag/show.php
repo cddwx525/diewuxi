@@ -1,42 +1,78 @@
 <?php
 namespace blog\views\guest\tag;
 
-use blog\lib\url;
-use blog\lib\views\guest_base;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\guest_base;
 
 class show extends guest_base
 {
-    public function get_items($result)
+    protected function set_items()
     {
-        $url = new url();
-
-        $parameters = $result["parameters"];
-        $tag = $result["tag"];
-
-
-        $title = "Tag: [" . htmlspecialchars($tag["name"]) . "]";
-
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/tag.list_all", ""), array(), "") . "\">All tags</a> > " . htmlspecialchars($tag["name"]);
-
-
-        $content = "<h3 class=\"bg-primary\">Tag: [" . htmlspecialchars($tag["name"]) . "]</h3>
-
-<div class=\"bg-info\">
-<ul>
-<li><span>Name: </span><span class=\"text-muted\">" . htmlspecialchars($tag["name"]) . "</span></li>
-<li><span>Slug: </span><span class=\"text-muted\">" . htmlspecialchars($tag["slug"]) . "</span></li>
-<li><span>Description: </span><span class=\"text-muted\">" . htmlspecialchars($tag["description"]) . "</span></li>
-<li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list_tag", ""), array("tag_slug" => $tag["slug"]), "") . "\">" . $tag["article_count"] . "</a></span></li>
-</ul>
-</div>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->title = "Tag: [" . htmlspecialchars($this->data["tag"]["name"]) . "]";
+        $this->position = array(
+            html::a(
+                "Tags",
+                url::get(array(\swdf::$app->name, "guest/tag.list_all", ""), array(), ""),
+                array()
+            ),
+            htmlspecialchars($this->data["tag"]["name"])
         );
+
+
+        $this->main = html::tag(
+            "div",
+            html::inline_tag("h3", "Tag: [" . htmlspecialchars($this->data["tag"]["name"]) . "]", array()) . "\n\n" .
+            html::tag(
+                "div",
+                html::tag(
+                    "ul",
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Name: ", array()) .
+                        html::inline_tag("span", htmlspecialchars($this->data["tag"]["name"]), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Description: ", array()) .
+                        html::inline_tag("span", htmlspecialchars($this->data["tag"]["description"]), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Articles: ", array()) .
+                        html::inline_tag(
+                            "span",
+                            html::a(
+                                htmlspecialchars($this->data["tag"]["article_count"]),
+                                url::get(
+                                    array(\swdf::$app->name, "guest/article.slug_list_tag", ""),
+                                    array("tag_slug" => $this->data["tag"]["slug"]),
+                                    ""
+                                ),
+                                array()
+                            ),
+                            array()
+                        ),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ),
+            array()
+        );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

@@ -1,246 +1,113 @@
 <?php
 namespace blog\views\guest\article;
 
-use blog\lib\url;
-use blog\lib\views\guest_base;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\guest_base;
+use blog\widgets\articles_position;
+use blog\widgets\tag_list;
+use blog\widgets\category_path;
+use blog\widgets\comment_tree;
 
 class show extends guest_base
 {
-    public function get_items($result)
+    protected function set_items()
     {
-        $url = new url();
+        $this->description = $this->data["article"]["description"];
+        $this->keywords = $this->data["article"]["keywords"];
+        $this->css = array(url::get_static(\swdf::$app->name, "css/github-markdown.css"),);
 
-        $parameters = $result["parameters"];
-        $article = $result["article"];
-        $comment_count = $result["comment_count"];
-        $comments = $result["comments"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $description = $article["description"];
-        $keywords = $article["keywords"];
-        $css = array($url->get_static($app_space_name, "css/github-markdown.css"),);
-        $js = array();
-        $js[] = "<script type=\"text/x-mathjax-config\">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, processEscapes: true, TeX: {extensions: [\"mhchem.js\"]}});</script>
-<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML\"></script>";
-        $title = $article["title"];
-
-
-        $categories_link_list = array();
-        foreach ($article["category"]["all_levels"]  as $category)
-        {
-            $categories_link_list[] = "<a href=\"" . $url->get(array($app_space_name, "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a>";
-        }
-
-
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.list_all", ""), array(), "") . "\">All articles</a> > " . implode(" > ", $categories_link_list) . " > " . htmlspecialchars($article["title"]);
-
-
-        if (empty($article["tag"]))
-        {
-            $article_tag_links = "<span>NULL</span>";
-        }
-        else
-        {
-            $article_tag_links = array();
-            foreach ($article["tag"] as $tag)
-            {
-                $article_tag_links[] = "<a href=\"" . $url->get(array($app_space_name, "guest/tag.slug_show", ""), array("tag_slug" => $tag["slug"]), "") . "\">" . htmlspecialchars($tag["name"]) . "</a>";
-            }
-            $article_tag_links = implode(", ", $article_tag_links);
-        }
-
-
-        if (empty($comments))
-        {
-            $comment_list = "<p>There is no comments now.</p>";
-        }
-        else
-        {
-            $list = array();
-            $indent = "";
-            $indent_constant = "";
-            foreach ($comments as $comment)
-            {
-                if (isset($comment["reply"]))
-                {
-                    if ($comment["author"] === "1")
-                    {
-                        $author_part = "<span class=\"text-warning\">[Author]</span>";
-                    }
-                    else
-                    {
-                        $author_part = "";
-                    }
-
-                    $list[] = "<li id=\"" . $comment["id"] . "\"><div>
-<div class=\"bg-info\">
-" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span><span class=\"pull-right\">[" . $comment["number"] . "#]</span>
-</div>
-
-<div>" . htmlspecialchars($comment["content"]) . "</div>
-
-<div>
-<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($app_space_name, "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"] ), "") . "\">Reply</a></span>
-</div>
-
-</div></li>
-
-<ul>
-" . $this->comment_output($comment["reply"], $article, $result, $url, $indent, $indent_constant) . "
-</ul>";
-                }
-                else
-                {
-                    if ($comment["author"] === "1")
-                    {
-                        $author_part = "<span class=\"text-warning\">[Author]</span>";
-                    }
-                    else
-                    {
-                        $author_part = "";
-                    }
-
-                    $list[] = "<li id=\"" . $comment["id"] . "\"><div>
-<div class=\"bg-info\">
-" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span><span class=\"pull-right\">[" . $comment["number"] . "#]</span>
-</div>
-
-<div>" . htmlspecialchars($comment["content"]) . "</div>
-
-<div>
-<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($app_space_name, "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
-</div>
-
-</div></li>";
-                }
-            }
-            $list = implode("\n", $list);
-
-            $comment_list = "<ul class=\"list-unstyled\">
-" . $list . "
-</ul>";
-        }
-
-
-        $content = "<h3 class=\"bg-primary\">Article: [" . htmlspecialchars($article["title"]) . "]</h3>
-<h3 class=\"article_title\">" . htmlspecialchars($article["title"]) . "</h3>
-
-<div class=\"bg-info\">
-<ul>
-<li><span>Date: </span><span class=\"text-muted\">" . $article["date"] . "</span></li>
-<li><span>Slug: </span><span class=\"text-muted\">" . $article["slug"] . "</span></li>
-<li><span>Description: </span><span class=\"text-muted\">" . $article["description"] . "</span></li>
-<li><span>Keywords: </span><span class=\"text-muted\">" . $article["keywords"] . "</span></li>
-<li><span>Category: </span><span>" . implode(" > ", $categories_link_list) . "</span></li>
-<li><span>Tag: </span><span>" . $article_tag_links . "</span></li>
-<li><span>Link: </span><span class=\"text-success\">" . $url->get(array($app_space_name, "guest/article.slug_show", ""), array("full_article_slug" => $article["full_slug"]), "") . "</span></li>
-<li><span>License: </span><span class=\"text-warning\"><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></span></li>
-</ul>
-</div>
-
-<div class=\"markdown-body\">
-" . $article["content"] . "
-</div>
-
-<h3 class=\"bg-primary\">Comments [" . $comment_count . "]</h3>
-" . $comment_list . "
-
-<h3 class=\"bg-primary\">Write comment(* is necessary, and email is not shown to public)</h3>
-
-<form action=\"" . $url->get(array($app_space_name, "guest/comment.add", ""), array(), "") . "\" method=\"post\">
-<p><input type=\"hidden\" name=\"article_id\" value=\"" . $article["id"] . "\" /></p>
-<p><input type=\"hidden\" name=\"target_id\" value=\"" . "NULL" . "\" /></p>
-
-<label>* Name(vchar(32)):</label>
-<p><input type=\"text\" name=\"user\" value=\"\" id=\"\" class=\"input_text\" /></p>
-
-<label>* Email(vchar(256)):</label>
-<p><input type=\"text\" name=\"mail\" value=\"\" class=\"input_text\" /></p>
-
-<label>Website(vchar(256)):</label>
-<p><input type=\"text\" name=\"site\" value=\"\" class=\"input_text\" /></p>
-
-<label>* Content(text):</label>
-<p><textarea name=\"content\" class=\"textarea\"></textarea></p>
-
-<p><input type=\"submit\" name=\"send\" value=\"Send\" class=\"input_submit\" /></p>
-</form >";
-
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "description" => $description,
-            "keywords" => $keywords,
-            "css" => $css,
-            "js" => $js,
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->js = array(
+            html::inline_tag(
+                "script",
+                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, processEscapes: true, TeX: {extensions: [\"mhchem.js\"]}})",
+                array("type" => "text/x-mathjax-config",)
+            ),
+            html::inline_tag(
+                "script",
+                "",
+                array(
+                    "type" => "text/javascript",
+                    "async src" => "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML",
+                )
+            ),
         );
+
+        $this->title = htmlspecialchars($this->data["article"]["title"]);
+        $this->position = articles_position::widget(array("data" => $this->data["article"]["category"]["path"]));
+        $this->position[] = htmlspecialchars($this->data["article"]["title"]);
+
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Article: [" . htmlspecialchars($this->data["article"]["title"]) . "]",
+                array()
+            ) . "\n" .
+            html::inline_tag(
+                "h4",
+                htmlspecialchars($this->data["article"]["title"]),
+                array("class" => "text-center")
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::tag(
+                    "ul",
+                    "<li><span>Date: </span><span>" . $this->data["article"]["date"] . "</span></li>" . "\n" .
+                    "<li><span>Description: </span><span>" . $this->data["article"]["description"] . "</span></li>" . "\n" .
+                    "<li><span>Keywords: </span><span>" . $this->data["article"]["keywords"] . "</span></li>" . "\n" .
+                    "<li><span>Category: </span><span>" . category_path::widget(array("data" => $this->data["article"]["category"])) . "</span></li>" . "\n" .
+                    "<li><span>Tag: </span><span>" . tag_list::widget(array("data" => $this->data["article"]["tags"])) . "</span></li>" . "\n" .
+                    "<li><span>Link: </span><span>" . url::get(
+                        array(\swdf::$app->name, "guest/article.slug_show", ""),
+                        array("full_slug" => $this->data["article"]["full_slug"]),
+                        ""
+                    ) . "</span></li>",
+                    array()
+                ),
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                $this->data["article"]["content"],
+                array("class" => "markdown-body")
+            ) . "\n\n" .
+            html::inline_tag(
+                "h3",
+                "Comments [" . $this->data["article"]["comment_count"] . "]",
+                array()
+            ) . "\n\n" .
+            comment_tree::widget(array("data" => $this->data["article"]["comment_tree"])) . "\n\n" .
+            html::inline_tag(
+                "h3",
+                "Write comment(* is necessary, and email is not shown to public)",
+                array()
+            ) . "\n\n" .
+            "<form action=\"" . url::get(array(\swdf::$app->name, "guest/comment.add", ""), array(), "") . "\" method=\"post\">" . "\n\n" .
+            "<p><input type=\"hidden\" name=\"article_id\" value=\"" . $this->data["article"]["id"] . "\" /></p>" . "\n" .
+            "<p><input type=\"hidden\" name=\"target_id\" value=\"" . "NULL" . "\" /></p>" . "\n\n" .
+            "<label>* Name:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"user\" value=\"\" id=\"\" class=\"input-text\" /></p>" . "\n\n" .
+            "<label>* Email:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"mail\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
+            "<label>Website:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"site\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
+            "<label>* Content:</label>" . "\n" .
+            "<p><textarea name=\"content\" class=\"textarea\"></textarea></p>" . "\n\n" .
+            "<p><input type=\"submit\" name=\"send\" value=\"Send\" class=\"input-submit\" /></p>" . "\n" .
+            "</form >",
+            array()
+        ); 
     }
 
 
-
-    private function comment_output($comments, $article, $result, $url, $indent, $indent_constant)
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        $list = array();
-        foreach ($comments as $comment)
-        {
-            if (isset($comment["reply"]))
-            {
-                if ($comment["author"] === "1")
-                {
-                    $author_part = "<span class=\"text-warning\">[Author]</span>";
-                }
-                else
-                {
-                    $author_part = "";
-                }
-
-                $list[] = $indent . "<li id=\"" . $comment["id"] . "\"><div>
-<div class=\"bg-info\">
-" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span>
-</div>
-
-<div>" . htmlspecialchars($comment["content"]) . "</div>
-
-<div>
-<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
-</div>
-
-</div></li>
-" . $indent . "<ul>
-" . $this->comment_output($comment["reply"], $article, $result, $url, $indent . $indent_constant, $indent_constant) . "
-" . $indent . "</ul>";
-            }
-            else
-            {
-                if ($comment["author"] === "1")
-                {
-                    $author_part = "<span class=\"text-warning\">[Author]</span>";
-                }
-                else
-                {
-                    $author_part = "";
-                }
-
-                $list[] = $indent . "<li id=\"" . $comment["id"] . "\"><div>
-<div class=\"bg-info\">
-" . $author_part . "<span>" . htmlspecialchars($comment["user"]) . "</span>
-</div>
-
-<div>" . htmlspecialchars($comment["content"]) . "</div>
-
-<div>
-<span class=\"text-muted\">" . $comment["date"] . "</span> <span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/comment.write", ""), array("article_id" => $article["id"], "target_id" => $comment["id"]), "") . "\">Reply</a></span>
-</div>
-
-</div></li>";
-            }
-        }
-        return implode("\n", $list);
+        $this->text = "";
     }
 }
 ?>

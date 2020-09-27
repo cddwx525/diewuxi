@@ -1,65 +1,33 @@
 <?php
 namespace blog\views\guest\category;
 
-use blog\lib\url;
-use blog\lib\views\guest_base;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\guest_base;
+use blog\widgets\categories;
 
 class list_all extends guest_base
 {
-    public function get_items($result)
+    protected function set_items()
     {
-        $url = new url();
-
-        $parameters = $result["parameters"];
-        $categories = $result["categories"];
-
-
-        $title = "All categories";
-
-        $position = " > All categories";
-
-
-        if (empty($categories))
-        {
-            $category_list = "<p>There is no category now.</p>";
-        }
-        else
-        {
-            $category_list = "<ul>
-" . $this->category_output($categories, $result, $url, "", "") . "
-</ul>";
-        }
-
-        $content = "<h3 class=\"bg-primary\">All categories</h3>
-" . $category_list;
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->title = "All categories";
+        $this->position = array("Categories");
+        $this->main = html::tag(
+            "div",
+            html::inline_tag("h3", "All categories", array()) . "\n\n" .
+            categories::widget(array("data" => $this->data["category_tree"])),
+            array()
         );
     }
 
 
-    private function category_output($categories, $result, $url, $indent, $indent_constant)
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        foreach ($categories as $category)
-        {
-            if (isset($category["son"]))
-            {
-                $list[] = $indent . "<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.slug_show", ""), array("category_slug" => $category["slug"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a> [" . $category["article_count"] . "]</li>
-" . $indent . "<ul>
-" . $this->category_output($category["son"], $result, $url, $indent . $indent_constant, $indent_constant) . "
-" . $indent . "</ul>";
-            }
-            else
-            {
-                $list[] = $indent . "<li><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.slug_show", ""), array("category_slug" => $category["slug"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a> [" . $category["article_count"] . "]</li>";
-            }
-        }
-        return implode("\n", $list);
+        $this->text = "";
     }
 }
 ?>

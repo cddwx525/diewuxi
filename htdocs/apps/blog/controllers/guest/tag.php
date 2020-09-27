@@ -1,210 +1,91 @@
 <?php
 namespace blog\controllers\guest;
 
-use blog\lib\url;
-use blog\lib\controllers\guest_base;
+use swdf\base\controller;
+use blog\filters\config_state;
+use blog\filters\init;
 use blog\models\tag as tag_model;
-use blog\models\article_tag as article_tag_model;
 
-class tag extends guest_base
+class tag extends controller
 {
-    public function list_all($parameters)
+    /**
+     *
+     *
+     */
+    protected function get_behaviors()
     {
-        $table_tag = new tag_model();
-        $table_article_tag = new article_tag_model();
-
-        //Filter config.
-        if ($this->config === FALSE)
-        {
-            $view_name = "common/not_config";
-
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
-
-        // Get tags record.
-        $tags = $table_tag->select()["record"];
-
-        // Add article count to tag.
-        foreach ($tags as $key => $tag)
-        {
-            $where = array(
-                array(
-                    "field" => "tag_id",
-                    "value" => (int) $tag["id"],
-                    "operator" => "=",
-                    "condition" => "",
-                ),
-            );
-            $article_count = $table_article_tag->where($where)->select_count()["record"];
-            $tag["article_count"] = $article_count;
-
-            $tags[$key] = $tag;
-        }
-
-        $view_name = "guest/tag/list_all";
-
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
-            "tags" => $tags,
+            array(
+                "class" => config_state::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => array(
+                        "common/not_conig",
+                        array()
+                    )
+                ),
+            ),
+            array(
+                "class" => init::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => TRUE,
+                )
+            ),
         );
     }
 
 
     /**
-     * Function show.
+     *
      *
      */
-    public function show($parameters)
+    public function list_all()
     {
-        $url = new url();
-        $table_tag = new tag_model();
-        $table_article_tag = new article_tag_model();
+        $tag_model = new tag_model();
 
-        //Filter config.
-        if ($this->config === FALSE)
-        {
-            $view_name = "common/not_config";
-
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
-
-        // Filter wrong tag id.
-        if (
-            (! isset($parameters["get"]["id"])) ||
-            ($parameters["get"]["id"] === "") ||
-            ($table_tag->select_by_id((int) $parameters["get"]["id"])["record"] === FALSE)
-        )
-        {
-            $view_name = "common/not_found";
-
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
-
-        // Get tag record.
-        $tag = $table_tag->select_by_id((int) $parameters["get"]["id"])["record"];
-
-        // Add article count to tag.
-        $where = array(
-            array(
-                "field" => "tag_id",
-                "value" => (int) $tag["id"],
-                "operator" => "=",
-                "condition" => "",
-            ),
-        );
-        $tag["article_count"] = $table_article_tag->where($where)->select_count()["record"];
-
-        $view_name = "guest/tag/show";
+        $tags = $tag_model->get_tags();
 
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
-            "tag" => $tag,
+            "guest/tag/list_all",
+            array(
+                "tags" => $tags,
+            )
         );
     }
+
+
 
 
     /**
      * Function slug show.
      *
      */
-    public function slug_show($parameters)
+    public function slug_show()
     {
-        $url = new url();
-        $table_tag = new tag_model();
-        $table_article_tag = new article_tag_model();
+        $tag_model = new tag_model();
 
-        //Filter config.
-        if ($this->config === FALSE)
+        if ($tag_model->get_is_slug(\swdf::$app->request["get"]["slug"]) === FALSE)
         {
-            $view_name = "common/not_config";
 
             return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
+                "common/not_found",
+                array()
             );
         }
         else
         {
-        }
-
-
-        // Filter wrong tag slug.
-        $where = array(
-            array(
-                "field" => "slug",
-                "value" => $parameters["get"]["tag_slug"],
-                "operator" => "=",
-                "condition" => "",
-            ),
-        );
-        $tag = $table_tag->where($where)->select_first()["record"];
-        if ($tag === FALSE)
-        {
-            $view_name = "common/not_found";
+            $tag = $tag_model->get_by_slug(\swdf::$app->request["get"]["slug"]);
 
             return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
+                "guest/tag/show",
+                array(
+                    "tag" => $tag,
+                )
             );
         }
-        else
-        {
-        }
-
-        // Add article count to tag.
-        $where = array(
-            array(
-                "field" => "tag_id",
-                "value" => (int) $tag["id"],
-                "operator" => "=",
-                "condition" => "",
-            ),
-        );
-        $tag["article_count"] = $table_article_tag->where($where)->select_count()["record"];
-
-        $view_name = "guest/tag/show";
-
-        return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
-            "tag" => $tag,
-        );
     }
 }
 ?>

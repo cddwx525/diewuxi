@@ -1,57 +1,72 @@
 <?php
 namespace blog\views\guest\category;
 
-use blog\lib\url;
-use blog\lib\views\guest_base;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\guest_base;
+use blog\widgets\categories_position;
 
 class show extends guest_base
 {
-    public function get_items($result)
+    public function set_items()
     {
-        $url = new url();
+        $this->title = "Category: [" . $this->data["category"]["full_name"] . "]";
+        $this->position = categories_position::widget(array("data" => array_slice($this->data["category"]["path"], 0, -1)));
+        $this->position[] = htmlspecialchars($this->data["category"]["name"]);
 
-        $parameters = $result["parameters"];
-        $category = $result["category"];
-
-
-        $title = "Category: [" . $category["name"] . "]";
-
-        $position = " > <a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.list_all", ""), array(), "") . "\">All categories</a> > " . htmlspecialchars($category["name"]);
-
-
-        if (empty($category["son"]))
-        {
-            $subcategory_links = "<span>NULL</span>";
-        }
-        else
-        {
-            $subcategory_links = array();
-            foreach ($category["son"] as $son)
-            {
-                $subcategory_links[] = "<a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/category.slug_show", ""), array("category_slug" => $son["slug"]), "") . "\">" . htmlspecialchars($son["name"]) . "</a>";
-            }
-            $subcategory_links = implode(", ", $subcategory_links);
-        }
-
-        $content = "<h3 class=\"bg-primary\">Category: [" . htmlspecialchars($category["name"]) . "]</h3>
-
-<div class=\"bg-info\">
-<ul>
-<li><span>Name: </span><span class=\"text-muted\">" . htmlspecialchars($category["name"]) . "</span></li>
-<li><span>Slug: </span><span class=\"text-muted\">" . htmlspecialchars($category["slug"]) . "</span></li>
-<li><span>Description: </span><span class=\"text-muted\">" . htmlspecialchars($category["description"]) . "</span></li>
-<li><span>Sons: </span><span>" . $subcategory_links . "</span></li>
-<li><span>Articles: </span><span><a href=\"" . $url->get(array($result["meta_data"]["settings"]["app_space_name"], "guest/article.slug_list", ""), array("full_category_slug" => $category["full_slug"]), "") . "\">" . $category["article_count"] . "</a></span></li>
-</ul>
-</div>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag("h3", "Category: [" . htmlspecialchars($this->data["category"]["full_name"]) . "]", array()) . "\n\n" .
+            html::tag(
+                "div",
+                html::tag(
+                    "ul",
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Name: ", array()) .
+                        html::inline_tag("span", htmlspecialchars($this->data["category"]["full_name"]), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Description: ", array()) .
+                        html::inline_tag("span", htmlspecialchars($this->data["category"]["description"]), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Articles: ", array()) .
+                        html::inline_tag(
+                            "span",
+                            html::a(
+                                htmlspecialchars($this->data["category"]["article_count"]),
+                                url::get(
+                                    array(\swdf::$app->name, "guest/article.slug_list_category", ""),
+                                    array("full_category_slug" => $this->data["category"]["full_slug"]),
+                                    ""
+                                ),
+                                array()
+                            ),
+                            array()
+                        ),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

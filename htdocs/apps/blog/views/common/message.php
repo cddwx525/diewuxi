@@ -5,7 +5,7 @@ use swdf\helpers\html;
 use swdf\helpers\url;
 use blog\views\layouts\guest_base;
 
-class not_found extends guest_base
+class message extends guest_base
 {
     /**
      *
@@ -13,22 +13,22 @@ class not_found extends guest_base
      */
     protected function set_items()
     {
-        $this->title = "Not found";
-        $this->position = array("Not Found");
+        $this->title = "Message from: [" . $this->data["source"] . "]";
+        $this->position = array("Message");
 
         $this->main = html::tag(
             "div",
             html::inline_tag(
                 "h3",
-                "Not Found!",
+                "Message from: [" . $this->data["source"] . "]",
                 array()
             ) . "\n\n" .
             html::tag(
                 "div",
                 html::inline_tag(
                     "p",
-                    "Your request page: \"" . \swdf::$app->request["url"] . "\" is not found on this server.",
-                    array()
+                    $this->data["message"] . " Comment failed!",
+                    array("class" => "text-error")
                 ),
                 array()
             ),
@@ -43,7 +43,7 @@ class not_found extends guest_base
      */
     protected function set_text()
     {
-        $this->text = "Not Found!";
+        $this->text = $this->data["message"] . "Comment failed!";
     }
 }
 ?>

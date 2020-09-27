@@ -1,35 +1,23 @@
 <?php
-namespace blog;
+return array(
+    "name" => "blog",
+    "title" => "SWDF test blog",
+    "version" => "1.0.1",
 
-class app_setting
-{
-    const APP_SPACE_NAME = __NAMESPACE__;
+    "db_id" => array(
+        "host" => "localhost",
+        "name" => "swdf_testblog",
+        "user" => "swdf_testblog",
+        "password" => "swdf_testblog",
+    ),
 
-    const APP_DEFAULT_NAME = "Simplelbog";
-    const APP_VERSION = "1.0.3";
-    
-    const SITE_NAME = "Site name when no database.";
-    const SITE_DESCRIPTION = "Site description when no database.";
-    const SITE_BEGIN_YEAR = "Begin year such as 2017 when no database";
+    "special_actions" => array(
+        "default" => array("blog", "guest/home.show", ""),
+        "not_found" => array("blog", "common/not_found.show", ""),
+    ),
 
-    const DB_HOST = "localhost";
-    const DB_NAME = "simpleblog";
-    const DB_USER = "simpleblog";
-    const DB_PASSWORD = "simpleblog";
-
-    const SESSION_REGENERATE_TIME = 900;
-    const SESSION_OLD_LAST_TIME = 120;
-    const COOKIES_TIME = 864000;
-
-    const MAX_FILE_SIZE = 5000000;
-
-    const SPECIAL_ACTIONS = array(
-            "DEFAULT" => array(__NAMESPACE__, "guest/home.show", ""),
-            "NOT_FOUND" => array(__NAMESPACE__, "common/not_found.show", ""),
-        );
-
-    const META_TABLE = "option";
-    const SQL = "--
+    "meta_table" => "option",
+    "sql" => "--
 -- Table structure for table `article`
 --
 
@@ -190,6 +178,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;";
-}
+/*!40101 SET character_set_client = @saved_cs_client */;",
+);
 ?>

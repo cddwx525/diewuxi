@@ -1,40 +1,31 @@
 <?php
 namespace blog\views\guest;
 
-use blog\lib\url;
-use blog\lib\views\guest_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\guest_base;
 
 class about extends guest_base
 {
-    public function get_items($result)
+    protected function set_items()
     {
-        $url = new url();
-
-        $parameters = $result["parameters"];
-        $about_page_page = $result["about_page_page"];
-
-
-        $css = array(
-            $url->get_static($result["meta_data"]["settings"]["app_space_name"], "css/github-markdown.css"),
+        $this->css = array(
+            url::get_static(\swdf::$app->name, "css/github-markdown.css"),
         );
-        $title = "About";
+        $this->title = "About";
+        $this->position = array("About");
+        $this->main = "<div>
+    <h3>Home</h3>
 
-        $position = " > About";
-
-        $content = "<h3 class=\"bg-primary\">About</h3>
-
-<div class=\"markdown-body\">
-" . $about_page_page["content"] . "
+    <div class=\"markdown-body\">
+" . html::tidy($this->data["about_page"]["content"], 2) . "
+    </div>
 </div>";
+    }
 
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "css" => $css,
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
-        );
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

@@ -1,10 +1,17 @@
 <?php
 namespace blog\models;
 
-use blog\lib\db_hander;
+use swdf\base\model;
 
-class option extends db_hander
+class option extends model
 {
-    public $table_name = "option";
+    /**
+     *
+     *
+     */
+    public function get_table_name()
+    {
+        return "option";
+    }
 }
 ?>

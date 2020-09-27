@@ -1,45 +1,63 @@
 <?php
 namespace blog\controllers\guest;
 
-use blog\lib\controllers\guest_base;
-use blog\lib\Michelf\MarkdownExtra;
+use swdf\base\controller;
+use blog\filters\config_state;
+use blog\filters\init;
 use blog\models\page;
+use blog\lib\Michelf\MarkdownExtra;
 
-class about extends guest_base
+class about extends controller
 {
-    public function show($parameters)
+    /**
+     *
+     *
+     */
+    protected function get_behaviors()
     {
-        $table_page = new page();
+        return array(
+            array(
+                "class" => config_state::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => array(
+                        "common/not_conig",
+                        array()
+                    )
+                ),
+            ),
+            array(
+                "class" => init::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => TRUE,
+                )
+            ),
+        );
+    }
 
-        //Filter config.
-        if ($this->config === FALSE)
-        {
-            $view_name = "common/not_config";
 
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
+    /**
+     *
+     *
+     */
+    public function show()
+    {
+        $page_model = new page();
 
-        $about_page = $this->meta_data["options"]["about_page"];
-        $about_page_page = $table_page->select_by_id((int) $about_page)["record"];
+        $about_page_id = \swdf::$app->data["options"]["about_page"];
+        $about_page = $page_model->select_by_id((int) $about_page_id)["record"];
 
-        $about_page_page["content"] = MarkdownExtra::defaultTransform($about_page_page["content"]);
+        $about_page["content"] = MarkdownExtra::defaultTransform($about_page["content"]);
 
-        $view_name = "guest/about";
 
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
-            "about_page_page" => $about_page_page,
+            "guest/about",
+            array(
+                "about_page" => $about_page,
+            ),
         );
     }
 }

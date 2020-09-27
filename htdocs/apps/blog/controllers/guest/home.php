@@ -1,45 +1,69 @@
 <?php
 namespace blog\controllers\guest;
 
-use blog\lib\controllers\guest_base;
-use blog\lib\Michelf\MarkdownExtra;
+use swdf\base\controller;
+use blog\filters\config_state;
+use blog\filters\init;
 use blog\models\page;
+use blog\lib\Michelf\MarkdownExtra;
 
-class home extends guest_base
+class home extends controller
 {
-    public function show($parameters)
+    /**
+     *
+     *
+     */
+    protected function get_behaviors()
     {
-        $table_page = new page();
+        return array(
+            array(
+                "class" => config_state::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => array(
+                        "common/not_conig",
+                        array()
+                    )
+                ),
+            ),
+            array(
+                "class" => init::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => TRUE,
+                )
+            ),
+        );
+    }
 
-        //Filter config.
-        if ($this->config === FALSE)
-        {
-            $view_name = "common/not_config";
 
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
+    /**
+     *
+     *
+     */
+    public function show()
+    {
+        $page_model = new page();
 
-        $home_page = $this->meta_data["options"]["home_page"];
-        $home_page_page = $table_page->select_by_id((int) $home_page)["record"];
+        $home_page_id = \swdf::$app->data["options"]["home_page"];
+        $home_page = $page_model->select_by_id((int) $home_page_id)["record"];
 
-        $home_page_page["content"] = MarkdownExtra::defaultTransform($home_page_page["content"]);
+        $home_page["content"] = MarkdownExtra::defaultTransform($home_page["content"]);
 
-        $view_name = "guest/home";
+        /*
+        print("<pre>");
+        print_r(\swdf::$app->data["category_tree"]);
+        print("</pre>");
+        exit();
+        */
 
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
-            "home_page_page" => $home_page_page,
+            "guest/home",
+            array(
+                "home_page" => $home_page,
+            ),
         );
     }
 }

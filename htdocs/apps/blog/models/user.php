@@ -1,10 +1,17 @@
 <?php
 namespace blog\models;
 
-use blog\lib\db_hander;
+use swdf\base\model;
 
-class user extends db_hander
+class user extends model
 {
-    public $table_name = "user";
+    /**
+     *
+     *
+     */
+    public function get_table_name()
+    {
+        return "user";
+    }
 }
 ?>
