@@ -1,9 +1,25 @@
 <?php
-define("VERSION", "1.0.2");
-define("DEBUG", TRUE);
-define("STATIC_FILE", TRUE);
+return array(
+    "version" => "1.0.2",
+    "main_app" => "main",
+    "site_base" => "",
+    "site_name" => "SWDF",
+    "site_description" => "SWDF(Simple Web Development Framwork)",
+    "site_begin_year" => "2017",
 
-define("SITE_BASE", "");
+    "session_regenerate_time" => 900,
+    "session_old_last_time" => 120,
+    "cookies_time" => 864000,
+    "max_file_size" => 5000000,
 
-define("MAIN_APP", "main");
+    "apps" => array(
+        "main" => array(
+        ),
+        "blog" => array(
+            "url_prefix" => "blog",
+        ),
+        /*
+         */
+    ),
+);
 ?>

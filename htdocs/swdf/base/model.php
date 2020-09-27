@@ -1,67 +1,38 @@
 <?php
-class db_method
+namespace swdf\base;
+
+abstract class model
 {
-    public $table;
-    private $handle;
-    private $filter = "";
+    private $table = NULL;
+    private $filter = NULL;
     private $variables = array();
 
+
+    /**
+     *
+     *
+     */
     public function __construct()
     {
-        $this->table = $this->table_name;
-        $app_setting = $this->get_app_setting();
-        $this->connect($app_setting::DB_HOST, $app_setting::DB_NAME, $app_setting::DB_USER, $app_setting::DB_PASSWORD);
-        $this->check_table($app_setting::META_TABLE, $app_setting::SQL);
+        $this->table = $this->get_table_name();
     }
 
-    private function connect($host, $dbname, $user, $pass)
-    {
-        try
-        {
-            $dsn = sprintf("mysql:host=%s;dbname=%s;charset=utf8", $host, $dbname);
 
-            $this->handle = new \PDO($dsn, $user, $pass);
+    /**
+     *
+     *
+     */
+    abstract public function get_table_name();
 
-            $this->handle->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-            $this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            //$this->handle->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, FALSE);
-            //$this->handle->setAttribute(\PDO::ATTR_EMULATE_PREPARES, FALSE);
-        }
-        catch (\PDOException $e)
-        {
-            print "Error!: " . $e->getMessage() . "<br/>";
-            exit();
-        }
-    }
-
-    private function check_table($meta_table, $sql)
-    {
-        try
-        {
-            $this->handle->query("SELECT * FROM `" . $meta_table . "`");
-        }
-        catch (\PDOException $e)
-        {
-            try
-            {
-                $this->handle->query($sql);
-            }
-            catch (\PDOException $e)
-            {
-                print "Error!: " . $e->getMessage() . "<br/>";
-                exit();
-            }
-        }
-    }
 
     /*
      * Raw query.
      */
     public function raw($sql)
     {
-        $this->filter = "";
+        $this->filter = NULL;
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         try
         {
@@ -81,20 +52,22 @@ class db_method
             "record" => $record,
         );
     }
+
+
     /*
      * # Fetch functions.
      */
     public function select()
     {
         $sql = sprintf("SELECT * FROM `%s` %s", $this->table, $this->filter);
-        $this->filter = "";
+        $this->filter = NULL;
 
         //print "<pre>";
         //print "[" . $sql . "]\n";
         //print_r($this->variables);
         //print "</pre>";
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($this->variables as $one_variable)
@@ -123,12 +96,17 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function select_count()
     {
         $sql = sprintf("SELECT COUNT(*) FROM `%s` %s", $this->table, $this->filter);
-        $this->filter = "";
+        $this->filter = NULL;
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($this->variables as $one_variable)
@@ -157,12 +135,17 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function select_first()
     {
         $sql = sprintf("SELECT * FROM `%s` %s", $this->table, $this->filter);
-        $this->filter = "";
+        $this->filter = NULL;
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($this->variables as $one_variable)
@@ -191,12 +174,17 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function select_by_id($id)
     {
         $sql = sprintf("SELECT * FROM `%s` WHERE `id` = :id", $this->table);
-        $this->filter = "";
+        $this->filter = NULL;
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
         $sth->bindValue(":id", $id, \PDO::PARAM_INT);
 
         try
@@ -218,10 +206,11 @@ class db_method
         );
     }
 
-    /*
-     * # Modification functions.
-     */
 
+    /**
+     *
+     *
+     */
     public function add($data)
     {
         $keys = array();
@@ -260,7 +249,7 @@ class db_method
 
         $sql = sprintf("INSERT INTO `%s` (%s) VALUES (%s)", $this->table, $keys_string, $params_string);
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($variables as $one_variable)
@@ -281,7 +270,7 @@ class db_method
 
         $errorcode = $sth->errorCode();
         $row_count = $sth->rowCount();
-        $last_id = $this->handle->lastInsertId();
+        $last_id = \swdf::$app->db->lastInsertId();
 
         return array(
             "errorcode" => $errorcode,
@@ -290,6 +279,11 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function update($data)
     {
         $updates = array();
@@ -323,9 +317,9 @@ class db_method
         $updates_string = implode(", ", $updates);
 
         $sql = sprintf("UPDATE `%s` SET %s %s", $this->table, $updates_string, $this->filter);
-        $this->filter = "";
+        $this->filter = NULL;
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($variables as $one_variable)
@@ -361,6 +355,11 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function update_by_id($id, $data)
     {
         $updates = array();
@@ -395,7 +394,7 @@ class db_method
 
         $sql = sprintf("UPDATE `%s` SET %s WHERE `id` = ?", $this->table, $updates_string);
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($variables as $one_variable)
@@ -426,12 +425,17 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function delete()
     {
         $sql = sprintf("DELETE FROM `%s` %s", $this->table, $this->filter);
-        $this->filter = "";
+        $this->filter = NULL;
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
 
         $i = 1;
         foreach ($this->variables as $one_variable)
@@ -460,11 +464,16 @@ class db_method
         );
     }
 
+
+    /**
+     *
+     *
+     */
     public function delete_by_id($id)
     {
         $sql = sprintf("DELETE FROM `%s` WHERE `id` = :id", $this->table);
 
-        $sth = $this->handle->prepare($sql);
+        $sth = \swdf::$app->db->prepare($sql);
         $sth->bindValue(":id", $id, \PDO::PARAM_INT);
 
         try
@@ -486,20 +495,40 @@ class db_method
         );
     }
 
-    /*
-     * ## Fetch filter functions
-     */
 
+    /**
+     *
+     * SELECT `column` FROM `table`
+     * WHERE
+     *     `article_id` = (int) $article["id"]
+     *     AND
+     *     `target_id` IS NULL;
+     *
+     *
+     * $where = array(
+     *     array(
+     *         "field" => "article_id",
+     *         "value" => (int) $article["id"],
+     *         "operator" => "=",
+     *         "condition" => "AND",
+     *     ),
+     *     array(
+     *         "field" => "target_id",
+     *         "operator" => "IS NULL",
+     *         "condition" => "",
+     *     ),
+     * );
+     */
     public function where($where = array())
     {
         if (isset($where))
         {
-            $where_final = array();
+            $where_list = array();
             foreach ($where as $one_where)
             {
                 if (isset($one_where["value"]))
                 {
-                    $where_final[] = sprintf("`%s` %s ? %s", $one_where["field"], $one_where["operator"], $one_where["condition"]);
+                    $where_list[] = sprintf("`%s` %s ? %s", $one_where["field"], $one_where["operator"], $one_where["condition"]);
 
                     if (is_null($one_where["value"]))
                     {
@@ -526,17 +555,97 @@ class db_method
                 }
                 else
                 {
-                    $where_final[] = sprintf("`%s` %s %s", $one_where["field"], $one_where["operator"], $one_where["condition"]);
+                    $where_list[] = sprintf("`%s` %s %s", $one_where["field"], $one_where["operator"], $one_where["condition"]);
                 }
             }
 
             $this->filter .= " WHERE ";
-            $this->filter .= implode(" ", $where_final);
+            $this->filter .= implode(" ", $where_list);
         }
 
         return $this;
     }
 
+
+    /**
+     *
+     * SELECT `column` FROM `table`
+     * WHERE
+     *     `article_id` = (int) $article["id"]
+     *     AND
+     *     `target_id` IS NULL;
+     *
+     *
+     * $where = array(
+     *     "AND",
+     *     array(
+     *         array(
+     *             "field" => "article_id",
+     *             "value" => (int) $article["id"],
+     *             "operator" => "=",
+     *         ),
+     *         array(
+     *             "field" => "target_id",
+     *             "operator" => "IS NULL",
+     *         ),
+     *     )
+     * );
+     */
+    public function batch_where($where = array())
+    {
+        if (isset($where))
+        {
+            $where_list = array();
+            foreach ($where[1] as $one_where)
+            {
+                if (isset($one_where["value"]))
+                {
+                    $where_list[] = sprintf("`%s` %s ?", $one_where["field"], $one_where["operator"]);
+
+                    if (is_null($one_where["value"]))
+                    {
+                        $type = \PDO::PARAM_NULL;
+                    }
+                    else if (is_bool($one_where["value"]))
+                    {
+                        $type = \PDO::PARAM_BOOL;
+                    }
+                    else if (is_int($one_where["value"]))
+                    {
+                        $type = \PDO::PARAM_INT;
+                    }
+                    else
+                    {
+                        $type = \PDO::PARAM_STR;
+                    }
+
+                    $one_variable = array();
+                    $one_variable["value"] = $one_where["value"];
+                    $one_variable["type"] = $type;
+
+                    $this->variables[] = $one_variable;
+                }
+                else
+                {
+                    $where_list[] = sprintf("`%s` %s", $one_where["field"], $one_where["operator"]);
+                }
+            }
+
+            $this->filter .= " WHERE ";
+            $this->filter .= implode(" " . $where[0] . " ", $where_list);
+        }
+        else
+        {
+        }
+
+        return $this;
+    }
+
+
+    /**
+     *
+     *
+     */
     public function order($order = array())
     {
         if(isset($order)) {
@@ -547,11 +656,16 @@ class db_method
         return $this;
     }
 
+
+    /**
+     *
+     *
+     */
     public function limit($limit = array())
     {
         if(isset($limit)) {
-            $this->limit .= " LIMIT ";
-            $this->limit .= implode(", ", $limit);
+            $this->filter .= " LIMIT ";
+            $this->filter .= implode(", ", $limit);
         }
 
         return $this;
