@@ -14,13 +14,21 @@ class about extends guest_base
         );
         $this->title = "About";
         $this->position = array("About");
-        $this->main = "<div>
-    <h3>Home</h3>
 
-    <div class=\"markdown-body\">
-" . html::tidy($this->data["about_page"]["content"], 2) . "
-    </div>
-</div>";
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "About",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                $this->data["about_page"]["content"],
+                array("class" => "markdown-body")
+            ),
+            array()
+        );
     }
 
     protected function set_text()

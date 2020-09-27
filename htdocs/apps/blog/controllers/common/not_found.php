@@ -1,22 +1,52 @@
 <?php
 namespace blog\controllers\common;
 
-use blog\lib\controllers\simple;
+use swdf\base\controller;
+use blog\filters\init;
+use blog\filters\side_data;
 
-class not_found extends simple
+class not_found extends controller
 {
-    public function show($parameters)
+    /**
+     *
+     *
+     */
+    protected function get_behaviors()
     {
-        /*
-         * Some operation.
-         */
-        $view_name = "common/not_found";
+        return array(
+            array(
+                "class" => init::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => array(
+                        "common/not_config",
+                        array()
+                    )
+                ),
+            ),
+            array(
+                "class" => side_data::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => TRUE,
+                )
+            ),
+        );
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function show()
+    {
 
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
+            "common/not_found",
+            array()
         );
     }
 }
