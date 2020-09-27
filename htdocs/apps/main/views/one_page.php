@@ -1,44 +1,34 @@
 <?php
 namespace main\views;
 
-use main\lib\url;
-use main\lib\views\base as base;
+use main\views\layouts\base;
 
 class one_page extends base
 {
-    public function get_items($result)
+    public function set_items()
     {
-        $url = new url();
+        $this->title = "One page";
+        $this->position = array("One page");
+        $this->main = "<div>
+    <h3>One page</h3>
 
+    <h4>Title 1</h4>
+    <p>Some text. Some text. Some text. Some text. Some text. Some text. Some text. Some text. Some text.</p>
 
-        $title = "One page";
-
-        $position = " > One page";
-
-        $content = "<h3 class=\"bg-primary\">One page</h3>
-
-<h3>Title 1</h3>
-<p>Some text.</p>
-
-<h3>Title 2</h3>
-<ul>
-<li>item</li>
-<li>item</li>
-<li>item</li>
-</ul>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
-        );
+    <h4>Title 2</h4>
+    <ul>
+        <li>item item item item item item item item item item</li>
+        <li>item item item item item item item item item item</li>
+        <li>item item item item item item item item item item</li>
+        <li>item item item item item item item item item item</li>
+        <li>item item item item item item item item item item</li>
+    </ul>
+</div>";
     }
 
-    public function get_string($result)
+    public function set_text()
     {
-        return "one page";
+        $this->text = "one page";
     }
 }
 ?>

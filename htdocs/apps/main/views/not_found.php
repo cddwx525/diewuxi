@@ -1,36 +1,23 @@
 <?php
 namespace main\views;
 
-use main\lib\url;
-use main\lib\views\base as base;
+use main\views\layouts\base;
 
 class not_found extends base
 {
-    public function get_items($result)
+    public function set_items()
     {
-        $url = new url();
-
-
-        $title = "Not found";
-
-        $position = " > Not Found";
-
-        $content = "<h3 class=\"bg-primary\">Not Found!</h3>
-
-<p>Your request page: \"" . $result["parameters"]["url"] . "\" is not found on this server.</p>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
-        );
+        $this->title = "Not found";
+        $this->position = array("Not Found");
+        $this->main = "<div>
+    <h3>Not Found!</h3>
+    <p>Your request page: \"" . \swdf::$app->request["url"] . "\" is not found on this server.</p>
+</div>";
     }
 
-    public function get_string($result)
+    public function set_text()
     {
-        return "################################################################################
+        $this->text = "################################################################################
 This is text mode of not found page.
 ################################################################################";
     }

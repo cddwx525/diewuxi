@@ -1,22 +1,17 @@
 <?php
 namespace main\controllers;
 
-use main\lib\controllers\base as base;
+use swdf\base\controller;
 
-class one_page extends base
+class one_page extends controller
 {
-    public function show($parameters)
+    public function show()
     {
-        /*
-         * Some operation.
-         */
-        $view_name = "one_page";
-
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
+            "one_page",
+            array(
+                "state" => "Y",
+            )
         );
     }
 }

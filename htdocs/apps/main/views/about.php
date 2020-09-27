@@ -1,38 +1,24 @@
 <?php
 namespace main\views;
 
-use main\lib\url;
-use main\lib\views\base as base;
+use main\views\layouts\base;
 
 class about extends base
 {
-    public function get_items($result)
+    public function set_items()
     {
-        $url = new url();
+        $this->title = "About";
+        $this->position = array("About");
+        $this->main = "<div>
+    <h3>About</h3>
 
-        $title = "About";
-
-        $position = " > About";
-
-        $content = "<h3 class=\"bg-primary\">About</h3>
-
-<h3>Title 1</h3>
-
-<h3>Title 2</h3>
-<p>some text.</p>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
-        );
+    <p>SWDF(Simple Web Development Framwork) is a simple MVC web app development framwork written in php.</p>
+</div>";
     }
 
-    public function get_string($result)
+    public function set_text()
     {
-        return "About page.";
+         $this->text = "About page.";
     }
 }
 ?>

@@ -1,45 +1,40 @@
 <?php
 namespace main\views;
 
-use main\lib\url;
-use main\lib\views\base as base;
+use main\views\layouts\base;
 
 class home extends base
 {
-    public function get_items($result)
+    /**
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->description = "Home page swdf(Simple Web development framwork)";
+        $this->title = "Home";
+        $this->position = array("Home");
 
+        $this->main = "<div>
+    <h3>Home</h3>
 
-        $title = "Home";
-
-        $position = "";
-
-        $content = "<h3 class=\"bg-primary\">Home</h3>
-
-<h3>Title 1</h3>
-<p>Some text.</p>
-
-<h3>Title 2</h3>
-<ul>
-<li>item</li>
-<li>item</li>
-<li>item</li>
-</ul>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
-        );
+    <h4>Wellcom to SWDF!</h4>
+</div>";
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "################################################################################
+        $this->text = "################################################################################
 This is text mode of home page.
+
+
+<a href=\"https://www.baidu.com\">Baidu</a>
+<img src=\"http://dwx.22web.org/apps/blog/static/media/2018/01/04/diewuxi.png\" />
+
 ################################################################################";
     }
 }
