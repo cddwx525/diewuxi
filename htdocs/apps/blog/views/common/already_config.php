@@ -1,39 +1,53 @@
 <?php
 namespace blog\views\common;
 
-use blog\lib\url;
-use blog\lib\views\simple;
+use swdf\helpers\html;
+use swdf\helpers\url;
+use blog\views\layouts\common_base;
 
-class already_config extends simple
+class already_config extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
+        $this->title = "Already config";
+        $this->position = array("Already config");
 
-
-        $title = "Already config";
-
-        $position = " > Already config";
-
-        $content = "<h3 class=\"bg-primary\">Already config!</h3>
-
-<div class=\"bg-warning\">
-<p>Go to home: <a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Home</a></p>
-</div>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Already config!",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "Go to home",
+                        url::get(array(\swdf::$app->name, "guest/home.show",""), array(), ""),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        return "[text]";
+        $this->text = "Already config!";
     }
 }
 ?>

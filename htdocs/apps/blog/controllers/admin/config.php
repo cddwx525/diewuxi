@@ -1,65 +1,59 @@
 <?php
 namespace blog\controllers\admin;
 
-use blog\lib\url;
-use blog\lib\controllers\initial;
-use blog\models\option as option_model;
-use blog\models\page as page_model;
-use blog\models\user as user_model;
+use swdf\base\controller;
+use blog\filters\init;
+use blog\filters\user_data;
+use blog\models\option;
+use blog\models\page;
+use blog\models\user;
 
-class config extends initial
+class config extends controller
 {
-    public function write($parameters)
+    /**
+     *
+     *
+     */
+    protected function get_behaviors()
     {
-        //Filter config.
-        if ($this->config === TRUE)
-        {
-            $view_name = "common/already_config";
-
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
-
-        $view_name = "admin/config/write";
-
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
+            array(
+                "class" => init::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => array(
+                        "common/already_config",
+                        array()
+                    ),
+                    "false" => TRUE,
+                ),
+            ),
         );
     }
 
 
-    public function save($parameters)
+    /**
+     *
+     *
+     */
+    public function write()
     {
-        $url = new url();
-        $table_option = new option_model();
-        $table_user = new user_model();
-        $table_page = new page_model();
+        return array(
+            "admin/config/write",
+            array()
+        );
+    }
 
-        //Filter config.
-        if ($this->config === TRUE)
-        {
-            $view_name = "common/already_config";
 
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
+    /**
+     *
+     *
+     */
+    public function save()
+    {
+        $option_model = new option();
+        $user_model = new user();
+        $page_model = new page();
 
         // Filter uncomplete.
         if (
