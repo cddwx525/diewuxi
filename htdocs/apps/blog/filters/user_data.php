@@ -198,9 +198,9 @@ class user_data
                             exit();
                         }
 
-                        setcookie("name", $_COOKIE["name"], time() + $this->meta_data["settings"]["cookies_time"], "", "", FALSE, TRUE);
-                        setcookie("serial", $one_user["serial"], time() + $this->meta_data["settings"]["cookies_time"], "", "", FALSE, TRUE);
-                        setcookie("stamp", $stamp, time() + $this->meta_data["settings"]["cookies_time"], "", "", FALSE, TRUE);
+                        setcookie("name", $_COOKIE["name"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
+                        setcookie("serial", $one_user["serial"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
+                        setcookie("stamp", $stamp, time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
 
                         session_regenerate_id();
 
