@@ -10,11 +10,22 @@ class html
     public static function tidy($string, $indent)
     {
        $indent_string = "    "; 
-       $result = str_replace("\n", "\n" . str_repeat($indent_string, $indent), $string);
-       $result = str_replace("\n" . str_repeat($indent_string, $indent) . "\n", "\n\n", $result);
-       $result = str_repeat($indent_string, $indent) . $result;
+
+       // Insert indent before every html tag before which only spaces exist.
+       $result = preg_replace("/^( *)</m", str_repeat($indent_string, $indent) . "\\1<", $string);
 
        return $result;
+    }
+
+    /**
+     *
+     *
+     */
+    public static function mono_tag($tag, $properties)
+    {
+        $result = "<" . $tag . self::get_property_string($properties) . " />";
+
+        return $result;
     }
 
 

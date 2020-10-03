@@ -36,7 +36,7 @@ class user_data
             $user = $user_model->where($where)->select_first()["record"];
             $user = $user_model->get_user($user);
 
-            \swdf::$app->data["admin"] = $user;
+            \swdf::$app->data["user"] = $user;
 
             return TRUE;
         }
@@ -182,43 +182,23 @@ class user_data
                                 "condition" => "",
                             ),
                         );
-                        $one_user = $user_model->where($where)->select_first()["record"];
+                        $user = $user_model->where($where)->select_first()["record"];
 
-                        try
-                        {
-                            $user_update = $user_model->update_by_id((int) $one_user["id"], array("stamp" => $stamp));
-                        }
-                        catch (\PDOException $e)
-                        {
-                            //$state = "USER_UPDATE_FAIL";
-
-                            session_write_close();
-
-                            print "Error!: " . $e->getMessage() . "<br/>";
-                            exit();
-                        }
+                        $user_update = $user_model->update_by_id((int) $user["id"], array("stamp" => $stamp));
 
                         setcookie("name", $_COOKIE["name"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
-                        setcookie("serial", $one_user["serial"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
+                        setcookie("serial", $user["serial"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
                         setcookie("stamp", $stamp, time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
 
                         session_regenerate_id();
 
                         $current_time = time();
-                        try
-                        {
-                            $user_update = $user_model->update_by_id((int) $one_user["id"], array("session_time_stamp" => $current_time, "last_session_id" => session_id()));
-                        }
-                        catch (\PDOException $e)
-                        {
-                            //$state = "USER_UPDATE_FAIL";
+                        $data_user = array(
+                            "session_time_stamp" => $current_time,
+                            "last_session_id" => session_id()
+                        );
 
-                            session_write_close();
-
-                            print "Error!: " . $e->getMessage() . "<br/>";
-                            exit();
-                        }
-
+                        $user_update = $user_model->update_by_id((int) $user["id"], $data_user);
                         $_SESSION["login_time"] = $current_time;
                         $_SESSION["name"] = $_COOKIE["name"];
 
@@ -242,10 +222,10 @@ class user_data
                     "condition" => "",
                 ),
             );
-            $one_user = $user_model->where($where)->select_first()["record"];
+            $user = $user_model->where($where)->select_first()["record"];
 
             if (
-                (session_id() != $one_user["last_session_id"] &&
+                (session_id() != $user["last_session_id"] &&
                 ((time() - $_SESSION["login_time"]) > \swdf::$app->config["session_old_last_time"]))
             )
             {
@@ -285,38 +265,30 @@ class user_data
             {
                 // Normal session information, test whether need regenerate.
 
-                if ((time() - $one_user["session_time_stamp"]) > \swdf::$app->config["session_regenerate_time"])
+                if ((time() - $user["session_time_stamp"]) > \swdf::$app->config["session_regenerate_time"])
                 {
                     // Regenerate session id.
 
                     session_regenerate_id();
 
                     $current_time = time();
-                    try
-                    {
-                        $user_update = $user_model->update_by_id((int) $one_user["id"], array("session_time_stamp" => $current_time, "last_session_id" => session_id()));
-                    }
-                    catch (\PDOException $e)
-                    {
-                        //$state = "USER_UPDATE_FAIL";
+                    $data_user = array(
+                        "session_time_stamp" => $current_time,
+                        "last_session_id" => session_id()
+                    );
 
-                        session_write_close();
-
-                        //return $state;
-
-                        print "Error!: " . $e->getMessage() . "<br/>";
-                        exit();
-                    }
+                    $user_update = $user_model->update_by_id((int) $user["id"], $data_user);
                 }
                 else
                 {
                     // No need regenerate session id, return.
 
-                    session_write_close();
-
-                    //$state = "Y";
-                    return TRUE;
                 }
+
+                session_write_close();
+                //$state = "Y";
+
+                return TRUE;
             }
         }
     }

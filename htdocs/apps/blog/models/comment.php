@@ -264,9 +264,7 @@ class comment extends model
             "article_id"    => (int) $data["article_id"],
         );
 
-        $result = $this->add($data);
-
-        return $result;
+        return $this->add($data);
     }
 }
 ?>

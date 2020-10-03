@@ -134,6 +134,10 @@ a:visited
     padding: 0.2em 1em;
 }
 
+.text-padding-s
+{
+    padding: 0.2em 0.5em;
+}
 
 .block-padding
 {

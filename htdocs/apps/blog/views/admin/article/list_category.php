@@ -1,105 +1,55 @@
 <?php
 namespace blog\views\admin\article;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
+use blog\widgets\admin_article_list;
 
 class list_category extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Articles in category [" . $this->data["category"]["full_name"] . "]";
+        $this->position = array("Articles in category [" . htmlspecialchars($this->data["category"]["full_name"]) . "]");
 
-        $parameters = $result["parameters"];
-        $category = $result["category"];
-        $articles = $result["articles"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Articles in category " . $category["name"];
-        $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">Category: " . htmlspecialchars($category["name"]) . "</a>";
-
-        $list = array();
-        foreach ($articles as $key => $article)
-        {
-            if (($key + 1)% 2 === 0)
-            {
-                $alternate = "even";
-            }
-            else
-            {
-                $alternate = "odd";
-            }
-
-            if (empty($article["tag"]))
-            {
-                $article_tags = "<span>NULL</span>";
-            }
-            else
-            {
-                $article_tags = array();
-                foreach ($article["tag"] as $tag)
-                {
-                    $article_tags[] = "<a href=\"" . $url->get(array($app_space_name, "admin/tag.show", ""), array("id" => $tag["id"]), "") . "\">" . htmlspecialchars($tag["name"]) . "</a>";
-                }
-                $article_tags = implode(", ", $article_tags);
-            }
-
-            $list[] = "<tr class=\"" . $alternate . "\">
-<td>" . $article["id"] . "</td>
-<td>" . htmlspecialchars($article["title"]) . "</td>
-<td>" . htmlspecialchars($article["slug"]) . "</td>
-<td><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $article["category"]["id"]), "") . "\">" . htmlspecialchars($article["category"]["name"]) . "</a></td>
-<td>" . $article_tags . "</td>
-<td><a href=\"" . $url->get(array($app_space_name, "admin/media.list_article", ""), array("article_id" => $article["id"]), "") . "\">" . $article["media_count"] . "</a></td>
-<td>" . $article["date"] . "</td>
-<td>" . $article["comment_count"] . "</td>
-<td><a href=\"" . $url->get(array($app_space_name, "admin/article.delete_confirm", ""), array("id" => $article["id"]), "") . "\">Delete</a> <a href=\"" . $url->get(array($app_space_name, "admin/article.edit", ""), array("id" => $article["id"]), "") . "\">Edit</a> <a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">View</a></td>
-</tr>";
-        }
-        $list = implode("\n", $list);
-
-
-        $article_list = "<h3 class=\"bg-primary\">Articles in category [" . htmlspecialchars($category["name"]) . "]</h3>
-
-<table class=\"table\">
-<tr>
-<th>Id</th>
-<th>Title</th>
-<th>Slug</th>
-<th>Category</th>
-<th>Tags</th>
-<th>Medias</th>
-<th>Date</th>
-<th>Comments</th>
-<th>Operate</th>
-</tr>
-" . $list . "
-</table>";
-
-        $main = "<div>" . "\n" . $article_list . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "p",
+                html::a(
+                    "Write an article.",
+                    url::get(
+                        array(\swdf::$app->name, "admin/article.write", ""),
+                        array(),
+                        ""
+                    ),
+                    array()
+                ),
+                array()
+            ) . "\n\n" .
+            html::inline_tag(
+                "h3",
+                "Articles in category [" . $this->data["category"]["full_name"] . "]",
+                array()
+            ) . "\n\n" .
+            admin_article_list::widget(array("data" => $this->data["articles"])),
+            array()
         );
     }
 
-    public function get_string($result)
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
     {
-        $parameters = $result["parameters"];
-        $category = $result["category"];
-        $articles = $result["articles"];
-
-        $articles_list_text = array();
-        foreach ($articles as $one_article)
-        {
-            $articles_list_text[] = $one_article["title"];
-        }
-        $articles_list_text = implode("\n", $articles_list_text);
-
-        return $articles_list_text;
+        $this->text = "";
     }
 }
 ?>

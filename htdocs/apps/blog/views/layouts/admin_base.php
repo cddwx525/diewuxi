@@ -343,8 +343,8 @@ abstract class admin_base extends view
                 "Comments",
             ),
             array(
-                url::get(array(\swdf::$app->name, "admin/media.list_all", ""), array(), ""),
-                "media",
+                url::get(array(\swdf::$app->name, "admin/file.list_all", ""), array(), ""),
+                "Files",
             ),
             array(
                 url::get(array(\swdf::$app->name, "admin/settings.show", ""), array(), ""),
@@ -380,7 +380,7 @@ abstract class admin_base extends view
                 "ul",
                 html::inline_tag(
                     "li",
-                    "User: " . \swdf::$app->data["admin"]["name"],
+                    "User: " . \swdf::$app->data["user"]["name"],
                     array("class" => "inline text-padding")
                 ) . "\n" .
                 html::inline_tag(

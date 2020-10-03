@@ -1,39 +1,33 @@
-.table
+.alternate-table
 {
     width: 100%;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
-.table th, td
+.alternate-table th, td
 {
     border-style: solid;
-    border-color: blue;
     border-width: 1px;
 }
 
 
-.table th
+.alternate-table th
 {
-    color: Brown;
-    background-color: White;
 }
 
 
-.table .odd 
+.alternate-table .odd 
 {
-    color: Black;
     background-color: LightGray;
 }
 
 
-.table .even 
+.alternate-table .even 
 {
-    color: Black;
-    background-color: White;
 }
 
 
-.table tr:hover td
+.alternate-table tr:hover td
 {
     color: White;
     background-color: Gray;

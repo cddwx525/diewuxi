@@ -29,6 +29,11 @@ class message extends common_base
                     "p",
                     $this->data["message"],
                     array("class" => "text-warning text-center")
+                ) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::a("Back", $this->data["back_url"], array()),
+                    array("class" => "text-center")
                 ),
                 array()
             ),

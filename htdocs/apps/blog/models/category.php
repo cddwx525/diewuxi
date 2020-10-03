@@ -60,9 +60,19 @@ class category extends model
      */
     public function get_by_full_slug($full_slug)
     {
-        $full_slug_list = $this->get_full_slug_data($full_slug);
+        $full_slug_data = $this->get_full_slug_data($full_slug);
 
-        foreach ($full_slug_list as $key => $slug)
+        return $this->get_by_full_slug_data($full_slug_data);
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function get_by_full_slug_data($full_slug_data)
+    {
+        foreach ($full_slug_data as $key => $slug)
         {
             if ($key === 0)
             {
@@ -74,7 +84,7 @@ class category extends model
                     ),
                     array(
                         "field" => "slug",
-                        "value" => $full_slug_list[0],
+                        "value" => $full_slug_data[0],
                         "operator" => "=",
                         "condition" => "",
                     ),
@@ -349,12 +359,59 @@ class category extends model
      *
      *
      */
+    public function get_is_id($id)
+    {
+        if (
+            (! isset($id))
+        )
+        {
+            return FALSE;
+        }
+        else
+        {
+            if (
+                ($id === "")
+            )
+            {
+                return FALSE;
+            }
+            else
+            {
+                if (
+                    ($this->select_by_id((int) $id)["record"] === FALSE)
+                )
+                {
+                    return FALSE;
+                }
+                else
+                {
+                    return TRUE;
+                }
+            }
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
     public function get_is_full_slug($full_slug)
     {
-        $full_slug_list = $this->get_full_slug_data($full_slug);
+        $full_slug_data = $this->get_full_slug_data($full_slug);
 
+        return $this->get_is_full_slug_data($full_slug_data);
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function get_is_full_slug_data($full_slug_data)
+    {
         // Filter wrong category slug.
-        foreach ($full_slug_list as $key => $value)
+        foreach ($full_slug_data as $key => $value)
         {
             $where = array(
                 array(
@@ -399,7 +456,7 @@ class category extends model
                 // Filter not son category of previous.
                 if (
                     ($parent_category === FALSE) ||
-                    ($parent_category["slug"] != $full_slug_list[$key - 1])
+                    ($parent_category["slug"] != $full_slug_data[$key - 1])
                 )
                 {
                     return FALSE;
@@ -454,6 +511,24 @@ class category extends model
         krsort($name_list, SORT_NUMERIC);
 
         return "/" . implode("/", $name_list);
+    }
+
+
+
+    /**
+     *
+     *
+     */
+    public function add_data($data)
+    {
+        $data_category = array(
+            "name"          => $data["name"],
+            "slug"          => $data["slug"],
+            "description"   => $data["description"],
+            "parent_id"     => $data["parent_id"],
+        );
+
+        return $this->add($data_category);
     }
 }
 ?>

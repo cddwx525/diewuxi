@@ -86,7 +86,44 @@ class tag extends model
 
 
     /**
-     * Tag array with article_count.
+     *
+     *
+     */
+    public function get_is_id($id)
+    {
+        if (
+            (! isset($id))
+        )
+        {
+            return FALSE;
+        }
+        else
+        {
+            if (
+                ($id === "")
+            )
+            {
+                return FALSE;
+            }
+            else
+            {
+                if (
+                    ($this->select_by_id((int) $id)["record"] === FALSE)
+                )
+                {
+                    return FALSE;
+                }
+                else
+                {
+                    return TRUE;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Tag array.
      *
      */
     public function get_tags()
@@ -153,6 +190,22 @@ class tag extends model
             ),
         );
         return $article_tag_model->where($where)->select_count()["record"];
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function add_data($data)
+    {
+        $data_tag = array(
+            "name"          => $data["name"],
+            "slug"          => $data["slug"],
+            "description"   => $data["description"],
+        );
+
+        return $this->add($data_tag);
     }
 }
 ?>

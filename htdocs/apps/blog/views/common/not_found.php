@@ -3,9 +3,9 @@ namespace blog\views\common;
 
 use swdf\helpers\html;
 use swdf\helpers\url;
-use blog\views\layouts\guest_base;
+use blog\views\layouts\common_base;
 
-class not_found extends guest_base
+class not_found extends common_base
 {
     /**
      *
