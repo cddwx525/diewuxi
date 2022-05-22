@@ -3,8 +3,9 @@ return array(
     "version" => "1.0.2",
     "main_app" => "main",
     "site_base" => "",
+
     "site_name" => "SWDF",
-    "site_description" => "SWDF(Simple Web Development Framwork)",
+    "site_description" => "Welcom to SWDF(Simple Web Development Framwork)!",
     "site_begin_year" => "2017",
 
     "session_regenerate_time" => 900,
