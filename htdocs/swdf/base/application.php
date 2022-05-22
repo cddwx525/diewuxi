@@ -5,15 +5,18 @@ use swdf\helpers\url;
 
 class application
 {
+    // Global config.
     public $config = NULL;
     public $apps = NULL;
     public $main_app = NULL;
     public $url_map = NULL;
 
 
+    // App properties from config file.
     public $name = NULL;
     public $title = NULL;
     public $version = NULL;
+    public $params = NULL;
     public $db_id = NULL;
     public $meta_table = NULL;
     public $sql = NULL;
@@ -21,6 +24,7 @@ class application
     public $special_actions = array();
 
 
+    // App properties runtime.
     public $db = NULL;
     public $router = NULL;
     public $request = NULL;
@@ -197,7 +201,9 @@ class application
             $filter_result = $controller->filter();
             if ($filter_result === TRUE)
             {
-                $result = $controller->$router["action_name"]();
+                //$result = $controller->$router["action_name"]();
+                $action_name=$router["action_name"];
+                $result = $controller->$action_name();
             }
             else
             {
@@ -205,6 +211,8 @@ class application
             }
 
 
+            // result[0]: view name
+            // result[1]: data array
             $view_class = $this->name . "\\views\\" . str_replace("/", "\\", $result[0]);
             $view = new $view_class($result[1]);
 
@@ -312,6 +320,7 @@ class application
                         "parameters" => array(
                             "get" => $match_variable,
                             "post" => $_POST,
+                            "file" => $_FILES,
                             "url" => url::root_url() . $request_uri,
                         ),
                     );
@@ -334,6 +343,7 @@ class application
             "parameters" => array(
                 "get" => array(),
                 "post" => $_POST,
+                "file" => $_FILES,
                 "url" => url::root_url() . $request_uri,
             ),
         );
@@ -368,7 +378,7 @@ class application
         }
         catch (\PDOException $e)
         {
-            print "Error!: " . $e->getMessage() . "<br/>";
+            print "Error in \"application->get_db()\":" . $e->getMessage() . "<br/>";
             exit();
         }
     }
