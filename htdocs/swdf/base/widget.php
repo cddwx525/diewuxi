@@ -10,7 +10,7 @@ abstract class widget
     public static function widget($config)
     {
         $result = new static();
-        
+
         return $result->run($config);
     }
 
