@@ -3,6 +3,7 @@ return array(
     "name" => "main",
     "title" => "Main app",
     "version" => "1.0.1",
+    "params" => array(),
 
     "db_id" => NULL,
 

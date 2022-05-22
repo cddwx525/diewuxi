@@ -75,7 +75,7 @@ abstract class base extends view
             "head",
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" . "\n" .
             "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" . "\n" .
-            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
+            //"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
             implode("\n", $head_list),
             array()
         );
@@ -191,7 +191,7 @@ abstract class base extends view
             $title_list[] = \swdf::$app->title;
         }
 
-        $title_list[] = \swdf::$app->config["site_name"];
+        $title_list[] = "SWDF";
 
         $title = "<title>" . implode(" - ", $title_list) . "</title>";
 
@@ -232,7 +232,7 @@ abstract class base extends view
             html::inline_tag(
                 "h1",
                 html::a(
-                    \swdf::$app->config["site_name"],
+                    "SWDF",
                     url::get(
                         \swdf::$app->main_app["special_actions"]["default"],
                         array(),
@@ -244,7 +244,7 @@ abstract class base extends view
             ) . "\n" .
             html::inline_tag(
                 "p",
-                \swdf::$app->config["site_description"],
+                "Wellcome to SWDF(Simple Web Development Framwork)",
                 array()
             ),
             array()
@@ -333,7 +333,7 @@ abstract class base extends view
                 "Blog >>",
             ),
         );
-        
+
         $menu_link_list = array();
         foreach ($menu_data as $one_menu)
         {
@@ -386,7 +386,7 @@ abstract class base extends view
             "div",
             html::inline_tag(
                 "p",
-                \swdf::$app->config["site_name"] . " " . \swdf::$app->config["site_begin_year"] . "--" . date("Y"),
+                "SWDF" . " " . "2017" . "--" . date("Y"),
                 array("class" => "float-right")
             ) . "\n" .
             html::tag(
