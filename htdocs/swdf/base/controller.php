@@ -33,24 +33,18 @@ class controller
                     if ((new $filter["class"])->run() === TRUE)
                     {
                         $result = $filter["rule"]["true"];
-                        if ($result === TRUE)
-                        {
-                        }
-                        else
-                        {
-                            return $result;
-                        }
                     }
                     else
                     {
                         $result = $filter["rule"]["false"];
-                        if ($result === TRUE)
-                        {
-                        }
-                        else
-                        {
-                            return $result;
-                        }
+                    }
+
+                    if ($result === TRUE)
+                    {
+                    }
+                    else
+                    {
+                        return $result;
                     }
                 }
                 else
