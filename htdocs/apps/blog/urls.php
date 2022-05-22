@@ -500,6 +500,13 @@ return array(
                 array("blog", "admin/comment.list_all", "",),
             ),
             array(
+                "^/comments\?action=list_by_article\?article_id=(?P<article_id>\d+)$",
+                array("/comments?action=list_by_article?article_id="),
+                array("article_id"),
+                array("blog", "common", "admin/comment", "list_by_article", "", "",),
+                array("blog", "admin/comment.list_by_article", "",),
+            ),
+            array(
                 "^/comments\?action=write&article_id=(?P<article_id>\d+)&target_id=(?P<target_id>\w+)$",
                 array("/comments?action=write&article_id=", "&target_id="),
                 array("article_id", "target_id"),
