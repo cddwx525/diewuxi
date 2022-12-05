@@ -12,175 +12,201 @@ A simple MVC web app development framwork written in php.
         apps/
             <app1>/
                 controllers/
-                    ...
                 lib/
-                    ...
                 models/
-                    ...
                 statics/
                     css/
-                        ...
                     fonts/
-                        ...
                     media/
-                        ...
                 views/
-                    ...
-                app_setting.php
+                config.php
                 urls.php
-            <app2>
-                controllers/
-                    ...
-                lib/
-                    ...
-                models/
-                    ...
-                statics/
-                    css/
-                        ...
-                    fonts/
-                        ...
-                    media/
-                        ...
-                views/
-                    ...
-                app_setting.php
-                urls.php
+            <app2>/
+                ...
         config/
             config.php
-            urls.php
-        core/
-            db_method.php
-            php_setting.php
-            url_parser.php
+        swdf/
+            base/
+                application.php
+                controller.php
+                model.php
+                view.php
+                widget.php
+            helpers/
+                html.php
+                url.php
+            swdf.php
+            swdf_base.php
         main.php
         robots.txt
         favicon.ico
 
-# File involved relations
-
-    main.php
-        ^--core/url_parser.php
-            ^-- config/url.php
-                ^-- apps/{<main_app_name>}/urls.php
-                    ^-- apps/{<main_app_name>}/app_setting.php
-                ^-- apps/{<other_app_name>}/urls.php
-                    ^-- apps/{<other_app_name>}/app_setting.php
-        ^-- core/php_setting.php
-        ^-- core/db_method.php
-        ^-- config/config.php
-
-        ^-- apps/{<app_name>}/app_setting.php
-        ^-- apps/{<app_name>}/controllers/{<controller_name>}.php
-            ^-- apps/{<app_name>}/models/{<model_name>}.php
-            ^-- apps/{<app_name>}/lib/controllers/guest_base.php
-                ^-- apps/{<app_name>}/models/{<model_name>}.php
-                    ^-- apps/{<app_name>}/lib/db_hander.php
-                        ^-- apps/{<app_name>}/app_setting.php
-                        ^-- core/db_method.php
-                ^-- apps/{<app_name>}/app_setting.php
-                ^-- apps/{<app_name>}/lib/url.php
-                        ^-- core/url_parser.php
-                ^-- apps/{<app_name>}/lib/controllers/base.php
-                    ^-- apps/{<app_name>}/models/{<model_name>}.php
-                        ^-- apps/{<app_name>}/lib/db_hander.php
-                            ^-- apps/{<app_name>}/app_setting.php
-                            ^-- core/db_method.php
-                    ^-- apps/{<app_name>}/app_setting.php
-                    ^-- apps/{<app_name>}/lib/url.php
-                        ^-- core/url_parser.php
-        ^-- apps/{<app_name>}/views/{<view_name>}.php
-            ^-- apps/{<app_name>}/lib/views/guest_base.php
-                ^-- apps/{<app_name>}/lib/url.php
-                    ^-- core/url_parser.php
-                ^-- apps/{<app_name>}/lib/views/base.php
-                    ^-- apps/{<app_name>}/lib/html.php
-                        ^-- apps/{<app_name>}/lib/url.php
-                            ^-- core/url_parser.php
-                    ^-- apps/{<app_name>}/lib/url.php
-                        ^-- core/url_parser.php
-            ^-- apps/{<app_name>}/lib/url.php
-                ^-- core/url_parser.php
-
-
 # Implenmentation
 
-## Entrance file `main.php`
+## `main.php`
 
-### Include files and setting
+### Source
 
-* Include files
+    define("DEBUG", TRUE);
+    define("STATIC_FILE", TRUE);
 
-    include CONFIG_PATH . "/config.php";
-    include CORE_PATH . "/php_setting.php";
-    include CORE_PATH . "/url_parser.php";
-    include CORE_PATH . "/db_method.php";
+    define("MAIN_SCRIPT", basename(__FILE__));
+    define("ROOT_PATH", __DIR__);
+    define("CONFIG_PATH", ROOT_PATH . "/config");
+    define("CORE_PATH", ROOT_PATH . "/swdf");
+    define("RUNTIME_PATH", ROOT_PATH . "/runtime");
+    define("APP_PATH", ROOT_PATH . "/apps");
 
-`config.php`: Define version, debug, default app, static file.
+    require CORE_PATH . "/swdf.php";
 
-`php_setting.php`: A class with methods of setting error reporting, session, time zone, slash, magic quote, load class.
+    $config = require CONFIG_PATH . "/config.php";
 
-`url_parser.php`: A class with methods of parse URI string.
+    $application = new swdf\base\application($config);
+    $application->run();
 
-`db_method.php`: A class with methods of operate database.
+### Process
 
-* Create `php_setting` object and do some actions
+* settings
 
-### Parse request URI
+    `swdf.php`: Define a swdf class, set autoload class, set php.
+    `config.php`: Overall config.
+
+The `swdf` class is global class, it is necessary to controll the whole data, it is the "pointer".
+
+* instance $application and run with config
+
+## Application run
+
+### Source
+
+    // Global config.
+    public $config = NULL;
+    public $apps = NULL;
+    public $main_app = NULL;
+    public $url_map = NULL;
+
+
+    // App properties from config file.
+    public $name = NULL;
+    public $title = NULL;
+    public $version = NULL;
+    public $params = NULL;
+    public $db_id = NULL;
+    public $meta_table = NULL;
+    public $sql = NULL;
+
+    public $special_actions = array();
+
+
+    // App properties runtime.
+    public $db = NULL;
+    public $router = NULL;
+    public $request = NULL;
+
+    public $data = NULL;
+
+
+    /**
+     *
+     *
+     */
+    public function __construct($config)
+    {
+        \swdf::$app = $this;                            // Point to this application.
+        $this->configure($config);                      // Config overall settings.
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function run()
+    {
+        $request_uri = $_SERVER["REQUEST_URI"];
+        $router = $this->get_router($request_uri);
+
+        if ($router === FALSE)
+        {
+            return FALSE;                               // Use php built-in file server
+        }
+        else
+        {
+        }
+
+        $this->configure_app($router);                  // Config app.
+
+        $this->response($router);
+    }
+
+### Process
 
 * Get request URI from `$_SERVER["REQUEST_URI"]`
-
-* Create `url_parser` object
-
-* Condition, whether use php built-in static file server
-
-If `STATIC_FILE` configed `TRUE`, some static file are directly served by php sever, not use `url_parser`.
-If `STATIC_FILE` configed `FALSE`, all URIs are passed to the `url_parser`.
-
-* `url_parser` match the request URI and return a array `dynamic_match`
-
-* Create a `app_setting` object accroding `dynamic_match` result
-
-### Not found
-
-If `controller_type` is `"SPECIAL"`, that is to say match failed.
-At the same time, `app_name` is `"MAIN_APP"` and `controller_flag` is `"NOT_FOUND"`.
-According `controller_flag`, in `app_setting.php` of `MAIN_APP`, a new URL definition is choosed.
-Then new `controller_name` and `action_name` is assigned.
-
-If not, use original data in `dynamic_match`.
-
-### Redirect
-
-If `method` is `301` or `302`, do redirection respectively, and exit.
-
-If not, next action, see below.
-
-### Action and response HTML
-
-* Create a controller object and run action accroding `dynamic_match` result
-
-The action run with data `parameters` in `dynamic_match`.
-Return a array which contains some data, such as `view_name`, model data.
-
-    return array(
-        "meta_data" => $this->meta_data,
-        "view_name" => $view_name,
-        "state" => "Y",
-        "parameters" => $parameters,
-        ...
-    );
-
-* Create a view object accroding return value of above action
-
-The action run with data `parameters` in `dynamic_match`.
-
-* Make the view
-
-If `method` is `text`, view object do text view action, or method is empty, do noral view action.
+* Get router form request URI
+* Config app with router
+* Response with router
 
 
-## URL parsing and generation `core/url_parer.php`
+## Application response
+
+
+    if ($router["controller_type"] === "special")
+    {
+        $special_actions = $this->apps[$this->name]["special_actions"];
+        $router["controller_name"] = explode(".", $special_actions[$router["special_flag"]][1])[0];
+        $router["action_name"] = explode(".", $special_actions[$router["special_flag"]][1])[1];
+    }
+    else
+    {
+    }
+
+    // Filter redirect.
+    if (
+        ($router["method"] === "301") ||
+        ($router["method"] === "302")
+    )
+    {
+        header("Location: " . url::get($router["target"], array(), ""), TRUE, $router["method"]);
+        exit();
+    }
+    else
+    {
+
+        $controller_class = $this->name . "\\controllers\\" . str_replace("/", "\\", $router["controller_name"]);
+        $controller = new $controller_class();
+
+        $filter_result = $controller->filter();
+        if ($filter_result === TRUE)
+        {
+            $result = $controller->$router["action_name"]();
+        }
+        else
+        {
+            $result = $filter_result;
+        }
+
+
+        // result[0]: view name
+        // result[1]: data array
+        $view_class = $this->name . "\\views\\" . str_replace("/", "\\", $result[0]);
+        $view = new $view_class($result[1]);
+
+        // Output mode.
+        if ($router["method"] === "text")
+        {
+            $view->output_text();
+        }
+        else if ($router["method"] === "")
+        {
+            $view->output_html();
+        }
+        else
+        {
+        }
+    }
+
+
+## URL parsing and generation `helper/url.php`
 
 ### URL definition
 
@@ -194,21 +220,21 @@ Single URL definition:
         array id,
     )
 
-* `pattern`, string
+* `pattern`
 
 URL regular expression to match request URI.
 
-* `url_base`, array
+* `url_base`
 
 Constant string in URL, there can be more than one element in the array.
 Whole URL is made of `url_base` and `url_parameters`.
 
-* `url_parameters`, array
+* `url_parameters`
 
 Parameter names appeared in `pattern`, there can be more than one element in the array.
 Whole URL is made of `url_base` and `url_parameters`.
 
-* `action`, array
+* `action`
 
 Array to location the action. 
 
@@ -221,17 +247,12 @@ Array to location the action.
         array target_url_id,
     )
 
-`app_name`: App name.
-
-`controller_type`: Controller type. Current only set "COMMON".
-
-`controller_name`: The class name with namespace without app name.
-
-`action_name`: The method name in controller class.
-
-`method`: Current "301"(permanently redirect), or "302"(temporarily redirect), or "text"(use text view), or ""(normal).
-
-`target_url_id`: The URL definition redirect to.
+    `app_name`:         App name.
+    `controller_type`:  Controller type. Current only set "COMMON".
+    `controller_name`:  The class name with namespace without app name.
+    `action_name`:      The method name in controller class.
+    `method`:           Current "301"(permanently redirect), or "302"(temporarily redirect), or "text"(use text view), or ""(normal).
+    `target_url_id`:    The URL definition redirect to.
 
 * `id`
 
@@ -241,11 +262,9 @@ Array to location the action.
         string extra,
     )
 
-`app_name`: App name.
-
-`identifier`: Identifier to identify this single url definition, typical use `<controller_name>.<action_name>`.
-
-`extra`: Extra identifier when some situation, for example, URL whether append "/".
+    `app_name`: App name.
+    `identifier`: Identifier to identify this single url definition, typical use `<controller_name>.<action_name>`.
+    `extra`: Extra identifier when some situation, for example, URL whether append "/".
 
 example:
 
@@ -253,8 +272,8 @@ example:
         "^/articles/(?P<full_article_slug>([[:word:]-]+/)+[[:word:]-]+)$",  // pattern
         array("/articles/",),                                               // url base string
         array("full_article_slug", ""),                                     // url parameters
-        array(blog, "COMMON", "guest/article", "slug_show", "", ""),   // action
-        array(blog, "guest/article.slug_show", "",),                   // id
+        array(blog, "COMMON", "guest/article", "slug_show", "", ""),        // action
+        array(blog, "guest/article.slug_show", "",),                        // id
     ),
 
     match url for example "/articles/life/how-to-drive".
@@ -342,41 +361,27 @@ The array:
 
 * When match successfully:
 
-`app_name`: App name set in URL definition.
-
-`controller_type`: Controller type set in URL definition. 
-
-`controller_flag`: Current "". 
-
-`controller_name`: Controller name set in URL definition.
-
-`action_name`: Action name set in URL definition.
-
-`method`: Method set in URL definition.
-
-`target`: Target set in URL definition.
-
-`parameters`: A array. 
-`get` is url parameter arrays match in URL definition , `post` is `$_POST` data array, `url` is this full URL.
+    `app_name`: App name set in URL definition.
+    `controller_type`: Controller type set in URL definition. 
+    `controller_flag`: Current "". 
+    `controller_name`: Controller name set in URL definition.
+    `action_name`: Action name set in URL definition.
+    `method`: Method set in URL definition.
+    `target`: Target set in URL definition.
+    `parameters`: A array. 
+    `get` is url parameter arrays match in URL definition , `post` is `$_POST` data array, `url` is this full URL.
 
 * When match failed:
 
-`app_name`: Current `"MAIN_APP"`.
-
-`controller_type`: Current `SPECIAL`.
-
-`controller_flag`: Current `"NOT_FOUND"`. 
-
-`controller_name`: Current "".
-
-`action_name`: Current "".
-
-`method`: Current "".
-
-`target`: Current "".
-
-`parameters`: A array. 
-`get` is array(), `post` is `$_POST` data array, `url` is this full URL.
+    `app_name`: Current `"MAIN_APP"`.
+    `controller_type`: Current `SPECIAL`.
+    `controller_flag`: Current `"NOT_FOUND"`. 
+    `controller_name`: Current "".
+    `action_name`: Current "".
+    `method`: Current "".
+    `target`: Current "".
+    `parameters`: A array. 
+    `get` is array(), `post` is `$_POST` data array, `url` is this full URL.
 
 ### URL generate
 
@@ -396,17 +401,10 @@ Get a static file path:
 
     public function get_static_file($app_name, $filename)
 
-## Database helper class `core/db_method.php`
-
-
-* Connect database with information from sub calss when object is created.
-
-When create object, get information and run connecting database, if table not exists, create it with SQL statements setting in app setting class.
+## Model `swdf/model.php`
 
 Inherited by app's model class, in subclass, set table name, app setting.
-
-* Define some public helper function to simplify database operation
-
+Define some public helper function to simplify database operation
 
     public function raw($sql)
         return array(
@@ -482,47 +480,34 @@ Inherited by app's model class, in subclass, set table name, app setting.
 
 Fully use class with namespace, prefix root namespace `<app_name>`.
 
-### App setting `apps/<appname>/app_setting.php`
+### App config `apps/<appname>/config.php`
 
 Only set some constant variables.
 
-    const APP_SPACE_NAME = __NAMESPACE__;
+    "name" => "blog",
+    "title" => "SWDF test blog",
+    "version" => "1.0.1",
+    "params" => array(
+        "file_folder" => "uploads",
+        "default_file_folder" => "uploads",
+        "file_host" => "local",
+        "default_file_host" => "local",
+    ),
 
-    const APP_DEFAULT_NAME = "<app name>";
-    const APP_VERSION = "<app version>";
-    
-    const SITE_NAME = "<site name>";
-    const SITE_DESCRIPTION = "<site description>";
-    const SITE_BEGIN_YEAR = "<begin year>";
+    "db_id" => array(
+        "host" => "localhost",
+        "name" => "swdf_testblog",
+        "user" => "swdf_testblog",
+        "password" => "swdf_testblog",
+    ),
 
-Database settings:
+    "special_actions" => array(
+        "default" => array("blog", "guest/home.show", ""),
+        "not_found" => array("blog", "common/not_found.show", ""),
+    ),
 
-    const DB_HOST = "<host>";
-    const DB_NAME = "<database name>";
-    const DB_USER = "<database username>";
-    const DB_PASSWORD = "<database password>";
-
-Session settings:
-
-    const SESSION_REGENERATE_TIME = 900;
-    const SESSION_OLD_LAST_TIME = 120;
-    const COOKIES_TIME = 864000;
-
-Upload file setting:
-
-    const MAX_FILE_SIZE = 5000000;
-
-Initialization tables setting:
-
-    const META_TABLE = "option";
-    const SQL = ""
-
-`SPECIAL_ACTIONS` array:
-
-    const SPECIAL_ACTIONS = array(
-            "DEFAULT" => array(__NAMESPACE__, "guest/home.show", ""),
-            "NOT_FOUND" => array(__NAMESPACE__, "common/not_found.show", ""),
-        );
+    "meta_table" => "option",
+    "sql" => "",
 
 When parse request URI failed, the `NOT_FOUND` key is used to get a controller.
 So main app must define this key.
