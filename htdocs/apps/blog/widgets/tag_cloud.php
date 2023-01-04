@@ -13,9 +13,7 @@ class tag_cloud extends widget
      */
     protected function run($config)
     {
-        $tags = $config["data"];
-
-        return $this->output_tags($tags);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -23,23 +21,24 @@ class tag_cloud extends widget
      *
      *
      */
-    private function output_tags($tags)
+    private function get_html($tags)
     {
         $tag_list = array();
+
         foreach ($tags as $tag)
         {
             $tag_list[] = html::a(
-                htmlspecialchars($tag["name"]),
+                htmlspecialchars($tag->record["name"]),
                 url::get(
-                    array( \swdf::$app->name, "guest/article.slug_list_tag", ""),
-                    array("tag_slug" => $tag["slug"]),
+                    array( \swdf::$app->name, "guest/article.slug_list_by_tag", ""),
+                    array("tag_slug" => $tag->record["slug"]),
                     ""
                 ),
                 array("class" => "tag")
             ) .
             html::inline_tag(
                 "span",
-                "[" . $tag["article_count"] . "]",
+                "[" . $tag->get_article_count() . "]",
                 array()
             );
         }

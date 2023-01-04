@@ -1,8 +1,17 @@
 <?php
+/**
+ * Markdown  -  A text-to-HTML conversion tool for web writers
+ *
+ * @package   php-markdown
+ * @author    Michel Fortin <michel.fortin@michelf.com>
+ * @copyright 2004-2021 Michel Fortin <https://michelf.com/projects/php-markdown/>
+ * @copyright (Original Markdown) 2004-2006 John Gruber <https://daringfireball.net/projects/markdown/>
+ */
+
 namespace blog\lib\Michelf;
 
 /**
- * Markdown Parser Interface 
+ * Markdown Parser Interface
  */
 interface MarkdownInterface {
 	/**

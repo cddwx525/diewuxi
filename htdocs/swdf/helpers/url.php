@@ -12,14 +12,14 @@ class url
     {
         $one_full_url_record = self::search_url_record($url_record);
 
-        if ($one_full_url_record != FALSE)
+        if ($one_full_url_record !== FALSE)
         {
             $final_url = array();
             $i = 0;
             foreach ($one_full_url_record[1] as $url_string)
             {
                 $final_url[] = $url_string;
-                if ($one_full_url_record[2][$i] != "")
+                if ($one_full_url_record[2][$i] !== "")
                 {
                     $final_url[] = $parameters[$one_full_url_record[2][$i]];
                 }
@@ -30,7 +30,7 @@ class url
             }
             $final_url = implode("", $final_url);
 
-            if ($anchor != "")
+            if ($anchor !== "")
             {
                 return self::root_url() . $final_url . "#" . $anchor;
             }
@@ -50,9 +50,9 @@ class url
      *
      * Get static link.
      */
-    public static function get_static($app_name, $filename)
+    public static function get_static($name)
     {
-        return self::root_url() . "/apps/" . $app_name . "/static/" . $filename;
+        return self::root_url() . "/" . APP_DIR . "/" . \swdf::$app->name . "/" . WEB_DIR . "/" . $name;
     }
 
 
@@ -60,19 +60,19 @@ class url
      *
      * Get static  link, relate.
      */
-    public static function get_static_relate($app_name, $filename)
+    public static function get_static_relate($name)
     {
-        return "/apps/" . $app_name . "/static/" . $filename;
+        return "/" . APP_DIR . "/" . \swdf::$app->name . "/" . WEB_DIR . "/" . $name;
     }
 
 
     /**
      *
-     * Get static file.
+     * Get file path.
      */
-    public static function get_static_file($app_name, $filename)
+    public static function get_path($name)
     {
-        return ROOT_PATH . "/apps/" . $app_name . "/static/" . $filename;
+        return ROOT_PATH . "/" . APP_DIR . "/" . \swdf::$app->name . "/" . WEB_DIR . "/" . $name;
     }
 
 
@@ -84,11 +84,25 @@ class url
     {
         if (empty($_SERVER["HTTPS"]))
         {
-            return $root_url = "http://" . $_SERVER["HTTP_HOST"] . \swdf::$app->config["site_base"];
+            if (empty(\swdf::$app->config["site_base"]))
+            {
+                return $root_url = "http://" . $_SERVER["HTTP_HOST"];
+            }
+            else
+            {
+                return $root_url = "http://" . $_SERVER["HTTP_HOST"] . "/" . \swdf::$app->config["site_base"];
+            }
         }
         else
         {
-            return $root_url = "https://" . $_SERVER["HTTP_HOST"] . \swdf::$app->config["site_base"];
+            if (empty(\swdf::$app->config["site_base"]))
+            {
+                return $root_url = "https://" . $_SERVER["HTTP_HOST"];
+            }
+            else
+            {
+                return $root_url = "https://" . $_SERVER["HTTP_HOST"] . "/" . \swdf::$app->config["site_base"];
+            }
         }
     }
 

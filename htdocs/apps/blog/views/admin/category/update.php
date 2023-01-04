@@ -1,45 +1,71 @@
 <?php
 namespace blog\views\admin\category;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
 
 class update extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Update category: [" . $this->data["category"]->get_full_name() . "]";
+        $this->position = array("Update category");
 
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Update categoty";
-        $position = " > Update category";
-
-        if ($state != "SUCCESS")
-        {
-            $message = "<p class=\"text-warning\">[" . $state . "], Update failed!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/category.edit", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
-        }
-        else
-        {
-            $message = "<p class=\"text-success\">Category have been updated successfully!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $parameters["post"]["id"]), "") . "\">View</a></p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/category.list_all", ""), array(), "") . "\">Category list</a></p>"; 
-        }
-
-        $content = "<h3 class=\"bg-primary\">Update category</h3>
-" . $message;
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Update category: [" . htmlspecialchars($this->data["category"]->get_full_name()) . "]",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    "Category updated Successfully!",
+                    array("class" => "text-center")
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "View",
+                        url::get(
+                            array(\swdf::$app->name, "admin/category.show", ""),
+                            array("id" => $this->data["category"]->record["id"]),
+                            ""
+                        ),
+                        array("class" => "text-padding")
+                    ) .
+                    html::a(
+                        "Category list",
+                        url::get(
+                            array(\swdf::$app->name, "admin/category.list_all", ""),
+                            array(),
+                            ""
+                        ),
+                        array("class" => "text-padding")
+                    ),
+                    array("class" => "text-center")
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Update successfully.";
     }
 }
 ?>

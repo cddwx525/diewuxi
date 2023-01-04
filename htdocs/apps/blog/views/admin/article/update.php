@@ -13,14 +13,14 @@ class update extends admin_base
      */
     protected function set_items()
     {
-        $this->title = "Update article [" . htmlspecialchars($this->data["article"]["title"]) . "]";
+        $this->title = "Update article: [" . $this->data["article"]->record["title"] . "]";
         $this->position = array("Update article");
 
         $this->main = html::tag(
             "div",
             html::inline_tag(
                 "h3",
-                "Update article [" . htmlspecialchars($this->data["article"]["title"]) . "]",
+                "Update article: [" . htmlspecialchars($this->data["article"]->record["title"]) . "]",
                 array()
             ) . "\n\n" .
             html::tag(
@@ -28,7 +28,7 @@ class update extends admin_base
                 html::inline_tag(
                     "p",
                     "Article updated Successfully!",
-                    array()
+                    array("class" => "text-center")
                 ) . "\n\n" .
                 html::inline_tag(
                     "p",
@@ -36,7 +36,7 @@ class update extends admin_base
                         "View",
                         url::get(
                             array(\swdf::$app->name, "admin/article.show", ""),
-                            array("id" => $this->data["article"]["id"]),
+                            array("id" => $this->data["article"]->record["id"]),
                             ""
                         ),
                         array("class" => "text-padding")
@@ -50,7 +50,7 @@ class update extends admin_base
                         ),
                         array("class" => "text-padding")
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

@@ -28,7 +28,7 @@ class not_found extends common_base
                 html::inline_tag(
                     "p",
                     "Your request page: \"" . \swdf::$app->request["url"] . "\" is not found on this server.",
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

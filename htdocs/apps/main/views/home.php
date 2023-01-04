@@ -1,6 +1,7 @@
 <?php
 namespace main\views;
 
+use swdf\helpers\html;
 use main\views\layouts\base;
 
 class home extends base
@@ -10,15 +11,26 @@ class home extends base
      */
     protected function set_items()
     {
-        $this->description = "Home page swdf(Simple Web development framwork)";
+        $this->description = "Diewuxi.";
         $this->title = "Home";
         $this->position = array("Home");
 
-        $this->main = "<div>
-    <h3>Home</h3>
+        $this->main = html::tag(
+            "div",
+            html::tag(
+                "div",
+                html::inline_tag("p", "Welcome to Diewuxi.", array()) . "\n" .
+                html::mono_tag(
+                    "img",
+                    array("src" => "/apps/blog/web/uploads/000/000/000/026-circutss.jpg", "alt" => "site_logo"),
+                ) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()),
+                array("class" => "markdown-body")
+            ),
+            array()
+        );
 
-    <h4>Wellcom to SWDF!</h4>
-</div>";
     }
 
 
@@ -28,14 +40,11 @@ class home extends base
      */
     protected function set_text()
     {
-        $this->text = "################################################################################
-This is text mode of home page.
-
-
-<a href=\"https://www.baidu.com\">Baidu</a>
-<img src=\"http://dwx.22web.org/apps/blog/static/media/2018/01/04/diewuxi.png\" />
-
-################################################################################";
+        $this->text = "" .
+            "################################################################################\n" .
+            "This is text mode of home page.\n" .
+            "<a href=\"https://www.baidu.com\">Baidu</a>\n" .
+            "################################################################################";
     }
 }
 ?>

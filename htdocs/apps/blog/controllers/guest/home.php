@@ -4,8 +4,7 @@ namespace blog\controllers\guest;
 use swdf\base\controller;
 use blog\filters\init;
 use blog\filters\side_data;
-use blog\models\page;
-use blog\lib\Michelf\MarkdownExtra;
+use blog\models\article;
 
 class home extends controller
 {
@@ -45,24 +44,13 @@ class home extends controller
      */
     public function show()
     {
-        $page_model = new page();
-
-        $home_page_id = \swdf::$app->data["options"]["home_page"];
-        $home_page = $page_model->select_by_id((int) $home_page_id)["record"];
-
-        $home_page["content"] = MarkdownExtra::defaultTransform($home_page["content"]);
-
-        /*
-        print("<pre>");
-        print_r(\swdf::$app->data["category_tree"]);
-        print("</pre>");
-        exit();
-        */
+        $article = new article();
+        $articles = $article->get_latest(10);
 
         return array(
             "guest/home",
             array(
-                "home_page" => $home_page,
+                "articles" => $articles,
             ),
         );
     }

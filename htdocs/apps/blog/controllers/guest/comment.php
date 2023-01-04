@@ -1,6 +1,7 @@
 <?php
 namespace blog\controllers\guest;
 
+use swdf\helpers\url;
 use swdf\base\controller;
 use blog\filters\init;
 use blog\filters\side_data;
@@ -45,10 +46,10 @@ class comment extends controller
      */
     public function write()
     {
-        $comment_model = new comment_model();
-        $article_model = new article();
+        $comment = new comment_model();
+        $article = new article();
 
-        if (! $comment_model->get_is_link(\swdf::$app->request["get"]))
+        if ($comment->get_is_link(\swdf::$app->request["get"]) === FALSE)
         {
             return array(
                 "common/not_found",
@@ -57,8 +58,8 @@ class comment extends controller
         }
         else
         {
-            $article = $article_model->get_by_id((int) \swdf::$app->request["get"]["article_id"]);
-            $comment = $comment_model->get_by_id((int) \swdf::$app->request["get"]["target_id"]);
+            $article = $article->get_by_id(\swdf::$app->request["get"]["article_id"]);
+            $comment = $comment->get_by_id(\swdf::$app->request["get"]["target_id"]);
 
             return array(
                 "guest/comment/write",
@@ -77,31 +78,32 @@ class comment extends controller
      */
     public function add()
     {
-        $comment_model = new comment_model();
-        $article_model = new article();
+        $comment = new comment_model();
+        $article = new article();
 
-        $validate = $comment_model->validate(\swdf::$app->request["post"]);
-        if (! $validate["result"])
+        $ret = $comment->guest_validate_add();
+        if ($ret["result"] === FALSE)
         {
             return array(
                 "common/message",
                 array(
                     "source" => "Add comment",
-                    "message" => $validate["message"],
+                    "message" => $ret["message"],
+                    "back_url" => url::get(array(\swdf::$app->name, "guest/home.show", ""), array(), ""),
                 )
             );
         }
         else
         {
-            $article = $article_model->get_by_id((int) \swdf::$app->request["post"]["article_id"]);
+            $article = $article->get_by_id(\swdf::$app->request["post"]["article_id"]);
 
-            $result = $comment_model->add_data(\swdf::$app->request["post"]);
+            $comment->guest_add_data();
 
             return array(
                 "guest/comment/add",
                 array(
                     "article" => $article,
-                    "last_id" => $result["last_id"],
+                    "comment" => $comment,
                 )
             );
         }

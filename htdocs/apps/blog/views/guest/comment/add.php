@@ -10,13 +10,13 @@ class add extends guest_base
 {
     protected function set_items()
     {
-        $this->title = "Comment under [" . htmlspecialchars($this->data["article"]["title"]) . "]";
-        $this->position = articles_position::widget(array("data" => $this->data["article"]["category"]["path"]));
+        $this->title = "Comment under [" . htmlspecialchars($this->data["article"]->record["title"]) . "]";
+        $this->position = articles_position::widget(array("data" => $this->data["article"]->get_category()->get_path()));
         $this->position[] = html::a(
-            htmlspecialchars($this->data["article"]["title"]),
+            htmlspecialchars($this->data["article"]->record["title"]),
             url::get(
                 array(\swdf::$app->name, "guest/article.slug_show", ""),
-                array("full_slug" => $this->data["article"]["full_slug"]),
+                array("full_slug" => $this->data["article"]->get_full_slug()),
                 ""
             ),
             array()
@@ -27,7 +27,7 @@ class add extends guest_base
             "div",
             html::inline_tag(
                 "h3",
-                "Add comment under: [" . htmlspecialchars($this->data["article"]["title"]) . "]",
+                "Add comment under: [" . htmlspecialchars($this->data["article"]->record["title"]) . "]",
                 array()
             ) . "\n\n" .
             html::tag(
@@ -35,7 +35,7 @@ class add extends guest_base
                 html::inline_tag(
                     "p",
                     "Comment added Successfully!",
-                    array()
+                    array("class" => "text-center")
                 ) . "\n\n" .
                 html::inline_tag(
                     "p",
@@ -43,12 +43,12 @@ class add extends guest_base
                         "View",
                         url::get(
                             array(\swdf::$app->name, "guest/article.slug_show", ""),
-                            array("full_slug" => $this->data["article"]["full_slug"]),
-                            $this->data["last_id"]
+                            array("full_slug" => $this->data["article"]->get_full_slug()),
+                            $this->data["comment"]->record["id"]
                         ),
                         array()
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

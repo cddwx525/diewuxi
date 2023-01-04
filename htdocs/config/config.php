@@ -4,8 +4,8 @@ return array(
     "main_app" => "main",
     "site_base" => "",
 
-    "site_name" => "SWDF",
-    "site_description" => "Welcom to SWDF(Simple Web Development Framwork)!",
+    "site_name" => "Diewuxi",
+    "site_description" => "There is a place in your mind, isn't it?",
     "site_begin_year" => "2017",
 
     "session_regenerate_time" => 900,

@@ -142,15 +142,7 @@ abstract class base extends view
     private function get_css()
     {
         $css_list = array();
-        $css_list[] = url::get_static(\swdf::$app->config["main_app"], "css/main.css");
-
-        if (\swdf::$app->name === \swdf::$app->config["main_app"])
-        {
-        }
-        else
-        {
-            $css_list[] = url::get_static(\swdf::$app->name, "css/main.css");
-        }
+        $css_list[] = url::get_static("css/main.css");
 
         $css_list = array_merge($css_list, $this->css);
 
@@ -182,16 +174,8 @@ abstract class base extends view
     {
         $title_list = array();
         $title_list[] = htmlspecialchars($this->title);
-
-        if (\swdf::$app->name === \swdf::$app->config["main_app"])
-        {
-        }
-        else
-        {
-            $title_list[] = \swdf::$app->title;
-        }
-
-        $title_list[] = "SWDF";
+        $title_list[] = \swdf::$app->title;
+        $title_list[] = \swdf::$app->config["site_name"];
 
         $title = "<title>" . implode(" - ", $title_list) . "</title>";
 
@@ -232,21 +216,13 @@ abstract class base extends view
             html::inline_tag(
                 "h1",
                 html::a(
-                    "SWDF",
-                    url::get(
-                        \swdf::$app->main_app["special_actions"]["default"],
-                        array(),
-                        ""
-                    ),
+                    \swdf::$app->config["site_name"],
+                    url::get(\swdf::$app->main_app["special_actions"]["default"], array(), ""),
                     array()
                 ),
                 array()
             ) . "\n" .
-            html::inline_tag(
-                "p",
-                "Wellcome to SWDF(Simple Web Development Framwork)",
-                array()
-            ),
+            html::inline_tag("p", \swdf::$app->config["site_description"], array()),
             array()
         );
 
@@ -263,22 +239,10 @@ abstract class base extends view
         $position_list = array();
 
         $position_list[] = html::a(
-            \swdf::$app->main_app["title"],
-            url::get(\swdf::$app->main_app["special_actions"]["default"], array(), ""),
+            \swdf::$app->title,
+            url::get(\swdf::$app->special_actions["default"], array(), ""),
             array()
         );
-
-        if (\swdf::$app->name === \swdf::$app->config["main_app"])
-        {
-        }
-        else
-        {
-            $position_list[] = html::a(
-                \swdf::$app->title,
-                url::get(\swdf::$app->special_actions["default"], array(), ""),
-                array()
-            );
-        }
 
         $position_list = array_merge($position_list, $this->position);
 
@@ -329,7 +293,7 @@ abstract class base extends view
                 "About",
             ),
             array(
-                "blog/",
+                url::root_url() . "/blog/",
                 "Blog >>",
             ),
         );

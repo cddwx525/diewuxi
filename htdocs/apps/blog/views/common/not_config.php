@@ -32,7 +32,7 @@ class not_config extends common_base
                         url::get(array(\swdf::$app->name, "admin/config.write",""), array(), ""),
                         array()
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

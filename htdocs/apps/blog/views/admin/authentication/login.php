@@ -28,7 +28,7 @@ class login extends common_base
                 html::inline_tag(
                     "p",
                     "Login successfully!",
-                    array()
+                    array("class" => "text-center")
                 ) . "\n\n" .
                 html::inline_tag(
                     "p",
@@ -41,7 +41,7 @@ class login extends common_base
                         ),
                         array()
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

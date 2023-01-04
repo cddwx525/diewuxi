@@ -1,0 +1,242 @@
+/*******************************************************************************
+ * # Whole
+ ******************************************************************************/
+* 
+{
+    /*
+    margin: 0px;
+    padding: 0px;
+    border-style: solid;
+    border-width: 1px;
+    */
+}
+
+body
+{
+    /*
+    color: black;
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+    */
+    font-family: monospace;
+    font-size: 10pt;
+    width: 800pt;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*******************************************************************************
+ * # Link
+ ******************************************************************************/
+a:link
+{
+    /*
+    color: blue;
+    text-decoration: none;
+    */
+    text-decoration: none;
+}
+
+a:hover
+{
+    /*
+    color: blue;
+    text-decoration: underline;
+    */
+    text-decoration: underline;
+}
+
+a:active
+{
+    /*
+    color: blue;
+    text-decoration: underline;
+    */
+    text-decoration: underline;
+}
+
+a:visited
+{
+    /*
+    color: blue;
+    text-decoration: none;
+    */
+    text-decoration: none;
+}
+
+
+/*******************************************************************************
+ * # Class
+ ******************************************************************************/
+
+/*******************************************************************************
+ * ## Float
+ ******************************************************************************/
+.float-left
+{
+    float: left;
+}
+
+.float-right
+{
+    float: right;
+}
+
+.clear-both
+{
+    clear: both;
+}
+
+/*******************************************************************************
+ * ## List
+ ******************************************************************************/
+.unstyle-list
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+/*******************************************************************************
+ * ## Block
+ ******************************************************************************/
+
+.inline
+{
+    display: inline;
+}
+
+
+.inline-block
+{
+    display: inline-block;
+}
+
+
+.text-padding
+{
+    padding: 0.2em 1em;
+}
+
+.text-padding-s
+{
+    padding: 0.2em 0.5em;
+}
+
+.block-padding
+{
+    padding: 0.5em 0.2em;
+}
+
+
+/*******************************************************************************
+ * ## Text color
+ ******************************************************************************/
+.text-warning
+{
+    color: red;
+}
+
+
+/*******************************************************************************
+ * ## Background color
+ ******************************************************************************/
+.bg-header-line-s
+{
+    background-color: greenyellow;
+}
+
+
+
+
+.bottom-border
+{
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+
+.top-border
+{
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+
+.text-center
+{
+    text-align: center;
+}
+
+
+
+
+
+.input-text
+{
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.input-submit
+{
+    box-sizing: border-box;
+    width: 100%;
+    height: 3em;
+}
+
+.textarea
+{
+    box-sizing: border-box;
+    width: 100%;
+    height: 10em;
+}
+
+.textarea-big
+{
+    box-sizing: border-box;
+    width: 100%;
+    height: 50em;
+}
+
+.tag
+{
+    margin: 0.2em;
+    display: inline-block;
+    color: Black;
+    background-color: LightGray;
+}
+
+.tag:hover
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
+}
+
+
+.markdown-body
+{
+    box-sizing: border-box;
+    margin: 0.3em auto;
+    min-width: 10em;
+    /*
+    max-width: 80em;
+    */
+}
+
+
+/*******************************************************************************
+ * ## layout
+ ******************************************************************************/
+.side
+{
+    width: 30%;
+}
+
+.main
+{
+    width: 70%;
+}

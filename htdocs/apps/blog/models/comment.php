@@ -17,14 +17,7 @@ class comment extends model
 
 
 
-    /**
-     *
-     *
-     */
-    public function get_comment($comment)
-    {
-        return $comment;
-    }
+       //$comment["article"] = $this->get_article($comment);
 
 
     /**
@@ -33,7 +26,9 @@ class comment extends model
      */
     public function get_by_id($id)
     {
-        return $this->get_comment($this->select_by_id($id)["record"]);
+        $this->record = $this->select_by_id($id)["record"];
+
+        return $this;
     }
 
 
@@ -41,28 +36,18 @@ class comment extends model
      *
      *
      */
-    public function hierarchy($comments)
+    public function find_all()
     {
-        foreach ($comments as $key => $comment)
+        $records = $this->order(array("`date` DESC"))->select()["record"];
+
+        $comments = array();
+        foreach ($records as $key => $item)
         {
-            $where = array(
-                array(
-                    "field" => "target_id",
-                    "value" => (int) $comment["id"],
-                    "operator" => "=",
-                    "condition" => "",
-                ),
-            );
-            $subcomments = $this->where($where)->order(array("`date` ASC"))->select()["record"];
-            if (! empty($subcomments))
-            {
-                $comments[$key]["reply"] = $this->hierarchy($subcomments);
-            }
-            else
-            {
-                $comments[$key]["reply"] = NULL;
-            }
+            $one_comment = new comment();
+            $one_comment->record = $item;
+            $comments[$key] = $one_comment;
         }
+
         return $comments;
     }
 
@@ -71,13 +56,97 @@ class comment extends model
      *
      *
      */
-    public function get_is_link($data)
+    public function get_article()
     {
-        $article_model = new article();
+        $article = new article();
+
+        return $article->get_by_id($this->record["article_id"]);
+    }
+
+
+
+    /**
+     *
+     *
+     */
+    public function get_reply()
+    {
+        $where = array(
+            array(
+                "field" => "target_id",
+                "value" => (int) $this->record["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+
+        $records = $this->where($where)->order(array("`date` ASC"))->select()["record"];
+
+        $comments = array();
+        foreach ($records as $key => $item)
+        {
+            $one_comment = new comment();
+            $one_comment->record = $item;
+            $comments[$key] = $one_comment;
+        }
+
+        return $comments;
+    }
+
+
+
+    ///**
+    // *
+    // *
+    // */
+    //public function hierarchy($comments)
+    //{
+    //    foreach ($comments as $key => $item)
+    //    {
+    //        $where = array(
+    //            array(
+    //                "field" => "target_id",
+    //                "value" => (int) $item->record["id"],
+    //                "operator" => "=",
+    //                "condition" => "",
+    //            ),
+    //        );
+    //        $records = $this->where($where)->order(array("`date` ASC"))->select()["record"];
+
+    //        $sub_comments = array();
+    //        foreach ($records as $key => $item)
+    //        {
+    //            $one_comment = new comment();
+    //            $one_comment->record = $item;
+    //            $sub_comments[$key] = $one_comment;
+    //        }
+
+    //        if (! empty($subcomments))
+    //        {
+    //            $comments[$key]["reply"] = $this->hierarchy($subcomments);
+    //        }
+    //        else
+    //        {
+    //            $comments[$key]["reply"] = NULL;
+    //        }
+    //    }
+    //    return $comments;
+    //}
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function get_is_link()
+    {
+        $article = new article();
 
         if (
-            (! isset($data["article_id"])) ||
-            (! isset($data["target_id"]))
+            (isset(\swdf::$app->request["get"]["article_id"])  === FALSE) ||
+            (isset(\swdf::$app->request["get"]["target_id"])   === FALSE)
         )
         {
             return FALSE;
@@ -85,30 +154,30 @@ class comment extends model
         else
         {
             if (
-                ($data["article_id"] === "") ||
-                ($data["target_id"] === "")
+                (\swdf::$app->request["get"]["article_id"]     === "") ||
+                (\swdf::$app->request["get"]["target_id"]      === "")
             )
             {
                 return FALSE;
             }
             else
             {
-                if ($data["target_id"] === "NULL")
+                if (\swdf::$app->request["get"]["target_id"] === "NULL")
                 {
                     return FALSE;
                 }
                 else
                 {
                     if (
-                        ($article_model->select_by_id((int) $data["article_id"])["record"] === FALSE) ||
-                        ($this->select_by_id((int) $data["target_id"])["record"] === FALSE)
+                        ($article->select_by_id(\swdf::$app->request["get"]["article_id"])["record"] === FALSE) ||
+                        ($this->select_by_id(\swdf::$app->request["get"]["target_id"])["record"] === FALSE)
                     )
                     {
                         return FALSE;
                     }
                     else
                     {
-                        if ($this->select_by_id((int) $data["target_id"])["record"]["article_id"] != $data["article_id"])
+                        if ($this->select_by_id(\swdf::$app->request["get"]["target_id"])["record"]["article_id"] !== \swdf::$app->request["get"]["article_id"])
                         {
                             return FALSE;
                         }
@@ -127,16 +196,283 @@ class comment extends model
      *
      *
      */
-    public function validate($data)
+    public function get_is_id($id)
     {
-        $article_model = new article();
+        if (
+            (isset($id) === FALSE)
+        )
+        {
+            return FALSE;
+        }
+        else
+        {
+            if (
+                ($id === "")
+            )
+            {
+                return FALSE;
+            }
+            else
+            {
+                if (
+                    ($this->select_by_id($id)["record"] === FALSE)
+                )
+                {
+                    return FALSE;
+                }
+                else
+                {
+                    return TRUE;
+                }
+            }
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function guest_validate_add()
+    {
+        return $this->validate();
+    }
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function guest_add_data()
+    {
+        if (\swdf::$app->request["post"]["target_id"] === "NULL")
+        {
+            $target_id = NULL;
+
+            $where = array(
+                array(
+                    "field" => "article_id",
+                    "value" => (int) \swdf::$app->request["post"]["article_id"],
+                    "operator" => "=",
+                    "condition" => "AND",
+                ),
+                array(
+                    "field" => "target_id",
+                    "operator" => "IS NULL",
+                    "condition" => "",
+                ),
+            );
+            $record = $this->where($where)->order(array("`number` DESC"))->select_first()["record"];
+
+            if ($record === FALSE)
+            {
+                $number = 1;
+            }
+            else
+            {
+                $number = (int) $record["number"] + 1;
+            }
+        }
+        else
+        {
+            $target_id = (int) \swdf::$app->request["post"]["target_id"];
+            $number = NULL;
+        }
+
+        $data_comment = array(
+            "date"          => date("Y-m-d H:i:s"),
+            "number"        => $number,
+
+            "user"          => \swdf::$app->request["post"]["user"],
+            "mail"          => \swdf::$app->request["post"]["mail"],
+            "site"          => \swdf::$app->request["post"]["site"],
+            "content"       => \swdf::$app->request["post"]["content"],
+
+            "target_id"     => $target_id,
+            "article_id"    => (int) \swdf::$app->request["post"]["article_id"],
+        );
+
+        $ret = $this->add($data_comment);
+
+        $this->get_by_id($ret["last_id"]);
+    }
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function validate_add()
+    {
+        if (
+            (isset(\swdf::$app->request["post"]["form_stamp"]) === FALSE) ||
+            (\swdf::$app->request["post"]["form_stamp"] !== \swdf::$app->data["user"]->record["form_stamp"])
+        )
+        {
+            return array(
+                "result" => FALSE,
+                "message" => "XSRF."
+            );
+        }
+        else
+        {
+            $ret = $this->validate();
+
+            if ($ret["result"] === FALSE)
+            {
+                return $ret;
+            }
+            else
+            {
+                return array(
+                    "result" => TRUE,
+                );
+            }
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function add_data()
+    {
+        if (\swdf::$app->request["post"]["target_id"] === "NULL")
+        {
+            $target_id = NULL;
+
+            $where = array(
+                array(
+                    "field" => "article_id",
+                    "value" => (int) \swdf::$app->request["post"]["article_id"],
+                    "operator" => "=",
+                    "condition" => "AND",
+                ),
+                array(
+                    "field" => "target_id",
+                    "operator" => "IS NULL",
+                    "condition" => "",
+                ),
+            );
+            $record = $this->where($where)->order(array("`number` DESC"))->select_first()["record"];
+
+            if ($record === FALSE)
+            {
+                $number = 1;
+            }
+            else
+            {
+                $number = (int) $record["number"] + 1;
+            }
+        }
+        else
+        {
+            $target_id = (int) \swdf::$app->request["post"]["target_id"];
+            $number = NULL;
+        }
+
+        if (isset(\swdf::$app->request["post"]["author"]) === TRUE)
+        {
+            $author = TRUE;
+        }
+        else
+        {
+            $author = FALSE;
+        }
+
+        $data_comment = array(
+            "date"          => date("Y-m-d H:i:s"),
+            "number"        => $number,
+            "user"          => \swdf::$app->request["post"]["user"],
+            "mail"          => \swdf::$app->request["post"]["mail"],
+            "site"          => \swdf::$app->request["post"]["site"],
+            "content"       => \swdf::$app->request["post"]["content"],
+            "author"        => $author,
+
+            "target_id"     => $target_id,
+            "article_id"    => (int) \swdf::$app->request["post"]["article_id"],
+        );
+
+        $ret = $this->add($data_comment);
+
+        $this->get_by_id($ret["last_id"]);
+    }
+
+
+
+    /**
+     *
+     *
+     */
+    public function validate_delete()
+    {
+        $ret = \swdf::$app->data["user"]->validate_password(\swdf::$app->request["post"]["password"]);
+        if ($ret["result"] === FALSE)
+        {
+            return $ret;
+        }
+        else
+        {
+            return array(
+                "result" => TRUE,
+            );
+        }
+    }
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function delete_data()
+    {
+        $this->delete_by_id($this->record["id"]);
+
+        $where = array(
+            array(
+                "field" => "target_id",
+                "value" => (int) \swdf::$app->request["post"]["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $records = $this->where($where)->select()["record"];
+
+        $this->recursive_delete($records);
+
+    }
+
+
+
+
+
+
+
+    /**
+     *
+     *
+     */
+    private function validate()
+    {
+        $article = new article();
+
+        //
+        // No form_stamp check, because guest have no form_stamp.
+        //
 
         if (
-            (! isset($data["article_id"])) ||
-            (! isset($data["target_id"])) ||
-            (! isset($data["user"])) ||
-            (! isset($data["mail"])) ||
-            (! isset($data["content"]))
+            (isset(\swdf::$app->request["post"]["article_id"])  === FALSE) ||
+            (isset(\swdf::$app->request["post"]["target_id"])   === FALSE) ||
+            (isset(\swdf::$app->request["post"]["user"])        === FALSE) ||
+            (isset(\swdf::$app->request["post"]["mail"])        === FALSE) ||
+            (isset(\swdf::$app->request["post"]["content"])     === FALSE)
         )
         {
             return array(
@@ -148,11 +484,11 @@ class comment extends model
         {
 
             if (
-                ($data["article_id"] === "") ||
-                ($data["target_id"] === "") ||
-                ($data["user"] === "") ||
-                ($data["mail"] === "") ||
-                ($data["content"] === "")
+                (\swdf::$app->request["post"]["article_id"] === "") ||
+                (\swdf::$app->request["post"]["target_id"]  === "") ||
+                (\swdf::$app->request["post"]["user"]       === "") ||
+                (\swdf::$app->request["post"]["mail"]       === "") ||
+                (\swdf::$app->request["post"]["content"]    === "")
             )
             {
                 return array(
@@ -162,9 +498,9 @@ class comment extends model
             }
             else
             {
-                if ($data["target_id"] == "NULL")
+                if (\swdf::$app->request["post"]["target_id"] === "NULL")
                 {
-                    if ($article_model->select_by_id((int) $data["article_id"])["record"] === FALSE)
+                    if ($article->select_by_id(\swdf::$app->request["post"]["article_id"])["record"] === FALSE)
                     {
                         return array(
                             "result" => FALSE,
@@ -181,8 +517,8 @@ class comment extends model
                 else
                 {
                     if (
-                        ($article_model->select_by_id((int) $data["article_id"])["record"] === FALSE) ||
-                        ($this->select_by_id((int) $data["target_id"])["record"] === FALSE)
+                        ($article->select_by_id(\swdf::$app->request["post"]["article_id"])["record"] === FALSE) ||
+                        ($this->select_by_id(\swdf::$app->request["post"]["target_id"])["record"] === FALSE)
                     )
                     {
                         return array(
@@ -192,7 +528,7 @@ class comment extends model
                     }
                     else
                     {
-                        if ($this->select_by_id((int) $data["target_id"])["record"]["article_id"] != $data["article_id"])
+                        if ($this->select_by_id(\swdf::$app->request["post"]["target_id"])["record"]["article_id"] !== \swdf::$app->request["post"]["article_id"])
                         {
                             return array(
                                 "result" => FALSE,
@@ -212,59 +548,38 @@ class comment extends model
     }
 
 
+
+
     /**
      *
      *
      */
-    public function add_data($data)
+    private function recursive_delete($records)
     {
-        if ($data["target_id"] === "NULL")
+        foreach ($records as $comment)
         {
-            $target_id = NULL;
+            $this->delete_by_id($comment["id"]);
 
             $where = array(
                 array(
-                    "field" => "article_id",
-                    "value" => (int) $data["article_id"],
-                    "operator" => "=",
-                    "condition" => "AND",
-                ),
-                array(
                     "field" => "target_id",
-                    "operator" => "IS NULL",
+                    "value" => (int) $comment["id"],
+                    "operator" => "=",
                     "condition" => "",
                 ),
             );
-            $comment_last = $this->where($where)->order(array("`number` DESC"))->select_first()["record"];
-            if ($comment_last === FALSE)
+
+            $sub_records = $this->where($where)->order(array("`date` ASC"))->select()["record"];
+
+            if (empty($sub_records) === FALSE)
             {
-                $number = 1;
+                $this->recursive_delete($sub_records);
             }
             else
             {
-                $number = $comment_last["number"] + 1;
             }
         }
-        else
-        {
-            $target_id = (int) $data["target_id"];
-            $number = NULL;
-        }
-
-        $data = array(
-            "date"          => date("Y-m-d H:i:s"),
-            "number"        => $number,
-
-            "user"          => $data["user"],
-            "mail"          => $data["mail"],
-            "site"          => $data["site"],
-            "content"       => $data["content"],
-
-            "target_id"     => $target_id,
-            "article_id"    => (int) $data["article_id"],
-        );
-
-        return $this->add($data);
     }
+
 }
 ?>

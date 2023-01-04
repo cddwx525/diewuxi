@@ -42,7 +42,7 @@ class swdf_base
     public static function load_class($class)
     {
         $path_list = array();
-        $path_list[] = ROOT_PATH . "/apps/" . str_replace("\\", "/", $class) . ".php";
+        $path_list[] = ROOT_PATH . "/" . APP_DIR . "/" . str_replace("\\", "/", $class) . ".php";
         $path_list[] = ROOT_PATH . "/" . str_replace("\\", "/", $class) . ".php";
 
         $file_path = NULL;

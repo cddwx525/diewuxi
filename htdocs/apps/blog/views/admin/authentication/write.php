@@ -26,10 +26,13 @@ class write extends common_base
             "<form action=\"" . url::get(array(\swdf::$app->name, "admin/authentication.login", ""), array(), "") . "\" method=\"post\">" . "\n" .
             "<label>Username:</label>" . "\n" .
             "<p><input type=\"text\" name=\"name\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
+
             "<label>Password:</label>" . "\n" .
             "<p><input type=\"password\" name=\"password\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
+
             "<label>Remember me</label>" . "\n" .
             "<p><input type=\"checkbox\" name=\"remember\" value=\"TRUE\" /></p>" . "\n\n" .
+
             "<p><input type=\"submit\" name=\"\" value=\"Login\" class=\"input-submit\" /></p>" . "\n" .
             "</form>",
             array()

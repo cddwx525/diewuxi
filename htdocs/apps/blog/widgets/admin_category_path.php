@@ -13,7 +13,7 @@ class admin_category_path extends widget
      */
     protected function run($config)
     {
-        return $this->get_category_path($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -21,16 +21,16 @@ class admin_category_path extends widget
      *
      *
      */
-    private function get_category_path($category)
+    private function get_html($category)
     {
         $category_path_list = array();
-        foreach ($category["path"]  as $one_category)
+        foreach ($category->get_path()  as $one_category)
         {
             $category_path_list[] = html::a(
-                htmlspecialchars($one_category["name"]),
+                htmlspecialchars($one_category->record["name"]),
                 url::get(
-                    array(\swdf::$app->name, "admin/article.list_category", ""),
-                    array("category_id" => $one_category["id"]),
+                    array(\swdf::$app->name, "admin/article.list_by_category", ""),
+                    array("category_id" => $one_category->record["id"]),
                     ""
                 ),
                 array()

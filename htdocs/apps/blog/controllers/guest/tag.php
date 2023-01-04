@@ -44,14 +44,12 @@ class tag extends controller
      */
     public function list_all()
     {
-        $tag_model = new tag_model();
-
-        $tags = $tag_model->get_tags();
+        $tag = new tag_model();
 
         return array(
             "guest/tag/list_all",
             array(
-                "tags" => $tags,
+                "tags" => $tag->find_all(),
             )
         );
     }
@@ -65,9 +63,9 @@ class tag extends controller
      */
     public function slug_show()
     {
-        $tag_model = new tag_model();
+        $tag = new tag_model();
 
-        if ($tag_model->get_is_slug(\swdf::$app->request["get"]["slug"]) === FALSE)
+        if ($tag->get_is_slug(\swdf::$app->request["get"]["slug"]) === FALSE)
         {
 
             return array(
@@ -77,7 +75,7 @@ class tag extends controller
         }
         else
         {
-            $tag = $tag_model->get_by_slug(\swdf::$app->request["get"]["slug"]);
+            $tag->get_by_slug(\swdf::$app->request["get"]["slug"]);
 
             return array(
                 "guest/tag/show",

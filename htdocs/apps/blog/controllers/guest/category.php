@@ -44,14 +44,14 @@ class category extends controller
      */
     public function list_all()
     {
-        $category_model = new category_model();
+        $category = new category_model();
 
-        $category_tree = $category_model->get_tree();
+        $root_categories = $category->get_root();
 
         return array(
             "guest/category/list_all",
             array(
-                "category_tree" => $category_tree,
+                "root_categories" => $root_categories,
             )
         );
     }
@@ -62,26 +62,24 @@ class category extends controller
      */
     public function slug_show()
     {
-        $category_model = new category_model();
+        $category = new category_model();
 
-        $full_slug = \swdf::$app->request["get"]["full_slug"];
-
-        if ($category_model->get_is_full_slug($full_slug) === TRUE)
+        if ($category->get_is_full_slug(\swdf::$app->request["get"]["full_slug"]) === FALSE)
         {
-            $category = $category_model->get_by_full_slug($full_slug);
+            return array(
+                "common/not_found",
+                array()
+            );
+        }
+        else
+        {
+            $category->get_by_full_slug(\swdf::$app->request["get"]["full_slug"]);
 
             return array(
                 "guest/category/show",
                 array(
                     "category" => $category,
                 )
-            );
-        }
-        else
-        {
-            return array(
-                "common/not_found",
-                array()
             );
         }
     }

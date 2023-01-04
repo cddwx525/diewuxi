@@ -13,7 +13,7 @@ class admin_comment_tree extends widget
      */
     protected function run($config)
     {
-        return $this->get_comment_tree_html($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -21,18 +21,18 @@ class admin_comment_tree extends widget
      *
      *
      */
-    private function get_comment_tree_html($comment_tree)
+    private function get_html($comments)
     {
-        if (empty($comment_tree))
+        if (empty($comments) === TRUE)
         {
-            $comment_html = "<p>There is no comments now.</p>";
+            $html = "<p>There is no comments now.</p>";
         }
         else
         {
-            $comment_html = $this->recusive_comment_tree_html($comment_tree);
+            $html = $this->recusive_comments($comments);
         }
 
-        return $comment_html;
+        return $html;
     }
 
 
@@ -40,12 +40,12 @@ class admin_comment_tree extends widget
      *
      *
      */
-    private function recusive_comment_tree_html($comment_tree)
+    private function recusive_comments($comments)
     {
         $comment_link_list = array();
-        foreach ($comment_tree as $comment)
+        foreach ($comments as $comment)
         {
-            if ($comment["author"] === "1")
+            if ($comment->record["author"] === "1")
             {
                 $author_part = html::inline_tag("span", "[Author]", array("class" => "text-warning text-padding"));
             }
@@ -58,13 +58,13 @@ class admin_comment_tree extends widget
                 "li",
                 html::tag(
                     "div",
-                    html::inline_tag("span", htmlspecialchars($comment["user"]), array()) .
+                    html::inline_tag("span", htmlspecialchars($comment->record["user"]), array()) .
                     $author_part .
-                    html::inline_tag("span", htmlspecialchars($comment["mail"]), array()) .
-                    html::inline_tag("span", htmlspecialchars($comment["site"]), array()) .
+                    html::inline_tag("span", "[" . htmlspecialchars($comment->record["mail"]) . "]", array("class" => "text-padding")) .
+                    html::inline_tag("span", "[" . htmlspecialchars($comment->record["site"]) . "]", array("class" => "text-padding")) .
                     html::inline_tag(
                         "span",
-                        is_null($comment["target_id"]) ? "[" . $comment["number"] . "#]" : "",
+                        is_null($comment->record["target_id"]) ? "[" . $comment->record["number"] . "#]" : "",
                         array("class" => "float-right")
                     ) . "\n" .
                     html::tag("div", "", array("class" => "clear-both")),
@@ -72,33 +72,51 @@ class admin_comment_tree extends widget
                 ) . "\n\n" .
                 html::tag(
                     "div",
-                    htmlspecialchars($comment["content"]),
+                    htmlspecialchars($comment->record["content"]),
                     array("class" => "block-padding")
                 ) . "\n\n" .
                 html::tag(
                     "div",
-                    html::inline_tag("span", $comment["date"], array("class" => "text-muted")) .
+                    html::inline_tag("span", $comment->record["date"], array("class" => "text-muted")) .
                     html::inline_tag(
                         "span",
                         html::a(
                             "Reply",
                             url::get(
                                 array(\swdf::$app->name, "admin/comment.write", ""),
-                                array("article_id" => $comment["article_id"], "target_id" => $comment["id"]),
+                                array("article_id" => $comment->record["article_id"], "target_id" => $comment->record["id"]),
                                 ""
                             ),
                             array("class" => "text-padding")
                         ),
                         array()
+                    ) .
+                    html::inline_tag(
+                        "span",
+                        html::a(
+                            "Delete",
+                            url::get(
+                                array(\swdf::$app->name, "admin/comment.delete_confirm", ""),
+                                array("id" => $comment->record["id"]),
+                                ""
+                            ),
+                            array("class" => "text-padding-s")
+                        ),
+                        array()
                     ),
                     array()
                 ),
-                array("id" => $comment["id"])
+                array("id" => $comment->record["id"])
             );
 
-            if (! is_null($comment["reply"]))
+            $reply = $comment->get_reply();
+
+            if (empty($reply) === FALSE)
             {
-                $comment_link_list[] = $this->get_comment_tree_html($comment["reply"]);
+                $comment_link_list[] = $this->recusive_comments($reply);
+            }
+            else
+            {
             }
         }
 

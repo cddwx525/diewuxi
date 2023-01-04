@@ -1,46 +1,71 @@
 <?php
 namespace blog\views\admin\tag;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
 
 class add extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Add tag";
+        $this->position = array("Add tag");
 
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Add tag";
-        $position = " > Add tag";
-
-        if ($state != "SUCCESS")
-        {
-            $message = "<p class=\"text-warning\">[" . $state . "], Add failed!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.write", ""), array(), "") . "\">Return</a></p>"; 
-        }
-        else
-        {
-            $message = "<p class=\"text-success\">Tag have been added successfully!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.show", ""), array("id" => $result["tag_add"]["last_id"]), "") . "\">View</a></p> 
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.list_all", ""), array(), "") . "\">Tag list</a></p>"; 
-        }
-
-        $content = "<h3 class=\"bg-primary\">Add tag</h3>
-
-" . $message;
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Add tag",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    "Tag added Successfully!",
+                    array("class" => "text-center")
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "View",
+                        url::get(
+                            array(\swdf::$app->name, "admin/tag.show", ""),
+                            array("id" => $this->data["tag"]->record["id"]),
+                            ""
+                        ),
+                        array("class" => "text-padding")
+                    ) .
+                    html::a(
+                        "Tag list",
+                        url::get(
+                            array(\swdf::$app->name, "admin/tag.list_all", ""),
+                            array(),
+                            ""
+                        ),
+                        array("class" => "text-padding")
+                    ),
+                    array("class" => "text-center")
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Add successfully.";
     }
 }
 ?>

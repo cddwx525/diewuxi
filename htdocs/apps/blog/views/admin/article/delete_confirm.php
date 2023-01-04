@@ -16,14 +16,14 @@ class delete_confirm extends admin_base
      */
     protected function set_items()
     {
-        $this->title = "Confirm delete article [" . htmlspecialchars($this->data["article"]["title"]) . "]";
+        $this->title = "Confirm delete article: [" . $this->data["article"]->record["title"] . "]";
         $this->position = array("Confirm delete article");
 
         $this->main = html::tag(
             "div",
             html::inline_tag(
                 "h3",
-                "Confirm delete article [" . htmlspecialchars($this->data["article"]["title"]) . "]",
+                "Confirm delete article: [" . htmlspecialchars($this->data["article"]->record["title"]) . "]",
                 array()
             ) . "\n" .
             html::inline_tag(
@@ -38,43 +38,43 @@ class delete_confirm extends admin_base
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Title: ", array()) .
-                        html::inline_tag("span", htmlspecialchars($this->data["article"]["title"]), array()),
+                        html::inline_tag("span", htmlspecialchars($this->data["article"]->record["title"]), array()),
                         array()
                     ) . "\n" .
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Description: ", array()) .
-                        html::inline_tag("span", htmlspecialchars($this->data["article"]["description"]), array()),
+                        html::inline_tag("span", htmlspecialchars($this->data["article"]->record["description"]), array()),
                         array()
                     ) . "\n" .
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Keywords: ", array()) .
-                        html::inline_tag("span", htmlspecialchars($this->data["article"]["keywords"]), array()),
+                        html::inline_tag("span", htmlspecialchars($this->data["article"]->record["keywords"]), array()),
                         array()
                     ) . "\n" .
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Category: ", array()) .
-                        html::inline_tag("span", admin_category_path::widget(array("data" => $this->data["article"]["category"])), array()),
+                        html::inline_tag("span", admin_category_path::widget(array("data" => $this->data["article"]->get_category())), array()),
                         array()
                     ) . "\n" .
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Tags: ", array()) .
-                        html::inline_tag("span", admin_tag_list::widget(array("data" => $this->data["article"]["tags"])), array()),
+                        html::inline_tag("span", admin_tag_list::widget(array("data" => $this->data["article"]->get_tags())), array()),
                         array()
                     ) . "\n" .
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Date: ", array()) .
-                        html::inline_tag("span", $this->data["article"]["date"], array()),
+                        html::inline_tag("span", $this->data["article"]->record["date"], array()),
                         array()
                     ) . "\n" .
                     html::inline_tag(
                         "li",
                         html::inline_tag("span", "Comments count: ", array()) .
-                        html::inline_tag("span", $this->data["article"]["comment_count"], array()),
+                        html::inline_tag("span", $this->data["article"]->get_comment_count(), array()),
                         array()
                     ),
                     array()
@@ -85,7 +85,7 @@ class delete_confirm extends admin_base
                 "form",
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["article"]["id"])),
+                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["article"]->record["id"])),
                     array()
                 ) . "\n\n" .
                 html::inline_tag("p", "Input user password to confirm the action: ", array()) . "\n" .

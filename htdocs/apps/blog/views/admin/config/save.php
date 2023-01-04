@@ -1,47 +1,48 @@
 <?php
 namespace blog\views\admin\config;
 
-use blog\lib\url;
-use blog\lib\views\simple;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\common_base;
 
-class save extends simple
+class save extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
-
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Save config";
-
-        $position = " > save config";
-
-        if ($state != "SUCCESS")
-        {
-            $message = "<p class=\"text-warning\">[" . $state . "], Save failed!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/config.write", ""), array(), "") . "\">Re config</a></p>";
-        }
-        else
-        {
-            $message = "<p class=\"text-success\">Configs have been saved successfully!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/home.show", ""), array(), "") . "\">Admin Home</a></p> 
-<p><a href=\"" . $url->get(array($app_space_name, "guest/home.show", ""), array(), "") . "\">Home</a></p>";
-        }
-
-        $content = "<h3 class=\"bg-primary\">Save config</h3>
-
-" . $message;
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->title = "Save config";
+        $this->position = array("Save config");
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Save config",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    "Save config Successfully!",
+                    array("class" => "text-center")
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Save config successfully.";
     }
 }
 ?>

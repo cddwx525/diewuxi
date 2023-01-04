@@ -13,17 +13,17 @@ class categories_position extends widget
      */
     protected function run($config)
     {
-        return $this->get_position($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
     /**
      *
      *
      */
-    private function get_position($category_path)
+    private function get_html($category_path)
     {
-        $position_list = array();
-        $position_list[] = html::a(
+        $html = array();
+        $html[] = html::a(
             "Categories",
             url::get(
                 array(\swdf::$app->name, "guest/category.list_all", ""),
@@ -35,18 +35,18 @@ class categories_position extends widget
 
         foreach ($category_path as $one_category)
         {
-            $position_list[] = html::a(
-                htmlspecialchars($one_category["name"]),
+            $html[] = html::a(
+                htmlspecialchars($one_category->record["name"]),
                 url::get(
                     array(\swdf::$app->name, "guest/category.slug_show", ""),
-                    array("full_slug" => $one_category["full_slug"]),
+                    array("full_slug" => $one_category->get_full_slug()),
                     ""
                 ),
                 array()
             );
         }
 
-        return $position_list;
+        return $html;
     }
 }
 ?>

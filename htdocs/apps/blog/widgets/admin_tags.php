@@ -13,7 +13,7 @@ class admin_tags extends widget
      */
     protected function run($config)
     {
-        return $this->get_tags($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -21,11 +21,11 @@ class admin_tags extends widget
      *
      *
      */
-    private function get_tags($tags)
+    private function get_html($tags)
     {
-        if (empty($tags))
+        if (empty($tags) === TRUE)
         {
-            $tags_link = "<span>There is no tag now.</span>";
+            $html = "<span>There is no tag now.</span>";
         }
         else
         {
@@ -33,29 +33,29 @@ class admin_tags extends widget
             foreach ($tags as $tag)
             {
                 $tags_link_list[] = html::a(
-                    htmlspecialchars($tag["name"]),
+                    htmlspecialchars($tag->record["name"]),
                     url::get(
-                        array(\swdf::$app->name, "admin/article.list_tag", ""),
-                        array("tag_id" => $tag["id"]),
+                        array(\swdf::$app->name, "admin/tag.show", ""),
+                        array("id" => $tag->record["id"]),
                         ""
                     ),
                     array()
                 ) .
                 html::inline_tag(
                     "span",
-                    htmlspecialchars($tag["slug"]),
+                    htmlspecialchars($tag->record["slug"]),
                     array("class" => "text-padding-s")
                 ) .
                 html::inline_tag(
                     "span",
-                    "[" . $tag["article_count"] . "]",
+                    "[" . $tag->get_article_count() . "]",
                     array()
                 );
             }
-            $tags_link = implode(", ", $tags_link_list);
+            $html = implode(", ", $tags_link_list);
         }
 
-        return $tags_link;
+        return $html;
     }
 }
 ?>

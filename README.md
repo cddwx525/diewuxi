@@ -14,10 +14,10 @@ A simple MVC web app development framwork written in php.
                 controllers/
                 lib/
                 models/
-                statics/
+                web/
                     css/
                     fonts/
-                    media/
+                    uploads/
                 views/
                 config.php
                 urls.php
@@ -50,12 +50,15 @@ A simple MVC web app development framwork written in php.
     define("DEBUG", TRUE);
     define("STATIC_FILE", TRUE);
 
+    define("WEB_DIR", "web");           // NOTE: check htaccess
+    define("APP_DIR", "apps");          // NOTE: check htaccess
+
     define("MAIN_SCRIPT", basename(__FILE__));
     define("ROOT_PATH", __DIR__);
     define("CONFIG_PATH", ROOT_PATH . "/config");
     define("CORE_PATH", ROOT_PATH . "/swdf");
     define("RUNTIME_PATH", ROOT_PATH . "/runtime");
-    define("APP_PATH", ROOT_PATH . "/apps");
+    define("APP_PATH", ROOT_PATH . "/" . APP_DIR);
 
     require CORE_PATH . "/swdf.php";
 
@@ -66,14 +69,14 @@ A simple MVC web app development framwork written in php.
 
 ### Process
 
-* settings
+1. settings
 
     `swdf.php`: Define a swdf class, set autoload class, set php.
     `config.php`: Overall config.
 
 The `swdf` class is global class, it is necessary to controll the whole data, it is the "pointer".
 
-* instance $application and run with config
+2. Create $application instance and run with config
 
 ## Application run
 
@@ -102,6 +105,7 @@ The `swdf` class is global class, it is necessary to controll the whole data, it
     public $db = NULL;
     public $router = NULL;
     public $request = NULL;
+    public $file = NULL;
 
     public $data = NULL;
 
@@ -128,80 +132,93 @@ The `swdf` class is global class, it is necessary to controll the whole data, it
 
         if ($router === FALSE)
         {
-            return FALSE;                               // Use php built-in file server
+            // Response as static file by php built-in server.
+
+            return FALSE;
         }
         else
         {
+            $this->configure_app($router);
+            $this->response($router);
+
+            return TRUE;
         }
-
-        $this->configure_app($router);                  // Config app.
-
-        $this->response($router);
     }
+
 
 ### Process
 
-* Get request URI from `$_SERVER["REQUEST_URI"]`
-* Get router form request URI
-* Config app with router
-* Response with router
+1. Get request URI from `$_SERVER["REQUEST_URI"]`
+2. Get router form request URI
+3. Config app with router
+4. Response with router
 
 
 ## Application response
 
 
-    if ($router["controller_type"] === "special")
+    private function response($router)
     {
-        $special_actions = $this->apps[$this->name]["special_actions"];
-        $router["controller_name"] = explode(".", $special_actions[$router["special_flag"]][1])[0];
-        $router["action_name"] = explode(".", $special_actions[$router["special_flag"]][1])[1];
-    }
-    else
-    {
-    }
-
-    // Filter redirect.
-    if (
-        ($router["method"] === "301") ||
-        ($router["method"] === "302")
-    )
-    {
-        header("Location: " . url::get($router["target"], array(), ""), TRUE, $router["method"]);
-        exit();
-    }
-    else
-    {
-
-        $controller_class = $this->name . "\\controllers\\" . str_replace("/", "\\", $router["controller_name"]);
-        $controller = new $controller_class();
-
-        $filter_result = $controller->filter();
-        if ($filter_result === TRUE)
+        // Special router.
+        //
+        // special_actions array example:
+        // array(
+        //     "default" => array("main", "home.show", ""),
+        //     "not_found" => array("main", "not_found.show", ""),
+        // ),
+        if ($router["controller_type"] === "special")
         {
-            $result = $controller->$router["action_name"]();
+            $special_actions = $this->apps[$this->name]["special_actions"];
+            $router["controller_name"] = explode(".", $special_actions[$router["special_flag"]][1])[0];
+            $router["action_name"] = explode(".", $special_actions[$router["special_flag"]][1])[1];
         }
         else
         {
-            $result = $filter_result;
         }
 
-
-        // result[0]: view name
-        // result[1]: data array
-        $view_class = $this->name . "\\views\\" . str_replace("/", "\\", $result[0]);
-        $view = new $view_class($result[1]);
-
-        // Output mode.
-        if ($router["method"] === "text")
+        if (
+            ($router["method"] === "301") ||
+            ($router["method"] === "302")
+        )
         {
-            $view->output_text();
-        }
-        else if ($router["method"] === "")
-        {
-            $view->output_html();
+            header("Location: " . url::get($router["target"], array(), ""), TRUE, $router["method"]);
+            exit();
         }
         else
         {
+            $controller_class = $this->name . "\\controllers\\" . str_replace("/", "\\", $router["controller_name"]);
+            $controller = new $controller_class();
+
+            $filter_result = $controller->filter();
+            if ($filter_result === TRUE)
+            {
+                //$result = $controller->$router["action_name"]();
+                $action_name=$router["action_name"];
+                $result = $controller->$action_name();
+            }
+            else
+            {
+                $result = $filter_result;
+            }
+
+
+            // result[0]: view name
+            // result[1]: data array
+            $view_class = $this->name . "\\views\\" . str_replace("/", "\\", $result[0]);
+            $view = new $view_class($result[1]);
+
+            // Output mode.
+            if ($router["method"] === "")
+            {
+                $view->output_html();
+            }
+            else if ($router["method"] === "text")
+            {
+                $view->output_text();
+            }
+            else
+            {
+            }
         }
     }
 
@@ -318,14 +335,14 @@ example:
                 "^/home\?action=show$",
                 array("/home?action=show"),
                 array(""),
-                array(blog, "COMMON", "admin/home", "show", "", ""),
+                array(blog, "COMMON", "admin/home", "show", "", array()),
                 array(blog, "admin/home.show", "",),
             ),
             array(
                 "^/articles\?action=show&id=(?P<id>\d+)$",
                 array("/articles?action=show&id=",),
                 array("id",),
-                array($app_name, "COMMON", "admin/article", "show", "", ""),
+                array($app_name, "COMMON", "admin/article", "show", "", array()),
                 array($app_name, "admin/article.show", "",),
             ),
         ),
@@ -344,18 +361,18 @@ Use URL definitions to match the request URI, the first matched URL definition i
 
 The array:
 
-    return array(
-        "app_name" => $app_name,
-        "controller_type" => $controller_type,
-        "special_flag" => $special_flag,
-        "controller_name" => $controller_name,
-        "action_name" => $action_name,
-        "method" => $method,
-        "target" => $target,
-        "parameters" => array(
-            "get" => $get,
-            "post" => $post,
-            "url" => $this->root_url() . $original_string,
+    array(
+        "app_name"          => $app_name,
+        "controller_type"   => $controller_type,
+        "special_flag"      => $special_flag,
+        "controller_name"   => $controller_name,
+        "action_name"       => $action_name,
+        "method"            => $method,
+        "target"            => $target,
+        "parameters"        => array(
+                "get"   => $get,
+                "post"  => $post,
+                "url"   => url::root_url() . $request_uri,
         ),
     );
 
@@ -391,15 +408,15 @@ Get a URL:
 
 Get a absolute static file URL:
 
-    public function get_static($app_name, $filename)
+    public function get_static($filename)
 
 Get a relate static file URL:
 
-    public function get_static_relate($app_name, $filename)
+    public function get_static_relate($filename)
 
 Get a static file path:
 
-    public function get_static_file($app_name, $filename)
+    public function get_static_file($filename)
 
 ## Model `swdf/model.php`
 
@@ -470,10 +487,13 @@ Define some public helper function to simplify database operation
     public function where($where = array())
         return $this;
 
+    public function batch_where($where = array())
+        return $this;
+
     public function order($order = array())
         return $this;
 
-    public function limit($limit = array())
+    public function limit($offset, $count)
         return $this;
 
 ## App
@@ -488,10 +508,6 @@ Only set some constant variables.
     "title" => "SWDF test blog",
     "version" => "1.0.1",
     "params" => array(
-        "file_folder" => "uploads",
-        "default_file_folder" => "uploads",
-        "file_host" => "local",
-        "default_file_host" => "local",
     ),
 
     "db_id" => array(
@@ -529,22 +545,22 @@ Dynamic pages.
 
 ### Feature
 
-* Add, update, delete, get function for article, category, tag
-* Edit about and home page
-* Edit article with markdown syntax
-* Unlimit category hierarchy list
-* Unlimit comment hierarchy list
-* Article-tag many-to-many relation
-* All left-align HTML code
-* Cookies or session based login remember
-* XSRF check
-* Cookies token steal check
-* Media managent
+    * Add, update, delete, get function for article, category, tag
+    * Edit about and home page
+    * Edit article with markdown syntax
+    * Unlimit category hierarchy list
+    * Unlimit comment hierarchy list
+    * Article-tag many-to-many relation
+    * All left-align HTML code
+    * Cookies or session based login remember
+    * XSRF check
+    * Cookies token steal check
+    * Media managent
 
 # htaccess file
 
-    RewriteCond %{REQUEST_URI} !^/apps/\w+/static/\w+(/\w+)*/.*$
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/apps/\w+/web/\w+(/\w+)*/.*$
     RewriteCond %{REQUEST_URI} !^/favicon\.ico$
     RewriteCond %{REQUEST_URI} !^/robots\.txt$
     RewriteRule ^.*$ main.php [L]
-

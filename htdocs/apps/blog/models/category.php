@@ -16,33 +16,6 @@ class category extends model
     }
 
 
-    /**
-     *
-     *
-     */
-    public function get_category($category)
-    {
-        $category = $this->get_base_category($category);
-        $category["path"] = $this->get_path($category);
-        $category["sub"] = $this->get_sub($category);
-
-        return $category;
-    }
-
-
-    /**
-     *
-     *
-     */
-    public function get_base_category($category)
-    {
-        $category["full_slug"] = $this->get_full_slug($category);
-        $category["full_name"] = $this->get_full_name($category);
-        $category["article_count"] = $this->get_article_count($category);
-
-        return $category;
-    }
-
 
     /**
      *
@@ -50,7 +23,9 @@ class category extends model
      */
     public function get_by_id($id)
     {
-        return $this->get_category($this->select_by_id($id)["record"]);
+        $this->record = $this->select_by_id($id)["record"];
+
+        return $this;
     }
 
 
@@ -84,7 +59,7 @@ class category extends model
                     ),
                     array(
                         "field" => "slug",
-                        "value" => $full_slug_data[0],
+                        "value" => $slug,
                         "operator" => "=",
                         "condition" => "",
                     ),
@@ -95,7 +70,7 @@ class category extends model
                 $where = array(
                     array(
                         "field" => "parent_id",
-                        "value" => (int) $category["id"],
+                        "value" => (int) $this->record["id"],
                         "operator" => "=",
                         "condition" => "AND",
                     ),
@@ -108,10 +83,10 @@ class category extends model
                 );
             }
 
-            $category = $this->where($where)->select_first()["record"];
+            $this->record = $this->where($where)->select_first()["record"];
         }
 
-        return $this->get_category($category);
+        return $this;
     }
 
 
@@ -119,25 +94,47 @@ class category extends model
      *
      *
      */
-    public function get_articles($category)
+    public function find_all()
     {
-        $article_model = new article();
+        $records = $this->select()["record"];
 
-        // Get articles belonged to category.
+        $categories = array();
+        foreach ($records as $key => $item)
+        {
+            $one_category = new category();
+            $one_category->record = $item;
+            $categories[$key] = $one_category;
+        }
+
+        return $categories;
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function get_articles()
+    {
+        $article = new article();
+
         $where = array(
             array(
                 "field" => "category_id",
-                "value" => (int) $category["id"],
+                "value" => (int) $this->record["id"],
                 "operator" => "=",
                 "condition" => "",
             ),
         );
-        $articles = $article_model->where($where)->select()["record"];
+        $records = $article->where($where)->select()["record"];
 
-        // Add relate data to article.
-        foreach ($articles as $key => $article)
+
+        $articles = array();
+        foreach ($records as $key => $item)
         {
-            $articles[$key] = $article_model->get_article($article);
+            $one_article = new article();
+            $one_article->record = $item;
+            $articles[$key] = $one_article;
         }
 
         return $articles;
@@ -148,13 +145,13 @@ class category extends model
      *
      *
      */
-    public function get_all_articles($category)
+    public function get_all_articles()
     {
-        $article_model = new article();
+        $article = new article();
 
         $categories = array();
-        $categories[] = $category;
-        $categories = array_merge($categories, $this->get_all_sub($category));
+        $categories[] = $this;
+        $categories = array_merge($categories, $this->get_all_sub());
 
 
         // Get articles belonged to category.
@@ -164,17 +161,19 @@ class category extends model
         {
             $where[1][] = array(
                 "field" => "category_id",
-                "value" => (int) $one_category["id"],
+                "value" => (int) $one_category->record["id"],
                 "operator" => "=",
             );
         }
-        $articles = $article_model->batch_where($where)->order(array("`date` DESC"))->select()["record"];
+        $records = $article->batch_where($where)->order(array("`date` DESC"))->select()["record"];
 
 
-        // Add relate data to article.
-        foreach ($articles as $key => $article)
+        $articles = array();
+        foreach ($records as $key => $item)
         {
-            $articles[$key] = $article_model->get_article($article);
+            $one_article = new article();
+            $one_article->record = $item;
+            $articles[$key] = $one_article;
         }
 
         return $articles;
@@ -185,28 +184,55 @@ class category extends model
      * Get article_count.
      *
      */
-    public function get_article_count($category)
+    public function get_article_count()
     {
-        $article_model = new article();
+        $article = new article();
 
         $where = array(
             array(
                 "field" => "category_id",
-                "value" => (int) $category["id"],
+                "value" => (int) $this->record["id"],
                 "operator" => "=",
                 "condition" => "",
             ),
         );
 
-        return $article_model->where($where)->select_count()["record"];
+        return $article->where($where)->select_count()["record"];
     }
 
 
+    ///**
+    // * Category array tree.
+    // *
+    // */
+    //public function get_tree()
+    //{
+    //    $where = array(
+    //        array(
+    //            "field" => "parent_id",
+    //            "operator" => "IS NULL",
+    //            "condition" => "",
+    //        ),
+    //    );
+    //    $records = $this->where($where)->select()["record"];
+
+    //    $top_categories = array();
+    //    foreach ($records as $key => $item)
+    //    {
+    //        $one_category = new category();
+    //        $one_category->record = $item;
+    //        $top_categories[$key] = $one_category;
+    //    }
+
+    //    return $this->hierarchy($top_categories);
+    //}
+
+
     /**
-     * Category array tree.
+     *
      *
      */
-    public function get_tree()
+    public function get_root()
     {
         $where = array(
             array(
@@ -215,59 +241,65 @@ class category extends model
                 "condition" => "",
             ),
         );
-        $category_tree = $this->hierarchy($this->where($where)->select()["record"]);
+        $records = $this->where($where)->select()["record"];
 
-        return $category_tree;
+        $root_categories = array();
+        foreach ($records as $key => $item)
+        {
+            $one_category = new category();
+            $one_category->record = $item;
+            $root_categories[$key] = $one_category;
+        }
+
+        return $root_categories;
     }
 
 
     /**
-     *
-     *
+     * @description Categories instances from this up to root.
+     * @param None
+     * @return array Categories instances array.
      */
-    private function hierarchy($categories)
+    public function get_path()
     {
-        foreach ($categories as $key => $category)
+        $categories = array();
+
+        $categories[] = $this;
+
+        // New instance, do NOT affect this instance.
+        $category = new category();
+        $category->get_by_id($this->record["id"]);
+
+        while ($category->record["parent_id"] !== NULL)
         {
-            $categories[$key] = $this->get_category($category);
-
-            // Get sub categories.
-            $subcategories = $this->get_sub($category);
-
-            if (! empty($subcategories))
-            {
-                $categories[$key]["son"] = $this->hierarchy($subcategories);
-            }
-            else
-            {
-                $categories[$key]["son"] = NULL;
-            }
+            // Use return value to accept instance.
+            $category = $category->get_by_id($category->record["parent_id"]);
+            $categories[] = $category;
         }
+
+        krsort($categories, SORT_NUMERIC);
 
         return $categories;
     }
 
 
     /**
-     * Category list from a category up to top category.
+     *
      *
      */
-    public function get_path($category)
+    public function get_parent()
     {
-        $category_list = array();
-
-        $category_list[] = $this->get_base_category($category);
-
-        while ($category["parent_id"] != NULL)
+        if (is_null($this->record["parent_id"]) === TRUE)
         {
-            $category = $this->select_by_id((int) $category["parent_id"])["record"];
-
-            $category_list[] = $this->get_base_category($category);
+            return NULL;
         }
+        else
+        {
+            // New instance, do NOT affect this instance.
+            $category = new category();
 
-        krsort($category_list, SORT_NUMERIC);
-
-        return $category_list;
+            return $category->get_by_id($this->record["parent_id"]);
+        }
     }
 
 
@@ -275,24 +307,27 @@ class category extends model
      * Sub category list of a category.
      *
      */
-    private function get_sub($category)
+    public function get_sub()
     {
         $where = array(
             array(
                 "field" => "parent_id",
-                "value" => (int) $category["id"],
+                "value" => (int) $this->record["id"],
                 "operator" => "=",
                 "condition" => "",
             ),
         );
-        $sub_categories = $this->where($where)->select()["record"];
+        $records = $this->where($where)->select()["record"];
 
-        foreach ($sub_categories as $key => $one_category)
+        $categories = array();
+        foreach ($records as $key => $item)
         {
-            $sub_categories[$key] = $this->get_base_category($one_category);
+            $one_category = new category();
+            $one_category->record = $item;
+            $categories[$key] = $one_category;
         }
 
-        return $sub_categories;
+        return $categories;
     }
 
 
@@ -300,11 +335,9 @@ class category extends model
      * All sub category list of a category.
      *
      */
-    private function get_all_sub($category)
+    public function get_all_sub()
     {
-        $all_sub_categories = $this->recusive_all_sub($category);
-
-        return $all_sub_categories;
+        return $this->recusive_all_sub($this);
     }
 
 
@@ -312,24 +345,18 @@ class category extends model
      *
      *
      */
-    private function recusive_all_sub($category)
+    public function get_sub_count()
     {
-        $sub_categories = $this->get_sub($category);
+        $where = array(
+            array(
+                "field" => "parent_id",
+                "value" => (int) $this->record["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
 
-        $all_sub_categories = array();
-        if (! empty($sub_categories))
-        {
-            foreach ($sub_categories as $one_category)
-            {
-                $all_sub_categories[] = $one_category;
-                $all_sub_categories = array_merge($all_sub_categories, $this->get_all_sub($one_category));
-            }
-        }
-        else
-        {
-        }
-
-        return $all_sub_categories;
+        return $this->where($where)->select_count()["record"];
     }
 
 
@@ -337,22 +364,84 @@ class category extends model
      *
      *
      */
-    public function get_full_slug($category)
+    public function get_full_slug()
     {
-        $slug_list = array();
-        $slug_list[] = $category["slug"];
+        $slugs = array();
+        $slugs[] = $this->record["slug"];
 
-        while ($category["parent_id"] != NULL)
+        // New instance to get slug list, do NOT affect this instance.
+        $category = new category();
+        $category->get_by_id($this->record["id"]);
+
+        while ($category->record["parent_id"] !== NULL)
         {
-            $category = $this->select_by_id((int) $category["parent_id"])["record"];
+            $category->get_by_id($category->record["parent_id"]);
 
-            $slug_list[] = $category["slug"];
+            $slugs[] = $category->record["slug"];
         }
 
-        krsort($slug_list, SORT_NUMERIC);
+        krsort($slugs, SORT_NUMERIC);
 
-        return $this->get_full_slug_by_data($slug_list);
+        return $this->get_full_slug_by_data($slugs);
     }
+
+
+    /**
+     *
+     *
+     */
+    public function get_full_name()
+    {
+        $names = array();
+        $names[] = $this->record["name"];
+
+        // New instance to get name list, do NOT affect this instance.
+        $category = new category();
+        $category->get_by_id($this->record["id"]);
+
+        while ($category->record["parent_id"] !== NULL)
+        {
+            $category->get_by_id($category->record["parent_id"]);
+
+            $names[] = $category->record["name"];
+        }
+
+        krsort($names, SORT_NUMERIC);
+
+        return "/" . implode("/", $names);
+    }
+
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function get_full_slug_data($full_slug)
+    {
+        //$return array_slice(explode("/", $full_slug), 0, -1);
+        return explode("/", $full_slug);
+    }
+
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function get_full_slug_by_data($full_slug_data)
+    {
+        //$return array_slice(explode("/", $full_slug), 0, -1);
+        return implode("/", $full_slug_data);
+    }
+
+
+
+
 
 
     /**
@@ -362,7 +451,7 @@ class category extends model
     public function get_is_id($id)
     {
         if (
-            (! isset($id))
+            (isset($id) === FALSE)
         )
         {
             return FALSE;
@@ -378,7 +467,7 @@ class category extends model
             else
             {
                 if (
-                    ($this->select_by_id((int) $id)["record"] === FALSE)
+                    ($this->select_by_id($id)["record"] === FALSE)
                 )
                 {
                     return FALSE;
@@ -390,6 +479,8 @@ class category extends model
             }
         }
     }
+
+
 
 
     /**
@@ -404,68 +495,63 @@ class category extends model
     }
 
 
+
+
     /**
      *
      *
      */
     public function get_is_full_slug_data($full_slug_data)
     {
-        // Filter wrong category slug.
-        foreach ($full_slug_data as $key => $value)
+        foreach ($full_slug_data as $key => $slug)
         {
-            $where = array(
-                array(
-                    "field" => "slug",
-                    "value" => $value,
-                    "operator" => "=",
-                    "condition" => "",
-                ),
-            );
-            $category = $this->where($where)->select_first()["record"];
-
-            // Filter not exist category.
-            if (
-                ($category === FALSE)
-            )
+            if ($key === 0)
             {
+                $where = array(
+                    array(
+                        "field" => "parent_id",
+                        "operator" => "IS NULL",
+                        "condition" => "AND",
+                    ),
+                    array(
+                        "field" => "slug",
+                        "value" => $slug,
+                        "operator" => "=",
+                        "condition" => "",
+                    ),
+                );
+            }
+            else
+            {
+                $where = array(
+                    array(
+                        "field" => "parent_id",
+                        "value" => (int) $record["id"],
+                        "operator" => "=",
+                        "condition" => "AND",
+                    ),
+                    array(
+                        "field" => "slug",
+                        "value" => $slug,
+                        "operator" => "=",
+                        "condition" => "",
+                    ),
+                );
+            }
+
+            $record = $this->where($where)->select_first()["record"];
+
+            if ($record === FALSE)
+            {
+                // Category for this slug not exists.
+
                 return FALSE;
             }
             else
             {
             }
-
-            // Filter not root category.
-            if (
-                ($key === 0) 
-            )
-            {
-                if (
-                    ($category["parent_id"] != NULL)
-                )
-                {
-                    return FALSE;
-                }
-                else
-                {
-                }
-            }
-            else
-            {
-                $parent_category = $this->select_by_id((int) $category["parent_id"])["record"];
-
-                // Filter not son category of previous.
-                if (
-                    ($parent_category === FALSE) ||
-                    ($parent_category["slug"] != $full_slug_data[$key - 1])
-                )
-                {
-                    return FALSE;
-                }
-                else
-                {
-                }
-            }
         }
+
         return TRUE;
     }
 
@@ -474,44 +560,102 @@ class category extends model
      *
      *
      */
-    public function get_full_slug_data($full_slug)
+    public function validate_add()
     {
-        //$return array_slice(explode("/", $full_slug), 0, -1);
-        return explode("/", $full_slug);
-    }
+        $ret = $this->validate();
 
-
-    /**
-     *
-     *
-     */
-    public function get_full_slug_by_data($full_slug_data)
-    {
-        //$return array_slice(explode("/", $full_slug), 0, -1);
-        return implode("/", $full_slug_data);
-    }
-
-
-    /**
-     *
-     *
-     */
-    public function get_full_name($category)
-    {
-        $name_list = array();
-        $name_list[] = $category["name"];
-
-        while ($category["parent_id"] != NULL)
+        if ($ret["result"] === FALSE)
         {
-            $category = $this->select_by_id((int) $category["parent_id"])["record"];
+            return $ret;
+        }
+        else
+        {
+            if ($this->get_is_full_slug(\swdf::$app->request["post"]["full_slug"]) === TRUE)
+            {
+                // Category conflict.
 
-            $name_list[] = $category["name"];
+                return array(
+                    "result" => FALSE,
+                    "message" => "Slug conflict."
+                );
+            }
+            else
+            {
+                // Category for this full slug not exists.
+
+                $full_slug_data = $this->get_full_slug_data(\swdf::$app->request["post"]["full_slug"]);
+
+                if (count($full_slug_data) > 1)
+                {
+                    // Multi level.
+
+                    $parent_full_slug_data = array_slice($full_slug_data, 0, -1);
+
+                    if ($this->get_is_full_slug_data($parent_full_slug_data) === FALSE)
+                    {
+                        return array(
+                            "result" => FALSE,
+                            "message" => "Parent category not exists."
+                        );
+                    }
+                    else
+                    {
+                        return array(
+                            "result" => TRUE,
+                        );
+                    }
+                }
+                else
+                {
+                    // Root level.
+
+                    return array(
+                        "result" => TRUE,
+                    );
+                }
+            }
+        }
+    }
+
+
+
+    /**
+     *
+     *
+     */
+    public function add_data()
+    {
+        $full_slug_data = $this->get_full_slug_data(\swdf::$app->request["post"]["full_slug"]);
+
+        if (count($full_slug_data) > 1)
+        {
+            $parent = new category();
+            $parent->get_by_full_slug_data(array_slice($full_slug_data, 0, -1));
+
+            $slug = array_slice($full_slug_data, -1)[0];
+
+            $data_category = array(
+                "name"          => \swdf::$app->request["post"]["name"],
+                "slug"          => $slug,
+                "description"   => \swdf::$app->request["post"]["description"],
+                "parent_id"     => (int) $parent->record["id"],
+            );
+        }
+        else
+        {
+            $data_category = array(
+                "name"          => \swdf::$app->request["post"]["name"],
+                "slug"          => $full_slug_data[0],
+                "description"   => \swdf::$app->request["post"]["description"],
+                "parent_id"     => NULL,
+            );
         }
 
-        krsort($name_list, SORT_NUMERIC);
+        $ret = $this->add($data_category);
 
-        return "/" . implode("/", $name_list);
+        $this->get_by_id($ret["last_id"]);
     }
+
 
 
 
@@ -519,16 +663,277 @@ class category extends model
      *
      *
      */
-    public function add_data($data)
+    public function validate_update()
     {
-        $data_category = array(
-            "name"          => $data["name"],
-            "slug"          => $data["slug"],
-            "description"   => $data["description"],
-            "parent_id"     => $data["parent_id"],
-        );
+        $ret = $this->validate();
 
-        return $this->add($data_category);
+        if ($ret["result"] === FALSE)
+        {
+            return $ret;
+        }
+        else
+        {
+            if ($this->get_is_full_slug(\swdf::$app->request["post"]["full_slug"]) === TRUE)
+            {
+                // Category for this full slug exists.
+
+                $category = new category();
+                $category->get_by_full_slug(\swdf::$app->request["post"]["full_slug"]);
+
+                if ((int) $category->record["id"] !== (int) \swdf::$app->request["post"]["id"])
+                {
+                    // Category slug conflict..
+
+                    return array(
+                        "result" => FALSE,
+                        "message" => "Slug conflict."
+                    );
+                }
+                else
+                {
+                    // Slug not changed.
+
+                    return array(
+                        "result" => TRUE,
+                    );
+                }
+            }
+            else
+            {
+                // Category for this full slug not exists.
+
+                $full_slug_data = $this->get_full_slug_data(\swdf::$app->request["post"]["full_slug"]);
+
+                if (count($full_slug_data) > 1)
+                {
+                    // Multi level.
+
+                    $parent_full_slug_data = array_slice($full_slug_data, 0, -1);
+
+                    if ($this->get_is_full_slug_data($parent_full_slug_data) === FALSE)
+                    {
+                        // Parent category for this slug not exists.
+
+                        return array(
+                            "result" => FALSE,
+                            "message" => "Parent category not exists."
+                        );
+                    }
+                    else
+                    {
+                        // Parent category for this slug exists.
+
+                        return array(
+                            "result" => TRUE,
+                        );
+                    }
+                }
+                else
+                {
+                    // Root level.
+
+                    return array(
+                        "result" => TRUE,
+                    );
+                }
+            }
+        }
     }
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function update_data()
+    {
+        $full_slug_data = $this->get_full_slug_data(\swdf::$app->request["post"]["full_slug"]);
+
+        if (count($full_slug_data) > 1)
+        {
+            $parent_category = new category();
+            $parent_category->get_by_full_slug_data(array_slice($full_slug_data, 0, -1));
+
+            $slug = array_slice($full_slug_data, -1)[0];
+
+            $data_category = array(
+                "name"          => \swdf::$app->request["post"]["name"],
+                "slug"          => $slug,
+                "description"   => \swdf::$app->request["post"]["description"],
+                "parent_id"     => (int) $parent_category->record["id"],
+            );
+        }
+        else
+        {
+            $data_category = array(
+                "name"          => \swdf::$app->request["post"]["name"],
+                "slug"          => $full_slug_data[0],
+                "description"   => \swdf::$app->request["post"]["description"],
+                "parent_id"     => NULL,
+            );
+        }
+
+        $this->update_by_id($this->record["id"], $data_category);
+
+        return $this->get_by_id($this->record["id"]);
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function validate_delete()
+    {
+        $ret = \swdf::$app->data["user"]->validate_password(\swdf::$app->request["post"]["password"]);
+        if ($ret["result"] === FALSE)
+        {
+            return $ret;
+        }
+        else
+        {
+            if (
+                ((int) $this->get_sub_count() !== 0) ||
+                ((int) $this->get_article_count() !== 0)
+            )
+            {
+                return array(
+                    "result" => FALSE,
+                    "message" => "Has sub category or article."
+                );
+            }
+            else
+            {
+                return array(
+                    "result" => TRUE,
+                );
+            }
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function delete_data()
+    {
+        return $this->delete_by_id($this->record["id"]);
+    }
+
+
+
+
+
+
+
+    ///**
+    // *
+    // *
+    // */
+    //private function hierarchy($categories)
+    //{
+    //    foreach ($categories as $key => $category)
+    //    {
+    //        $categories[$key] = $this->get_category($category);
+
+    //        // Get sub categories.
+    //        $subcategories = $this->get_sub($category);
+
+    //        if (! empty($subcategories))
+    //        {
+    //            $categories[$key]["son"] = $this->hierarchy($subcategories);
+    //        }
+    //        else
+    //        {
+    //            $categories[$key]["son"] = NULL;
+    //        }
+    //    }
+
+    //    return $categories;
+    //}
+
+
+
+
+    /**
+     *
+     *
+     */
+    private function recusive_all_sub($category)
+    {
+        $sub_categories = $category->get_sub();
+
+        $all_sub_categories = array();
+
+        if (empty($sub_categories) === FALSE)
+        {
+            foreach ($sub_categories as $one_category)
+            {
+                $all_sub_categories[] = $one_category;
+                $all_sub_categories = array_merge($all_sub_categories, $this->recusive_all_sub($one_category));
+            }
+        }
+        else
+        {
+        }
+
+        return $all_sub_categories;
+    }
+
+
+    /**
+     *
+     *
+     */
+    private function validate()
+    {
+        if (
+            (isset(\swdf::$app->request["post"]["form_stamp"]) === FALSE) ||
+            (\swdf::$app->request["post"]["form_stamp"] !== \swdf::$app->data["user"]->record["form_stamp"])
+        )
+        {
+            return array(
+                "result" => FALSE,
+                "message" => "XSRF."
+            );
+        }
+        else
+        {
+            if (
+                (isset(\swdf::$app->request["post"]["name"])        === FALSE) ||
+                (isset(\swdf::$app->request["post"]["full_slug"])   === FALSE)
+            )
+            {
+                return array(
+                    "result" => FALSE,
+                    "message" => "Form uncomplete, one or more field not set."
+                );
+            }
+            else
+            {
+                if (
+                    (\swdf::$app->request["post"]["name"]       === "") ||
+                    (\swdf::$app->request["post"]["full_slug"]  === "")
+                )
+                {
+                    return array(
+                        "result" => FALSE,
+                        "message" => "Form uncomplete, one or more necessary field is empty."
+                    );
+                }
+                else
+                {
+                    return array(
+                        "result" => TRUE,
+                    );
+                }
+            }
+        }
+    }
+
+
 }
 ?>

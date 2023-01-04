@@ -1,40 +1,56 @@
 <?php
 namespace blog\views\admin\tag;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
 
 class show extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Tag: [" . $this->data["tag"]->record["name"] . "]";
+        $this->position = array("Show tag");
 
-        $parameters = $result["parameters"];
-        $tag = $result["tag"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Tag " . $tag["name"];
-        $position = " > Tag information";
-
-
-        $content = "<h3 class=\"bg-primary\">Tag: " . htmlspecialchars($tag["name"]) . "</h3>
-
-<ul class=\"bg-info\">
-<li><span>Name: </span><span class=\"text-muted\">" . htmlspecialchars($tag["name"]) . "</span></li>
-<li><span>Slug: </span><span class=\"text-muted\">" . htmlspecialchars($tag["slug"]) . "</span></li>
-<li><span>Description: </span><span class=\"text-muted\">" . htmlspecialchars($tag["description"]) . "</span></li>
-<li><span>Articles: </span><span><a href=\"" . $url->get(array($app_space_name, "admin/article.list_tag", ""), array("tag_id" => $tag["id"]), "") . "\">" . $tag["article_count"] . "</a></span></li>
-</ul>";
-
-        $main = "<div>" . "\n" . "\n" .$content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Tag: [" . htmlspecialchars($this->data["tag"]->record["name"]) . "]",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::tag(
+                    "ul",
+                    "<li><span>Name: </span><span>" . htmlspecialchars($this->data["tag"]->record["name"]) . "</span></li>" . "\n" .
+                    "<li><span>Slug: </span><span>" . htmlspecialchars($this->data["tag"]->record["slug"]) . "</span></li>" . "\n" .
+                    "<li><span>Description: </span><span>" . htmlspecialchars($this->data["tag"]->record["description"]) . "</span></li>" . "\n" .
+                    "<li><span>Articles: </span><span>" . html::a(
+                        $this->data["tag"]->get_article_count(),
+                        url::get(array(\swdf::$app->name, "admin/article.list_by_tag", ""), array("tag_id" => $this->data["tag"]->record["id"]), ""),
+                        array()
+                    ) . "</span></li>",
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

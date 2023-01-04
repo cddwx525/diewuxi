@@ -1,51 +1,54 @@
 <?php
 namespace blog\controllers\admin;
 
-use blog\lib\controllers\admin_base;
+use swdf\helpers\url;
+use swdf\base\controller;
+use blog\filters\init;
+use blog\filters\user_data;
 
-class settings extends admin_base
+class settings extends controller
 {
-    public function show($parameters)
+    /**
+     *
+     *
+     */
+    protected function get_behaviors()
     {
-        //Filter config.
-        if ($this->config === FALSE)
-        {
-            $view_name = "common/not_config";
-
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
-
-        //Filter authentication.
-        if ($this->authentication === FALSE)
-        {
-            $view_name = "common/not_login";
-
-            return array(
-                "meta_data" => $this->meta_data,
-                "view_name" => $view_name,
-                "state" => "Y",
-                "parameters" => $parameters,
-            );
-        }
-        else
-        {
-        }
-
-        $view_name = "admin/settings";
-
         return array(
-            "meta_data" => $this->meta_data,
-            "view_name" => $view_name,
-            "state" => "Y",
-            "parameters" => $parameters,
+            array(
+                "class" => init::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => array(
+                        "common/not_config",
+                        array()
+                    )
+                ),
+            ),
+            array(
+                "class" => user_data::class,
+                "actions" => array(),
+                "rule" => array(
+                    "true" => TRUE,
+                    "false" => array(
+                        "common/not_login",
+                        array()
+                    )
+                )
+            ),
+        );
+    }
+
+    /**
+     *
+     *
+     */
+    public function show()
+    {
+        return array(
+            "admin/settings",
+            array()
         );
     }
 }

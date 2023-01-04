@@ -75,7 +75,7 @@ abstract class guest_base extends view
             "head",
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" . "\n" .
             "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" . "\n" .
-            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
+            //"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
             implode("\n", $head_list),
             array()
         );
@@ -142,15 +142,7 @@ abstract class guest_base extends view
     private function get_css()
     {
         $css_list = array();
-        $css_list[] = url::get_static(\swdf::$app->config["main_app"], "css/main.css");
-
-        if (\swdf::$app->name === \swdf::$app->config["main_app"])
-        {
-        }
-        else
-        {
-            $css_list[] = url::get_static(\swdf::$app->name, "css/main.css");
-        }
+        $css_list[] = url::get_static("css/main.css");
 
         $css_list = array_merge($css_list, $this->css);
 
@@ -181,15 +173,7 @@ abstract class guest_base extends view
     {
         $title_list = array();
         $title_list[] = htmlspecialchars($this->title);
-
-        if (\swdf::$app->name === \swdf::$app->config["main_app"])
-        {
-        }
-        else
-        {
-            $title_list[] = \swdf::$app->title;
-        }
-
+        $title_list[] = \swdf::$app->title;
         $title_list[] = \swdf::$app->config["site_name"];
 
         $title = "<title>" . implode(" - ", $title_list) . "</title>";
@@ -232,20 +216,12 @@ abstract class guest_base extends view
                 "h1",
                 html::a(
                     \swdf::$app->config["site_name"],
-                    url::get(
-                        \swdf::$app->main_app["special_actions"]["default"],
-                        array(),
-                        ""
-                    ),
+                    url::get(\swdf::$app->main_app["special_actions"]["default"], array(), ""),
                     array()
                 ),
                 array()
             ) . "\n" .
-            html::inline_tag(
-                "p",
-                \swdf::$app->config["site_description"],
-                array()
-            ),
+            html::inline_tag( "p", \swdf::$app->config["site_description"], array()),
             array()
         );
 
@@ -262,22 +238,10 @@ abstract class guest_base extends view
         $position_list = array();
 
         $position_list[] = html::a(
-            \swdf::$app->main_app["title"],
-            url::get(\swdf::$app->main_app["special_actions"]["default"], array(), ""),
+            \swdf::$app->title,
+            url::get(\swdf::$app->special_actions["default"], array(), ""),
             array()
         );
-
-        if (\swdf::$app->name === \swdf::$app->config["main_app"])
-        {
-        }
-        else
-        {
-            $position_list[] = html::a(
-                \swdf::$app->title,
-                url::get(\swdf::$app->special_actions["default"], array(), ""),
-                array()
-            );
-        }
 
         $position_list = array_merge($position_list, $this->position);
 
@@ -336,7 +300,7 @@ abstract class guest_base extends view
                 "About",
             ),
         );
-        
+
 
         $menu_link_list = array();
         foreach ($menu_data as $one_menu)
@@ -390,7 +354,7 @@ abstract class guest_base extends view
                 ) .  "\n" .
                 html::tag(
                     "div",
-                    category_side::widget(array("data" => \swdf::$app->data["category_tree"])),
+                    category_side::widget(array("data" => \swdf::$app->data["root_categories"])),
                     array()
                 ) .  "\n" .
                 html::inline_tag(

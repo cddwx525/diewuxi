@@ -21,22 +21,12 @@ class user_data
      */
     public function set_data()
     {
-        $user_model = new user();
+        $user = new user();
+        \swdf::$app->data["user"] = $user;
 
         if ($this->get_is_login())
         {
-            $where = array(
-                array(
-                    "field" => "name",
-                    "value" => $_SESSION["name"],
-                    "operator" => "=",
-                    "condition" => "",
-                ),
-            );
-            $user = $user_model->where($where)->select_first()["record"];
-            $user = $user_model->get_user($user);
-
-            \swdf::$app->data["user"] = $user;
+            $user->get_by_name($_SESSION["name"]);
 
             return TRUE;
         }
@@ -53,8 +43,6 @@ class user_data
      */
     public function get_is_login()
     {
-        $user_model = new user();
-
         session_start();
 
         if (! isset($_SESSION["name"]))
@@ -92,7 +80,6 @@ class user_data
                 session_unset();
                 session_write_close();
 
-                //$state = "N";
                 return FALSE;
             }
             else
@@ -113,9 +100,8 @@ class user_data
                         "condition" => "",
                     ),
                 );
-                $user = $user_model->where($where)->select()["record"];
 
-                if (empty($user))
+                if (empty(\swdf::$app->data["user"]->where($where)->select()["record"]))
                 {
                     // Cookies name and serial wrong, return.
 
@@ -126,7 +112,6 @@ class user_data
                     session_unset();
                     session_write_close();
 
-                    //$state = "N";
                     return FALSE;
                 }
                 else
@@ -153,9 +138,8 @@ class user_data
                             "condition" => "",
                         ),
                     );
-                    $user = $user_model->where($where)->select()["record"];
 
-                    if (empty($user))
+                    if (empty(\swdf::$app->data["user"]->where($where)->select()["record"]))
                     {
                         // Stamp wrong, steal cookies, return.
 
@@ -166,7 +150,6 @@ class user_data
                         session_unset();
                         session_write_close();
 
-                        //$state = "STAMP_STEAL";
                         return FALSE;
                     }
                     else
@@ -174,20 +157,13 @@ class user_data
                         // Cookies information right, update database and cookies, return.
 
                         $stamp = bin2hex(openssl_random_pseudo_bytes(32));
-                        $where = array(
-                            array(
-                                "field" => "name",
-                                "value" => $_COOKIE["name"],
-                                "operator" => "=",
-                                "condition" => "",
-                            ),
-                        );
-                        $user = $user_model->where($where)->select_first()["record"];
 
-                        $user_update = $user_model->update_by_id((int) $user["id"], array("stamp" => $stamp));
+                        \swdf::$app->data["user"]->get_by_name($_COOKIE["name"]);
+
+                        \swdf::$app->data["user"]->update_by_id((int) \swdf::$app->data["user"]->record["id"], array("stamp" => $stamp));
 
                         setcookie("name", $_COOKIE["name"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
-                        setcookie("serial", $user["serial"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
+                        setcookie("serial", \swdf::$app->data["user"]->record["serial"], time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
                         setcookie("stamp", $stamp, time() + \swdf::$app->config["cookies_time"], "", "", FALSE, TRUE);
 
                         session_regenerate_id();
@@ -198,13 +174,13 @@ class user_data
                             "last_session_id" => session_id()
                         );
 
-                        $user_update = $user_model->update_by_id((int) $user["id"], $data_user);
+                        \swdf::$app->data["user"]->update_by_id((int) \swdf::$app->data["user"]->record["id"], $data_user);
+
                         $_SESSION["login_time"] = $current_time;
                         $_SESSION["name"] = $_COOKIE["name"];
 
                         session_write_close();
 
-                        //$state = "Y";
                         return TRUE;
                     }
                 }
@@ -214,18 +190,10 @@ class user_data
         {
             // Has session information, test whether is old session.
 
-            $where = array(
-                array(
-                    "field" => "name",
-                    "value" => $_SESSION["name"],
-                    "operator" => "=",
-                    "condition" => "",
-                ),
-            );
-            $user = $user_model->where($where)->select_first()["record"];
+            \swdf::$app->data["user"]->get_by_name($_SESSION["name"]);
 
             if (
-                (session_id() != $user["last_session_id"] &&
+                (session_id() !== \swdf::$app->data["user"]->record["last_session_id"] &&
                 ((time() - $_SESSION["login_time"]) > \swdf::$app->config["session_old_last_time"]))
             )
             {
@@ -258,14 +226,13 @@ class user_data
                 session_unset();
                 session_write_close();
 
-                //$state = "N";
                 return FALSE;
             }
             else
             {
                 // Normal session information, test whether need regenerate.
 
-                if ((time() - $user["session_time_stamp"]) > \swdf::$app->config["session_regenerate_time"])
+                if ((time() - \swdf::$app->data["user"]->record["session_time_stamp"]) > \swdf::$app->config["session_regenerate_time"])
                 {
                     // Regenerate session id.
 
@@ -277,7 +244,7 @@ class user_data
                         "last_session_id" => session_id()
                     );
 
-                    $user_update = $user_model->update_by_id((int) $user["id"], $data_user);
+                    \swdf::$app->data["user"]->update_by_id((int) \swdf::$app->data["user"]->record["id"], $data_user);
                 }
                 else
                 {
@@ -286,7 +253,6 @@ class user_data
                 }
 
                 session_write_close();
-                //$state = "Y";
 
                 return TRUE;
             }

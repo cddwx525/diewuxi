@@ -28,7 +28,7 @@ class logout extends common_base
                 html::inline_tag(
                     "p",
                     "Login successfully!",
-                    array()
+                    array("class" => "text-center")
                 ) . "\n\n" .
                 html::inline_tag(
                     "p",
@@ -50,7 +50,7 @@ class logout extends common_base
                         ),
                         array("class" => "text-padding")
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

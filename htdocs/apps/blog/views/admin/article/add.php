@@ -28,7 +28,7 @@ class add extends admin_base
                 html::inline_tag(
                     "p",
                     "Article added Successfully!",
-                    array()
+                    array("class" => "text-center")
                 ) . "\n\n" .
                 html::inline_tag(
                     "p",
@@ -36,7 +36,7 @@ class add extends admin_base
                         "View",
                         url::get(
                             array(\swdf::$app->name, "admin/article.show", ""),
-                            array("id" => $this->data["article_add"]["last_id"]),
+                            array("id" => $this->data["article"]->record["id"]),
                             ""
                         ),
                         array("class" => "text-padding")
@@ -50,7 +50,7 @@ class add extends admin_base
                         ),
                         array("class" => "text-padding")
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

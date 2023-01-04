@@ -10,22 +10,40 @@ class about extends guest_base
     protected function set_items()
     {
         $this->css = array(
-            url::get_static(\swdf::$app->name, "css/github-markdown.css"),
+            url::get_static("css/github-markdown.css"),
         );
         $this->title = "About";
         $this->position = array("About");
 
         $this->main = html::tag(
             "div",
-            html::inline_tag(
-                "h3",
-                "About",
-                array()
-            ) . "\n\n" .
             html::tag(
                 "div",
-                $this->data["about_page"]["content"],
-                array("class" => "markdown-body")
+                html::inline_tag("p", "", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()),
+                array()
             ),
             array()
         );

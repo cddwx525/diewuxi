@@ -15,7 +15,7 @@ class list_all extends guest_base
         $this->main = html::tag(
             "div",
             html::inline_tag("h3", "All categories", array()) . "\n\n" .
-            categories::widget(array("data" => $this->data["category_tree"])),
+            categories::widget(array("data" => $this->data["root_categories"])),
             array()
         );
     }

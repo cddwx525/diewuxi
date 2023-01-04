@@ -1,63 +1,101 @@
 <?php
 namespace blog\views\admin\category;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
+use blog\widgets\admin_category_path;
 
 class delete_confirm extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Confirm delete category: [" . $this->data["category"]->get_full_name() . "]";
+        $this->position = array("Confirm delete category");
 
-        $parameters = $result["parameters"];
-        $category = $result["category"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Confirm delete category";
-        $position = " > Confirm delete category";
-
-        if (empty($category["son"]))
-        {
-            $subcategory_links = "NULL";
-        }
-        else
-        {
-            $subcategory_links = array();
-            foreach ($category["son"] as $son)
-            {
-                $subcategory_links[] = "<a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $son["id"]), "") . "\">" . htmlspecialchars($son["name"]) . " </a>";
-            }
-            $subcategory_links = implode(", ", $subcategory_links);
-        }
-
-        $content = "<h3 class=\"bg-primary\">Category delete confirm</h3>
-
-<p>The information of the category are:</p>
-
-<ul class=\"bg-info\">
-<li><span>Name: </span><span class=\"text-muted\">" . htmlspecialchars($category["name"]) . "</span></li>
-<li><span>Slug: </span><span class=\"text-muted\">" . htmlspecialchars($category["slug"]) . "</span></li>
-<li><span>Description: </span><span class=\"text-muted\">" . htmlspecialchars($category["description"]) . "</span></li>
-<li><span>Sons: </span><span>" . $subcategory_links . "</span></li>
-<li><span>Articles: </span><span><a href=\"" . $url->get(array($app_space_name, "admin/article.list_category", ""), array("category_id" => $category["id"]), "") . "\">" . $category["article_count"] . "</a></span></li>
-</ul>
-
-<form action=\"" . $url->get(array($app_space_name, "admin/category.delete", ""), array(), "") . "\" method=\"post\">
-<p><input type=\"hidden\" name=\"id\" value=\"" . $category["id"] . "\" />
-
-<p>Please input the password to confirm the action: </p>
-<p><input type=\"password\" name=\"password\" value=\"\" id=\"\" /> <input type=\"submit\" name=\"confirm\" value=\"Confirm\" /></p>
-</form>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Confirm delete category: [" . htmlspecialchars($this->data["category"]->get_full_name()) . "]",
+                array()
+            ) . "\n" .
+            html::inline_tag(
+                "p",
+                "Category information:",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::tag(
+                    "ul",
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Full name: ", array()) .
+                        html::inline_tag("span", htmlspecialchars($this->data["category"]->get_full_name()), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Description: ", array()) .
+                        html::inline_tag("span", htmlspecialchars($this->data["category"]->record["description"]), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Sub count: ", array()) .
+                        html::inline_tag("span", $this->data["category"]->get_sub_count(), array()),
+                        array()
+                    ) . "\n" .
+                    html::inline_tag(
+                        "li",
+                        html::inline_tag("span", "Article count: ", array()) .
+                        html::inline_tag("span", $this->data["category"]->get_article_count(), array()),
+                        array()
+                    ),
+                    array()
+                ),
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "form",
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["category"]->record["id"])),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "Input user password to confirm the action: ", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "password", "name" => "password", "value" => "", "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "submit", "name" => "confirm", "value" => "Confirm", "class" => "input-submit")),
+                    array()
+                ),
+                array(
+                    "action" => url::get(array(\swdf::$app->name, "admin/category.delete", ""), array(), ""),
+                    "method" => "post"
+                )
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

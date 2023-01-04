@@ -5,14 +5,13 @@ use swdf\helpers\url;
 use swdf\base\controller;
 use blog\filters\init;
 use blog\filters\user_data;
-use blog\lib\Michelf\MarkdownExtra;
 use blog\models\article as article_model;
 use blog\models\tag;
 use blog\models\category;
 use blog\models\media;
 use blog\models\comment;
 use blog\models\article_tag;
-use blog\models\user;
+use blog\models\file;
 
 class article extends controller
 {
@@ -55,14 +54,12 @@ class article extends controller
      */
     public function list_all()
     {
-        $article_model = new article_model();
-
-        $articles = $article_model->get_articles();
+        $article = new article_model();
 
         return array(
             "admin/article/list_all",
             array(
-                "articles" => $articles,
+                "articles" => $article->find_all(),
             )
         );
     }
@@ -72,24 +69,24 @@ class article extends controller
      *
      *
      */
-    public function list_category()
+    public function list_by_category()
     {
-        $category_model = new category();
+        $category = new category();
 
-        if (! $category_model->get_is_id(\swdf::$app->request["get"]["category_id"]))
+        if ($category->get_is_id(\swdf::$app->request["get"]["category_id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $category = $category_model->get_by_id(\swdf::$app->request["get"]["category_id"]);
-            $articles = $category_model->get_articles($category);
+            $category->get_by_id(\swdf::$app->request["get"]["category_id"]);
+            $articles = $category->get_articles();
 
             return array(
-                "admin/article/list_category",
+                "admin/article/list_by_category",
                 array(
                     "category" => $category,
                     "articles" => $articles,
@@ -103,24 +100,24 @@ class article extends controller
      *
      *
      */
-    public function list_tag()
+    public function list_by_tag()
     {
-        $tag_model = new tag();
+        $tag = new tag();
 
-        if (! $tag_model->get_is_id(\swdf::$app->request["get"]["tag_id"]))
+        if ($tag->get_is_id(\swdf::$app->request["get"]["tag_id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $tag = $tag_model->get_by_id(\swdf::$app->request["get"]["tag_id"]);
-            $articles = $tag_model->get_articles($tag);
+            $tag->get_by_id(\swdf::$app->request["get"]["tag_id"]);
+            $articles = $tag->get_articles();
 
             return array(
-                "admin/article/list_tag",
+                "admin/article/list_by_tag",
                 array(
                     "tag" => $tag,
                     "articles" => $articles,
@@ -134,30 +131,58 @@ class article extends controller
      *
      *
      */
-    public function show()
+    public function list_by_file()
     {
-        $article_model = new article_model();
-        $user_model = new user();
+        $file = new file();
 
-        if (! $article_model->get_is_id(\swdf::$app->request["get"]["id"]))
+        if ($file->get_is_id(\swdf::$app->request["get"]["file_id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $article = $article_model->get_by_id(\swdf::$app->request["get"]["id"]);
-            $article["content"] = MarkdownExtra::defaultTransform($article["content"]);
+            $file->get_by_id(\swdf::$app->request["get"]["file_id"]);
+            $articles = $file->get_articles();
 
-            $form_stamp = $user_model->generate_form_stamp(\swdf::$app->data["user"]);
+            return array(
+                "admin/article/list_by_file",
+                array(
+                    "file" => $file,
+                    "articles" => $articles,
+                )
+            );
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function show()
+    {
+        $article = new article_model();
+
+        if ($article->get_is_id(\swdf::$app->request["get"]["id"]) === FALSE)
+        {
+            return array(
+                "admin/common/not_found",
+                array()
+            );
+        }
+        else
+        {
+            $article->get_by_id(\swdf::$app->request["get"]["id"]);
 
             return array(
                 "admin/article/show",
                 array(
                     "article" => $article,
-                    "form_stamp" => $form_stamp,
+                    "root_comments" => $article->get_root_comments(),
+                    "form_stamp" => \swdf::$app->data["user"]->update_form_stamp()->record["form_stamp"],
                 )
             );
         }
@@ -170,21 +195,18 @@ class article extends controller
      */
     public function write()
     {
-        $category_model = new category();
-        $tag_model = new tag();
-        $user_model = new user();
+        $category = new category();
+        $tag = new tag();
 
-        $category_tree = $category_model->get_tree();
-        $tags = $tag_model->get_tags();
-
-        $form_stamp = $user_model->generate_form_stamp(\swdf::$app->data["user"]);
+        $root_categories = $category->get_root();
+        $tags = $tag->find_all();
 
         return array(
             "admin/article/write",
             array(
-                "category_tree" => $category_tree,
+                "root_categories" => $root_categories,
                 "tags" => $tags,
-                "form_stamp" => $form_stamp,
+                "form_stamp" => \swdf::$app->data["user"]->update_form_stamp()->record["form_stamp"],
             )
         );
     }
@@ -196,29 +218,29 @@ class article extends controller
      */
     public function add()
     {
-        $article_model = new article_model();
+        $article = new article_model();
 
-        $validate = $article_model->validate(\swdf::$app->request["post"], \swdf::$app->data["user"]);
+        $ret = $article->validate_add();
 
-        if (! $validate["result"])
+        if ($ret["result"] === FALSE)
         {
             return array(
-                "common/message",
+                "admin/common/message",
                 array(
                     "source" => "Add article",
-                    "message" => $validate["message"],
+                    "message" => $ret["message"],
                     "back_url" => url::get(array(\swdf::$app->name, "admin/article.write", ""), array(), ""),
                 )
             );
         }
         else
         {
-            $article_add = $article_model->add_data(\swdf::$app->request["post"]);
+            $article->add_data();
 
             return array(
                 "admin/article/add",
                 array(
-                    "article_add" => $article_add,
+                    "article" => $article,
                 )
             );
         }
@@ -231,34 +253,30 @@ class article extends controller
      */
     public function edit()
     {
-        $article_model = new article_model();
-        $category_model = new category();
-        $tag_model = new tag();
-        $user_model = new user();
+        $article = new article_model();
+        $category = new category();
+        $tag = new tag();
 
-        if (! $article_model->get_is_id(\swdf::$app->request["get"]["id"]))
+        if ($article->get_is_id(\swdf::$app->request["get"]["id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $article = $article_model->get_by_id((int) \swdf::$app->request["get"]["id"]);
-            $category_tree = $category_model->get_tree();
-            $tags = $tag_model->get_tags();
-
-            $form_stamp = $user_model->generate_form_stamp(\swdf::$app->data["user"]);
-
+            $article->get_by_id(\swdf::$app->request["get"]["id"]);
+            $root_categories = $category->get_root();
+            $tags = $tag->find_all();
 
             return array(
                 "admin/article/edit",
                 array(
                     "article" => $article,
-                    "category_tree" => $category_tree,
+                    "root_categories" => $root_categories,
                     "tags" => $tags,
-                    "form_stamp" => $form_stamp,
+                    "form_stamp" => \swdf::$app->data["user"]->update_form_stamp()->record["form_stamp"],
                 )
             );
         }
@@ -271,35 +289,35 @@ class article extends controller
      */
     public function update()
     {
-        $article_model = new article_model();
+        $article = new article_model();
 
-        if (! $article_model->get_is_id(\swdf::$app->request["post"]["id"]))
+        if ($article->get_is_id(\swdf::$app->request["post"]["id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $article = $article_model->get_by_id(\swdf::$app->request["post"]["id"]);
+            $article->get_by_id(\swdf::$app->request["post"]["id"]);
 
-            $validate = $article_model->validate(\swdf::$app->request["post"], \swdf::$app->data["user"]);
+            $ret = $article->validate_update();
 
-            if (! $validate["result"])
+            if ($ret["result"] === FALSE)
             {
                 return array(
-                    "common/message",
+                    "admin/common/message",
                     array(
                         "source" => "Update article",
-                        "message" => $validate["message"],
-                        "back_url" => url::get(array(\swdf::$app->name, "admin/article.edit", ""), array("id" => \swdf::$app->request["post"]["id"]), ""),
+                        "message" => $ret["message"],
+                        "back_url" => url::get(array(\swdf::$app->name, "admin/article.edit", ""), array("id" => $article->record["id"]), ""),
                     )
                 );
             }
             else
             {
-                $article_update = $article_model->update_data(\swdf::$app->request["post"]);
+                $article->update_data();
 
                 return array(
                     "admin/article/update",
@@ -318,18 +336,18 @@ class article extends controller
      */
     public function delete_confirm()
     {
-        $article_model = new article_model();
+        $article = new article_model();
 
-        if (! $article_model->get_is_id(\swdf::$app->request["get"]["id"]))
+        if ($article->get_is_id(\swdf::$app->request["get"]["id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $article = $article_model->get_by_id(\swdf::$app->request["get"]["id"]);
+            $article->get_by_id(\swdf::$app->request["get"]["id"]);
 
             return array(
                 "admin/article/delete_confirm",
@@ -347,35 +365,35 @@ class article extends controller
      */
     public function delete()
     {
-        $article_model = new article_model();
+        $article = new article_model();
 
-        if (! $article_model->get_is_id(\swdf::$app->request["post"]["id"]))
+        if ($article->get_is_id(\swdf::$app->request["post"]["id"]) === FALSE)
         {
             return array(
-                "common/not_found",
+                "admin/common/not_found",
                 array()
             );
         }
         else
         {
-            $article = $article_model->get_by_id(\swdf::$app->request["post"]["id"]);
+            $article->get_by_id(\swdf::$app->request["post"]["id"]);
 
-            $validate = $article_model->validate_password(\swdf::$app->request["post"], \swdf::$app->data["user"]);
+            $ret = \swdf::$app->data["user"]->validate_password(\swdf::$app->request["post"]["password"]);
 
-            if (! $validate["result"])
+            if ($ret["result"] === FALSE)
             {
                 return array(
-                    "common/message",
+                    "admin/common/message",
                     array(
                         "source" => "Delete article",
-                        "message" => $validate["message"],
-                        "back_url" => url::get(array(\swdf::$app->name, "admin/article.delete_confirm", ""), array("id" => $article["id"]), ""),
+                        "message" => $ret["message"],
+                        "back_url" => url::get(array(\swdf::$app->name, "admin/article.delete_confirm", ""), array("id" => $article->record["id"]), ""),
                     )
                 );
             }
             else
             {
-                $article_delete = $article_model->delete_data(\swdf::$app->request["post"]);
+                $article->delete_data();
 
                 return array(
                     "admin/article/delete",

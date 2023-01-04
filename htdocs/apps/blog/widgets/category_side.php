@@ -13,44 +13,63 @@ class category_side extends widget
      */
     protected function run($config)
     {
-        $category_tree = $config["data"];
-
-        return $this->output_tree($category_tree);
+        return $this->get_html($config["data"]);
     }
+
 
 
     /**
      *
      *
      */
-    private function output_tree($category_tree)
+    private function get_html($categories)
+    {
+        if (empty($categories) === TRUE)
+        {
+            $html = "<p>There is no category now.</p>";
+        }
+        else
+        {
+            $html = $this->recusive_categories($categories);
+        }
+
+        return $html;
+    }
+
+    /**
+     *
+     *
+     */
+    private function recusive_categories($categories)
     {
         $category_link_list = array();
 
-        foreach ($category_tree as $node)
+        foreach ($categories as $category)
         {
             $category_link_list[] = html::inline_tag(
                 "li",
                 html::a(
-                    htmlspecialchars($node["name"]),
+                    htmlspecialchars($category->record["name"]),
                     url::get(
-                        array(\swdf::$app->name, "guest/article.slug_list_category", ""),
-                        array("full_category_slug" => $node["full_slug"]),
+                        array(\swdf::$app->name, "guest/article.slug_list_by_category", ""),
+                        array("full_category_slug" => $category->get_full_slug()),
                         ""
                     ),
                     array()
                 ) .
                 html::inline_tag(
                     "span",
-                    "[" . $node["article_count"] . "]",
+                    "[" . $category->get_article_count() . "]",
                     array()
                 ),
                 array()
             );
 
-            if (! is_null($node["son"]))
+            $sub_categories = $category->get_sub();
+
+            if (empty($sub_categories) === FALSE)
             {
-                $category_link_list[] = $this->output_tree($node["son"]);
+                $category_link_list[] = $this->recusive_categories($sub_categories);
             }
             else
             {

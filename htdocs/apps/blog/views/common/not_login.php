@@ -32,7 +32,7 @@ class not_login extends common_base
                         url::get(array(\swdf::$app->name, "admin/authentication.write",""), array(), ""),
                         array()
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

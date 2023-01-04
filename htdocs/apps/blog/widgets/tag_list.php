@@ -13,18 +13,18 @@ class tag_list extends widget
      */
     protected function run($config)
     {
-        return $this->get_tags($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
     /**
      *
      *
      */
-    private function get_tags($tags)
+    private function get_html($tags)
     {
-        if (empty($tags))
+        if (empty($tags) === TRUE)
         {
-            $tags_link = "<span>NULL</span>";
+            $html = "<span>NULL</span>";
         }
         else
         {
@@ -32,19 +32,19 @@ class tag_list extends widget
             foreach ($tags as $tag)
             {
                 $tags_link_list[] = html::a(
-                    htmlspecialchars($tag["name"]),
+                    htmlspecialchars($tag->record["name"]),
                     url::get(
-                        array(\swdf::$app->name, "guest/article.slug_list_tag", ""),
-                        array("tag_slug" => $tag["slug"]),
+                        array(\swdf::$app->name, "guest/article.slug_list_by_tag", ""),
+                        array("tag_slug" => $tag->record["slug"]),
                         ""
                     ),
                     array()
                 );
             }
-            $tags_link = implode(", ", $tags_link_list);
+            $html = implode(", ", $tags_link_list);
         }
 
-        return $tags_link;
+        return $html;
     }
 }
 ?>

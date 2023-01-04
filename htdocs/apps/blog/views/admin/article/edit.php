@@ -34,61 +34,70 @@ class edit extends admin_base
                 ) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["article"]["id"])),
+                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["article"]->record["id"])),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Title:", array()) . "\n" .
+
+                html::inline_tag("label", "* Title:", array()) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "text", "name" => "title", "value" => $this->data["article"]["title"], "class" => "input-text")),
+                    html::mono_tag("input", array("type" => "text", "name" => "title", "value" => $this->data["article"]->record["title"], "class" => "input-text")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Slug:", array()) . "\n" .
+
+                html::inline_tag("label", "* Slug:", array()) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "text", "name" => "slug", "value" => $this->data["article"]["slug"], "class" => "input-text")),
+                    html::mono_tag("input", array("type" => "text", "name" => "slug", "value" => $this->data["article"]->record["slug"], "class" => "input-text")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Date:", array()) . "\n" .
+
+                html::inline_tag("label", "* Date:", array()) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "text", "name" => "date", "value" => $this->data["article"]["date"], "class" => "input-text")),
+                    html::mono_tag("input", array("type" => "text", "name" => "date", "value" => $this->data["article"]->record["date"], "class" => "input-text")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Content:", array()) . "\n" .
+
+                html::inline_tag("label", "* Content:", array()) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::inline_tag("textarea", $this->data["article"]["content"], array("name" => "content", "class" => "textarea")),
+                    html::inline_tag("textarea", $this->data["article"]->record["content"], array("name" => "content", "class" => "textarea-big")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Category:", array()) . "\n" .
+
+                html::inline_tag("label", "* Category full slug:", array()) . "\n" .
                 html::inline_tag("p", "Availiable categories:", array()) . "\n" .
-                admin_category_tree::widget(array("data" => $this->data["category_tree"])) . "\n" .
+                admin_category_tree::widget(array("data" => $this->data["root_categories"])) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "text", "name" => "category_full_slug", "value" => $this->data["article"]["category"]["full_slug"], "class" => "input-text")),
+                    html::mono_tag("input", array("type" => "text", "name" => "category_full_slug", "value" => $this->data["article"]->get_category()->get_full_slug(), "class" => "input-text")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "Tags(seperated by \", \"):", array()) . "\n" .
+
+                html::inline_tag("label", "Tag slugs(seperated by \", \"):", array()) . "\n" .
                 html::inline_tag("p", "Availiable tags:", array()) . "\n" .
                 admin_tags::widget(array("data" => $this->data["tags"])) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "text", "name" => "tag_slugs", "value" => $this->data["article"]["tag_slugs"], "class" => "input-text")),
+                    html::mono_tag("input", array("type" => "text", "name" => "tag_slugs", "value" => $this->data["article"]->get_tag_slugs(), "class" => "input-text")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Keywords:", array()) . "\n" .
+
+                html::inline_tag("label", "* Keywords:", array()) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::mono_tag("input", array("type" => "text", "name" => "keywords", "value" => $this->data["article"]["keywords"], "class" => "input-text")),
+                    html::mono_tag("input", array("type" => "text", "name" => "keywords", "value" => $this->data["article"]->record["keywords"], "class" => "input-text")),
                     array()
                 ) . "\n\n" .
-                html::inline_tag("p", "* Description:", array()) . "\n" .
+
+                html::inline_tag("label", "* Description:", array()) . "\n" .
                 html::inline_tag(
                     "p",
-                    html::inline_tag("textarea", $this->data["article"]["description"], array("name" => "description", "class" => "textarea")),
+                    html::inline_tag("textarea", $this->data["article"]->record["description"], array("name" => "description", "class" => "textarea")),
                     array()
                 ) . "\n\n" .
+
                 html::inline_tag(
                     "p",
                     html::mono_tag("input", array("type" => "submit", "name" => "update", "value" => "Update", "class" => "input-submit")),

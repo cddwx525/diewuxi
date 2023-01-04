@@ -15,12 +15,34 @@ class home extends admin_base
     {
         $this->title = "Home";
         $this->position = array("Home");
+
         $this->main = html::tag(
             "div",
             html::inline_tag("h3", "Administration Home", array()) . "\n\n" .
             html::tag(
                 "div",
-                html::inline_tag("p", "This is home page.", array()),
+                html::inline_tag("p", "This is home page.", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()) . "\n" .
+                html::mono_tag("br", array()),
                 array()
             ),
             array()

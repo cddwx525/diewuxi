@@ -1,13 +1,9 @@
 <?php
 return array(
     "name" => "blog",
-    "title" => "SWDF test blog",
-    "version" => "1.0.1",
+    "title" => "Blog",
+    "version" => "1.0.0",
     "params" => array(
-        "file_folder" => "uploads",
-        "default_file_folder" => "uploads",
-        "file_host" => "local",
-        "default_file_host" => "local",
     ),
 
     "db_id" => array(

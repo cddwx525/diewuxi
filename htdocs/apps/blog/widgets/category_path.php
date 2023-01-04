@@ -13,7 +13,7 @@ class category_path extends widget
      */
     protected function run($config)
     {
-        return $this->get_category_path($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -21,16 +21,16 @@ class category_path extends widget
      *
      *
      */
-    private function get_category_path($category)
+    private function get_html($category)
     {
         $category_path_list = array();
-        foreach ($category["path"]  as $one_category)
+        foreach ($category->get_path()  as $category)
         {
             $category_path_list[] = html::a(
-                htmlspecialchars($one_category["name"]),
+                htmlspecialchars($category->record["name"]),
                 url::get(
-                    array(\swdf::$app->name, "guest/article.slug_list_category", ""),
-                    array("full_category_slug" => $one_category["full_slug"]),
+                    array(\swdf::$app->name, "guest/article.slug_list_by_category", ""),
+                    array("full_category_slug" => $category->get_full_slug()),
                     ""
                 ),
                 array()

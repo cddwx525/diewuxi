@@ -1,8 +1,8 @@
 <?php
 return array(
     "name" => "main",
-    "title" => "Main app",
-    "version" => "1.0.1",
+    "title" => "Main",
+    "version" => "1.0.0",
     "params" => array(),
 
     "db_id" => NULL,

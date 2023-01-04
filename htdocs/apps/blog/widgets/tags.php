@@ -13,7 +13,7 @@ class tags extends widget
      */
     protected function run($config)
     {
-        return $this->get_tags($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -21,40 +21,41 @@ class tags extends widget
      *
      *
      */
-    private function get_tags($tags)
+    private function get_html($tags)
     {
-        if (empty($tags))
+        if (empty($tags) === TRUE)
         {
-            $tag_list = "<p>There is no tags now.</p>";
+            $html = "<p>There is no tags now.</p>";
         }
         else
         {
             $tag_link_list = array();
-            foreach ($tags as $one_tag)
+
+            foreach ($tags as $tag)
             {
                 $tag_link_list[] = html::inline_tag(
                     "span",
                     html::a(
-                        htmlspecialchars($one_tag["name"]),
+                        htmlspecialchars($tag->record["name"]),
                         url::get(
                             array(\swdf::$app->name, "guest/tag.slug_show", ""),
-                            array("slug" => $one_tag["slug"]),
+                            array("slug" => $tag->record["slug"]),
                             ""
                         ),
                         array()
                     ) .
                     html::inline_tag(
                         "span",
-                        "[" . $one_tag["article_count"] . "]",
+                        "[" . $tag->get_article_count() . "]",
                         array()
                     ),
                     array()
                 );
             }
 
-            $tag_link = implode("\n", $tag_link_list);
+            $html = implode("\n", $tag_link_list);
         }
-        return $tag_link;
+        return $html;
     }
 }
 ?>

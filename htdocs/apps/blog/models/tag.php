@@ -17,16 +17,7 @@ class tag extends model
     }
 
 
-    /**
-     *
-     *
-     */
-    public function get_tag($tag)
-    {
-        $tag["article_count"] = $this->get_article_count($tag);
-
-        return $tag;
-    }
+        //$tag["article_count"] = $this->get_article_count($tag);
 
 
     /**
@@ -35,7 +26,9 @@ class tag extends model
      */
     public function get_by_id($id)
     {
-        return $this->get_tag($this->select_by_id($id)["record"]);
+        $this->record = $this->select_by_id($id)["record"];
+
+        return $this;
     }
 
 
@@ -53,9 +46,82 @@ class tag extends model
                 "condition" => "",
             ),
         );
-        $tag = $this->where($where)->select_first()["record"];
 
-        return $this->get_tag($tag);
+        $this->record = $this->where($where)->select_first()["record"];
+
+        return $this;
+    }
+
+
+    /**
+     * @description Get all instances.
+     * @param None
+     * @return array Array of instances.
+     */
+    public function find_all()
+    {
+        $records = $this->select()["record"];
+
+        $tags = array();
+        foreach ($records as $key => $item)
+        {
+            $one_tag = new tag();
+            $one_tag->record = $item;
+            $tags[$key] = $one_tag;
+        }
+
+        return $tags;
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function get_articles()
+    {
+        $article_tag = new article_tag();
+
+        $where = array(
+            array(
+                "field" => "tag_id",
+                "value" => (int) $this->record["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+        $records = $article_tag->where($where)->select()["record"];
+
+        $articles = array();
+        foreach ($records as $key => $item)
+        {
+            $one_article = new article();
+            $articles[$key] = $one_article->get_by_id($item["article_id"]);
+        }
+
+        return $articles;
+    }
+
+
+    /**
+     * @description Get number of articles belong to this tag.
+     * @param None
+     * @return int Number of articles.
+     */
+    public function get_article_count()
+    {
+        $article_tag = new article_tag();
+
+        $where = array(
+            array(
+                "field" => "tag_id",
+                "value" => (int) $this->record["id"],
+                "operator" => "=",
+                "condition" => "",
+            ),
+        );
+
+        return $article_tag->where($where)->select_count()["record"];
     }
 
 
@@ -92,7 +158,7 @@ class tag extends model
     public function get_is_id($id)
     {
         if (
-            (! isset($id))
+            (isset($id) === FALSE)
         )
         {
             return FALSE;
@@ -108,7 +174,7 @@ class tag extends model
             else
             {
                 if (
-                    ($this->select_by_id((int) $id)["record"] === FALSE)
+                    ($this->select_by_id($id)["record"] === FALSE)
                 )
                 {
                     return FALSE;
@@ -122,90 +188,229 @@ class tag extends model
     }
 
 
+
     /**
-     * Tag array.
+     *
      *
      */
-    public function get_tags()
+    public function validate_add()
     {
-        $article_tag_model = new article_tag();
+        $ret = $this->validate();
 
-        $tags = $this->select()["record"];
-
-        foreach ($tags as $key => $tag)
+        if ($ret["result"] === FALSE)
         {
-            $tags[$key] = $this->get_tag($tag);
+            return $ret;
         }
-
-        return $tags;
-    }
-
-
-    /**
-     *
-     *
-     */
-    public function get_articles($tag)
-    {
-        $article_model = new article();
-        $article_tag_model = new article_tag();
-
-        // Get article_tag_relations.
-        $where = array(
-            array(
-                "field" => "tag_id",
-                "value" => (int) $tag["id"],
-                "operator" => "=",
-                "condition" => "",
-            ),
-        );
-        $article_tag_records = $article_tag_model->where($where)->select()["record"];
-
-        // Get articles belonged to tag.
-        $articles = array();
-        foreach ($article_tag_records as $article_tag_record)
+        else
         {
-            $article = $article_model->select_by_id((int) $article_tag_record["article_id"])["record"];
-            $articles[] = $article_model->get_article($article);
+            if ($this->get_is_slug(\swdf::$app->request["post"]["slug"]) === TRUE)
+            {
+                // Tag slug conflict.
+
+                return array(
+                    "result" => FALSE,
+                    "message" => "Slug conflict."
+                );
+            }
+            else
+            {
+                return array(
+                    "result" => TRUE,
+                );
+            }
         }
-
-        return $articles;
     }
 
 
-    /**
-     * Get article_count.
-     *
-     */
-    public function get_article_count($tag)
-    {
-        $article_tag_model = new article_tag();
-
-        $where = array(
-            array(
-                "field" => "tag_id",
-                "value" => (int) $tag["id"],
-                "operator" => "=",
-                "condition" => "",
-            ),
-        );
-        return $article_tag_model->where($where)->select_count()["record"];
-    }
 
 
     /**
      *
      *
      */
-    public function add_data($data)
+    public function add_data()
     {
         $data_tag = array(
-            "name"          => $data["name"],
-            "slug"          => $data["slug"],
-            "description"   => $data["description"],
+            "name"          => \swdf::$app->request["post"]["name"],
+            "slug"          => \swdf::$app->request["post"]["slug"],
+            "description"   => \swdf::$app->request["post"]["description"],
         );
 
-        return $this->add($data_tag);
+        $ret = $this->add($data_tag);
+
+        $this->get_by_id($ret["last_id"]);
     }
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function validate_update()
+    {
+        $ret = $this->validate();
+
+        if ($ret["result"] === FALSE)
+        {
+            return $ret;
+        }
+        else
+        {
+            if ($this->get_is_slug(\swdf::$app->request["post"]["slug"]) === TRUE)
+            {
+                // Slug exists.
+
+                $tag = new tag();
+                $tag->get_by_slug(\swdf::$app->request["post"]["slug"]);
+
+                if ((int) $tag->record["id"] !== (int) \swdf::$app->request["post"]["id"])
+                {
+                    // Slug conflict..
+
+                    return array(
+                        "result" => FALSE,
+                        "message" => "Slug conflict."
+                    );
+                }
+                else
+                {
+                    // Slug not change.
+
+                    return array(
+                        "result" => TRUE,
+                    );
+                }
+            }
+            else
+            {
+                // Slug not exists.
+
+                return array(
+                    "result" => TRUE,
+                );
+            }
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function update_data()
+    {
+        $data_tag = array(
+            "name"          => \swdf::$app->request["post"]["name"],
+            "slug"          => \swdf::$app->request["post"]["slug"],
+            "description"   => \swdf::$app->request["post"]["description"],
+        );
+
+        $this->update_by_id($this->record["id"], $data_tag);
+
+        $this->get_by_id($this->record["id"]);
+    }
+
+
+    /**
+     *
+     *
+     */
+    public function validate_delete()
+    {
+        $ret = \swdf::$app->data["user"]->validate_password(\swdf::$app->request["post"]["password"]);
+
+        if ($ret["result"] === FALSE)
+        {
+            return $ret;
+        }
+        else
+        {
+            if (
+                ((int) $this->get_article_count() !== 0)
+            )
+            {
+                return array(
+                    "result" => FALSE,
+                    "message" => "Has article."
+                );
+            }
+            else
+            {
+                return array(
+                    "result" => TRUE,
+                );
+            }
+        }
+    }
+
+
+
+
+    /**
+     *
+     *
+     */
+    public function delete_data()
+    {
+        return $this->delete_by_id($this->record["id"]);
+    }
+
+
+
+
+
+    /**
+     *
+     *
+     */
+    private function validate()
+    {
+        if (
+            (isset(\swdf::$app->request["post"]["form_stamp"]) === FALSE) ||
+            (\swdf::$app->request["post"]["form_stamp"] !== \swdf::$app->data["user"]->record["form_stamp"])
+        )
+        {
+            return array(
+                "result" => FALSE,
+                "message" => "XSRF."
+            );
+        }
+        else
+        {
+            if (
+                (isset(\swdf::$app->request["post"]["name"]) === FALSE) ||
+                (isset(\swdf::$app->request["post"]["slug"]) === FALSE)
+            )
+            {
+                return array(
+                    "result" => FALSE,
+                    "message" => "Form uncomplete, one or more field not set."
+                );
+            }
+            else
+            {
+                if (
+                    (\swdf::$app->request["post"]["name"] === "") ||
+                    (\swdf::$app->request["post"]["slug"] === "")
+                )
+                {
+                    return array(
+                        "result" => FALSE,
+                        "message" => "Form uncomplete, one or more necessary field is empty."
+                    );
+                }
+                else
+                {
+                    return array(
+                        "result" => TRUE,
+                    );
+                }
+            }
+        }
+    }
+
+
 }
 ?>

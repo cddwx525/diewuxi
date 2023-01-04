@@ -9,7 +9,6 @@ use blog\models\category;
 use blog\models\tag;
 use blog\models\comment;
 use blog\models\article_tag;
-use blog\lib\Michelf\MarkdownExtra;
 
 
 class article extends controller
@@ -46,14 +45,12 @@ class article extends controller
 
     public function list_all()
     {
-        $article_model = new article_model();
-
-        $articles = $article_model->get_articles();
+        $article = new article_model();
 
         return array(
             "guest/article/list_all",
             array(
-                "articles" => $articles,
+                "articles" => $article->find_all(),
             )
         );
     }
@@ -62,31 +59,28 @@ class article extends controller
     /**
      * Function slug_list_category.
      */
-    public function slug_list_category()
+    public function slug_list_by_category()
     {
-        $category_model = new category();
+        $category = new category();
 
-        $full_category_slug = \swdf::$app->request["get"]["full_category_slug"];
-
-        if ($category_model->get_is_full_slug($full_category_slug) === TRUE)
-        {
-            $category = $category_model->get_by_full_slug($full_category_slug);
-            $articles = $category_model->get_articles($category);
-
-
-            return array(
-                "guest/article/list_category",
-                array(
-                    "category" => $category,
-                    "articles" => $articles,
-                )
-            );
-        }
-        else
+        if ($category->get_is_full_slug(\swdf::$app->request["get"]["full_category_slug"]) === FALSE)
         {
             return array(
                 "common/not_found",
                 array()
+            );
+        }
+        else
+        {
+            $category->get_by_full_slug(\swdf::$app->request["get"]["full_category_slug"]);
+            $articles = $category->get_articles();
+
+            return array(
+                "guest/article/slug_list_by_category",
+                array(
+                    "category" => $category,
+                    "articles" => $articles,
+                )
             );
         }
     }
@@ -95,13 +89,11 @@ class article extends controller
     /*
      * Function slug_list_tag.
      */
-    public function slug_list_tag()
+    public function slug_list_by_tag()
     {
-        $tag_model = new tag();
+        $tag = new tag();
 
-        $tag_slug = \swdf::$app->request["get"]["tag_slug"];
-
-        if ($tag_model->get_is_slug($tag_slug) === FALSE)
+        if ($tag->get_is_slug(\swdf::$app->request["get"]["tag_slug"]) === FALSE)
         {
             return array(
                 "common/not_found",
@@ -110,11 +102,11 @@ class article extends controller
         }
         else
         {
-            $tag = $tag_model->get_by_slug($tag_slug);
-            $articles = $tag_model->get_articles($tag);
+            $tag->get_by_slug(\swdf::$app->request["get"]["tag_slug"]);
+            $articles = $tag->get_articles();
 
             return array(
-                "guest/article/list_tag",
+                "guest/article/slug_list_by_tag",
                 array(
                     "tag" => $tag,
                     "articles" => $articles,
@@ -129,29 +121,27 @@ class article extends controller
      */
     public function slug_show()
     {
-        $article_model = new article_model();
+        $article = new article_model();
 
-        $full_article_slug = \swdf::$app->request["get"]["full_slug"];
-
-        if ($article_model->get_is_full_slug($full_article_slug) === TRUE)
-        {
-            $article = $article_model->get_by_full_slug($full_article_slug);
-
-            // Convert markdown to html.
-            $article["content"] = MarkdownExtra::defaultTransform($article["content"]);
-
-            return array(
-                "guest/article/show",
-                array(
-                    "article" => $article,
-                )
-            );
-        }
-        else
+        if ($article->get_is_full_slug(\swdf::$app->request["get"]["full_slug"]) === FALSE)
         {
             return array(
                 "common/not_found",
                 array()
+            );
+        }
+        else
+        {
+            $article->get_by_full_slug(\swdf::$app->request["get"]["full_slug"]);
+
+            //$article["content"] = MarkdownExtra::defaultTransform($article["content"]);
+
+            return array(
+                "guest/article/slug_show",
+                array(
+                    "article" => $article,
+                    "root_comments" => $article->get_root_comments(),
+                )
             );
         }
     }

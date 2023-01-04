@@ -1,51 +1,55 @@
 <?php
 namespace blog\views\admin\config;
 
-use blog\lib\url;
-use blog\lib\views\simple;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\common_base;
 
-class write extends simple
+class write extends common_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Write config";
+        $this->position = array("Write config");
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Write config(* is necessary)",
+                array()
+            ) . "\n\n" .
+            "<form action=\"" . url::get(array(\swdf::$app->name, "admin/config.save", ""), array(), "") . "\" method=\"post\">" . "\n" .
+            "<label>* Blog name:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"blog_name\" value=\"\" id=\"\" class=\"input-text\" /></p>" . "\n\n" .
 
-        $parameters = $result["parameters"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
+            "<label>* Blog description:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"blog_description\" value=\"\" id=\"\" class=\"input-text\" /></p>" . "\n\n" .
 
+            "<label>* Admin user name:</label>" . "\n" .
+            "<p><input type=\"text\" name=\"name\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
 
-        $title = "Write config";
+            "<label>* Admin user password:</label>" . "\n" .
+            "<p><input type=\"password\" name=\"password\" value=\"\" class=\"input-text\" /></p>" . "\n\n" .
 
-        $position = " > Write config";
-
-
-        $content = "<h3 class=\"bg-primary\">Writet config</h3>
-
-<p>Write option(* must be write)</p>
-
-<form action=\"". $url->get(array($app_space_name, "admin/config.save", ""), array(), "") . "\" method=\"post\">
-<p>* Blog name(longtext):</p>
-<p><input type=\"text\" name=\"blog_name\" value=\"\" class=\"input_text\" /></p>
-
-<p>Blog description(longtext):</p>
-<p><input type=\"text\" name=\"blog_description\" value=\"\" class=\"input_text\" /></p>
-
-<p>* Admin user name(varchar(32)):</p>
-<p><input type=\"text\" name=\"name\" value=\"\" class=\"input_text\" /></p>
-
-<p>* Admin user password(varchar(256)):</p>
-<p><input type=\"password\" name=\"password\" value=\"\" class=\"input_text\" /></p>
-
-<p><input type=\"submit\" name=\"save\" value=\"Save\" class=\"input_submit\" /></p>
-</form >";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+            "<p><input type=\"submit\" name=\"send\" value=\"Save\" class=\"input-submit\" /></p>" . "\n" .
+            "</form >",
+            array()
         );
+
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

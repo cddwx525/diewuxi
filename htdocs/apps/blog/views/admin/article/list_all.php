@@ -4,7 +4,7 @@ namespace blog\views\admin\article;
 use swdf\helpers\url;
 use swdf\helpers\html;
 use blog\views\layouts\admin_base;
-use blog\widgets\admin_article_list;
+use blog\widgets\admin_article_table;
 
 class list_all extends admin_base
 {
@@ -22,7 +22,7 @@ class list_all extends admin_base
             html::inline_tag(
                 "p",
                 html::a(
-                    "Write an article.",
+                    "Write an article",
                     url::get(
                         array(\swdf::$app->name, "admin/article.write", ""),
                         array(),
@@ -37,7 +37,7 @@ class list_all extends admin_base
                 "All articles",
                 array()
             ) . "\n\n" .
-            admin_article_list::widget(array("data" => $this->data["articles"])),
+            admin_article_table::widget(array("data" => $this->data["articles"])),
             array()
         );
     }

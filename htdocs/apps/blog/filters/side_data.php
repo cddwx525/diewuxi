@@ -24,12 +24,12 @@ class side_data
      */
     public function set_common()
     {
-        $category_model = new category();
-        $tag_model = new tag();
+        $category = new category();
+        $tag = new tag();
 
 
-        \swdf::$app->data["category_tree"] = $category_model->get_tree();
-        \swdf::$app->data["tags"] = $tag_model->get_tags();
+        \swdf::$app->data["root_categories"] = $category->get_root();
+        \swdf::$app->data["tags"] = $tag->find_all();
     }
 }
 ?>

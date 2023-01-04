@@ -7,6 +7,8 @@ abstract class model
     private $filter = NULL;
     private $variables = array();
 
+    public  $record = array();
+
 
     /**
      *
@@ -92,6 +94,7 @@ abstract class model
 
         return array(
             "errorcode" => $errorcode,
+            // $record: {empty array: No record or fail, array: OK}
             "record" => $record,
         );
     }
@@ -170,6 +173,7 @@ abstract class model
 
         return array(
             "errorcode" => $errorcode,
+            // $record: {FALSE: No record or fail, array: OK}
             "record" => $record,
         );
     }
@@ -202,6 +206,7 @@ abstract class model
 
         return array(
             "errorcode" => $errorcode,
+            // $record: {FALSE: No record or fail, array: OK}
             "record" => $record,
         );
     }
@@ -661,12 +666,14 @@ abstract class model
      *
      *
      */
-    public function limit($limit = array())
+    public function limit($offset, $count)
     {
         if(isset($limit)) {
             $this->filter .= " LIMIT ";
             $this->filter .= implode(", ", $limit);
         }
+
+        $this->filter .= " LIMIT " . $offset . ", " . $count;
 
         return $this;
     }

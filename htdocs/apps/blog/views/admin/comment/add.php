@@ -1,46 +1,71 @@
 <?php
 namespace blog\views\admin\comment;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
 
 class add extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Comment under: [" . $this->data["article"]->record["title"] . "]";
+        $this->position = array("Add comment");
 
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $article = $result["article"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Comment under " . $article["title"];
-        $position = " > Add comment";
-
-        if ($state != "SUCCESS")
-        {
-            $message = "<p class=\"text-warning\">[" . $state . "], Comment failed!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">Return to article</a></p>"; 
-        }
-        else
-        {
-            $message = "<p class=\"text-success\">Comment have been added successfully!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/article.show", ""), array("id" => $article["id"]), "") . "\">Return to article</a></p>"; 
-        }
-
-        $content = "<h3 class=\"bg-primary\">Comment under: [" . htmlspecialchars($article["title"]) . "]</h3>
-
-" . $message;
-
-        $main = "<div>" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Comment under: [" . htmlspecialchars($this->data["article"]->record["title"]) . "]",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    "comment added Successfully!",
+                    array("class" => "text-center")
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "View",
+                        url::get(
+                            array(\swdf::$app->name, "admin/article.show", ""),
+                            array("id" => $this->data["article"]->record["id"]),
+                            $this->data["comment"]->record["id"]
+                        ),
+                        array("class" => "text-padding")
+                    ) .
+                    html::a(
+                        "Comment list",
+                        url::get(
+                            array(\swdf::$app->name, "admin/comment.list_all", ""),
+                            array(),
+                            ""
+                        ),
+                        array("class" => "text-padding")
+                    ),
+                    array("class" => "text-center")
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Add successfully.";
     }
 }
 ?>

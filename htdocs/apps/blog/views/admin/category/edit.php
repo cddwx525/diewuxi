@@ -1,81 +1,87 @@
 <?php
 namespace blog\views\admin\category;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
+use blog\widgets\admin_category_tree;
 
 class edit extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Edit category: [" . $this->data["category"]->get_full_name() . "]";
+        $this->position = array("Edit category");
 
-        $parameters = $result["parameters"];
-        $category = $result["category"];
-        $categories = $result["categories"];
-        $form_stamp = $result["form_stamp"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Edit category";
-        $position = " > Edit category";
-
-        $category_names = "<ul>
-" . $this->category_output($result, $categories, array(), $url, "") . "
-</ul>";
-
-        $category_edit = "<h3 class=\"bg-primary\">Edit category(* must be write)</h3>
-
-<form action=\"". $url->get(array($app_space_name, "admin/category.update", ""), array(), "") . "\" method=\"post\">
-<p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
-<p><input type=\"hidden\" name=\"id\" value=\"" . $category["id"] . "\" /></p>
-
-<p>* Name(vchar(64)):</p>
-<p><input type=\"text\" name=\"name\" value=\"" . $category["name"] . "\" class=\"input_text\" /></p>
-
-<p>* Slug(vchar(64)):</p>
-<p><input type=\"text\" name=\"slug\" value=\"" . $category["slug"] . "\" class=\"input_text\" /></p>
-
-<p>Parent(vchar(64)):</p>
-<p>Availiable categories:</p>
-" . $category_names . "
-<p><input type=\"text\" name=\"parent\" value=\"" . $category["parent"] . "\" class=\"input_text\" /></p>
-
-<p>Description(text):</p>
-<p><textarea name=\"description\" class=\"textarea\">" . $category["description"] . "</textarea></p>
-
-<p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-
-</form >";
-
-        $main = "<div>" . "\n" . $category_edit . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Edit category: [" . htmlspecialchars($this->data["category"]->get_full_name()) . "]",
+                array()
+            ) . "\n\n" .
+            html::inline_tag(
+                "p",
+                "Availiable categories:",
+                array()
+            ) . "\n\n" .
+            admin_category_tree::widget(array("data" => $this->data["root_categories"])) . "\n\n" .
+            html::tag(
+                "form",
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "hidden", "name" => "form_stamp", "value" => $this->data["form_stamp"])),
+                    array()
+                ) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["category"]->record["id"])),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "* Name:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "text", "name" => "name", "value" => $this->data["category"]->record["name"], "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "* Full slug:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "text", "name" => "full_slug", "value" => $this->data["category"]->get_full_slug(), "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "Description:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::inline_tag("textarea", $this->data["category"]->record["description"], array("name" => "description", "class" => "textarea")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "submit", "name" => "update", "value" => "Update", "class" => "input-submit")),
+                    array()
+                ),
+                array(
+                    "action" => url::get(array(\swdf::$app->name, "admin/category.update", ""), array(), ""),
+                    "method" => "post"
+                )
+            ),
+            array()
         );
     }
 
-    private function category_output($result, $categories, $list, $url, $indent)
-    {
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
 
-        foreach ($categories as $category)
-        {
-            if (isset($category["son"]))
-            {
-                $list[] = $indent . "<li><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a></li>
-" . $indent . "<ul>
-" . $this->category_output($result, $category["son"], array(), $url, $indent . "") . "
-" . $indent . "</ul>";
-            }
-            else
-            {
-                $list[] = $indent . "<li><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a></li>";
-            }
-        }
-        return implode("\n", $list);
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Form_stamp: " . $this->data["form_stamp"];
     }
 }
 ?>

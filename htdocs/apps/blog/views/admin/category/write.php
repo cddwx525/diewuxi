@@ -1,86 +1,83 @@
 <?php
 namespace blog\views\admin\category;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
+use blog\widgets\admin_category_tree;
+
 
 class write extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Write category";
+        $this->position = array("Write category");
 
-        $parameters = $result["parameters"];
-        $categories = $result["categories"];
-        $form_stamp = $result["form_stamp"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Write category";
-        $position = " > Write category";
-
-        if (empty($categories))
-        {
-            $category_names = "<p>There is no categories now.</p>";
-        }
-        else
-        {
-            $category_names = "<ul>
-" . $this->category_output($result, $categories, array(), $url, "") . "
-</ul>";
-        }
-
-        $category_write = "<h3 class=\"bg-primary\">Write category(* must be write)</h3>
-
-<p>Availiable categories:</p>
-" . $category_names . "
-
-<form action=\"". $url->get(array($app_space_name, "admin/category.add", ""), array(), "") . "\" method=\"post\">
-<p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
-
-<p>* Name(vchar(64)):</p>
-<p><input type=\"text\" name=\"name\" value=\"\" class=\"input_text\" /></p>
-
-<p>* Slug(vchar(64)):</p>
-<p><input type=\"text\" name=\"slug\" value=\"\" class=\"input_text\" /></p>
-
-<p>* Parent(vchar(64))(chose one from above or \"NULL\"):</p>
-<p><input type=\"text\" name=\"parent\" value=\"\" class=\"input_text\" /></p>
-
-<p>Description(text):</p>
-<p><textarea name=\"description\" class=\"textarea\"></textarea></p>
-
-<p><input type=\"submit\" name=\"add\" value=\"Add\" class=\"input_submit\" /></p>
-</form >";
-
-        $main = "<div>" . "\n" . $category_write . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Write category(* must be write)",
+                array()
+            ) . "\n\n" .
+            html::inline_tag(
+                "p",
+                "Availiable categories:",
+                array()
+            ) . "\n\n" .
+            admin_category_tree::widget(array("data" => $this->data["root_categories"])) . "\n\n" .
+            html::tag(
+                "form",
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "hidden", "name" => "form_stamp", "value" => $this->data["form_stamp"])),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "* Name:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "text", "name" => "name", "value" => "", "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "* Full slug:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "text", "name" => "full_slug", "value" => "", "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "Description:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::inline_tag("textarea", "", array("name" => "description", "class" => "textarea")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "submit", "name" => "add", "value" => "Add", "class" => "input-submit")),
+                    array()
+                ),
+                array(
+                    "action" => url::get(array(\swdf::$app->name, "admin/category.add", ""), array(), ""),
+                    "method" => "post"
+                )
+            ),
+            array()
         );
     }
 
-    private function category_output($result, $categories, $list, $url, $indent)
-    {
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
 
-        foreach ($categories as $category)
-        {
-            if (isset($category["son"]))
-            {
-                $list[] = $indent . "<li><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a></li>
-" . $indent . "<ul>
-" . $this->category_output($result, $category["son"], array(), $url, $indent . "") . "
-" . $indent . "</ul>";
-            }
-            else
-            {
-                $list[] = $indent . "<li><a href=\"" . $url->get(array($app_space_name, "admin/category.show", ""), array("id" => $category["id"]), "") . "\">" . htmlspecialchars($category["name"]) . "</a></li>";
-            }
-        }
-        return implode("\n", $list);
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Form_stamp: " . $this->data["form_stamp"];
     }
 }
 ?>

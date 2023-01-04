@@ -14,14 +14,14 @@ class delete extends admin_base
      */
     protected function set_items()
     {
-        $this->title = "Delete article [" . htmlspecialchars($this->data["article"]["title"]) . "]";
+        $this->title = "Delete article: [" . $this->data["article"]->record["title"] . "]";
         $this->position = array("Delete article");
 
         $this->main = html::tag(
             "div",
             html::inline_tag(
                 "h3",
-                "Delete article [" . htmlspecialchars($this->data["article"]["title"]) . "]",
+                "Delete article: [" . htmlspecialchars($this->data["article"]->record["title"]) . "]",
                 array()
             ) . "\n\n" .
             html::tag(
@@ -29,7 +29,7 @@ class delete extends admin_base
                 html::inline_tag(
                     "p",
                     "Article deleted Successfully!",
-                    array()
+                    array("class" => "text-center")
                 ) . "\n\n" .
                 html::inline_tag(
                     "p",
@@ -42,7 +42,7 @@ class delete extends admin_base
                         ),
                         array("class" => "text-padding")
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),

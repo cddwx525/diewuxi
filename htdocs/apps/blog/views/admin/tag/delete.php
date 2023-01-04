@@ -1,59 +1,62 @@
 <?php
 namespace blog\views\admin\tag;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
 
 class delete extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Delete tag: [" . $this->data["tag"]->record["name"] . "]";
+        $this->position = array("Delete tag");
 
-        $parameters = $result["parameters"];
-        $state = $result["state"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Delete tag";
-        $position = " > Delete tag";
-
-
-        if ($state != "SUCCESS")
-        {
-            if ($state === "PASSWORD_FAIL")
-            {
-                $message = "<p class=\"text-warning\">Password wrong!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.delete_confirm", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
-            }
-            else if ($state === "DELETE_DENY")
-            {
-                $message = "<p class=\"text-warning\">Tag has articles, cannot deleted!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.delete_confirm", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
-            }
-            else
-            {
-                $message = "<p class=\"text-warning\">[" . $state . "], Tag delete wrong!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.delete_confirm", ""), array("id" => $parameters["post"]["id"]), "") . "\">Return</a></p>"; 
-            }
-        }
-        else
-        {
-            $message = "<p class=\"text-success\">Tag have been deleted successfully!</p>
-<p><a href=\"" . $url->get(array($app_space_name, "admin/tag.list_all", ""), array(), "") . "\">Tag list</a></p>"; 
-        }
-
-        $content = "<h3 class=\"bg-primary\">Delete tag</h3>
-
-" . $message;
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Delete tag: [" . htmlspecialchars($this->data["tag"]->record["name"]) . "]",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::inline_tag(
+                    "p",
+                    "Tag deleted Successfully!",
+                    array("class" => "text-center")
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::a(
+                        "Tag list",
+                        url::get(
+                            array(\swdf::$app->name, "admin/tag.list_all", ""),
+                            array(),
+                            ""
+                        ),
+                        array("class" => "text-padding")
+                    ),
+                    array("class" => "text-center")
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Delete successfully.";
     }
 }
 ?>

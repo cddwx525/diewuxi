@@ -1,38 +1,51 @@
 <?php
 namespace blog\views\admin;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
+use blog\widgets\admin_category_path;
 
 class settings extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Settings";
+        $this->position = array("Settings");
 
-        $state = $result["state"];
-        $parameters = $result["parameters"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Setting";
-
-        $position = " > <a href=\"" . $url->get(array($app_space_name, "admin/settings.show", ""), array(), "") . "\">Setting</a>";
-
-        $content = "<h3 class=\"bg-primary\">Setting</h3>
-
-<ul>
-<li><a href=\"" . $url->get(array($app_space_name, "admin/account.edit", ""), array(), "") . "\">Account setting</a></li>
-<li><a href=\"" . $url->get(array($app_space_name, "admin/option.edit", ""), array(), "") . "\">Site options</a></li>
-</ul>";
-
-        $main = "<div>" . "\n" . $content . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Settings",
+                array()
+            ) . "\n\n" .
+            html::tag(
+                "div",
+                html::tag(
+                    "ul",
+                    "<li>" . html::a("Account settings", url::get(array(\swdf::$app->name, "admin/account.edit", ""), array(), ""), array()) . "</li>" . "\n" .
+                    "<li>" . html::a("Site options", url::get(array(\swdf::$app->name, "admin/option.edit", ""), array(), ""), array()) . "</li>" ,
+                    array()
+                ),
+                array()
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "";
     }
 }
 ?>

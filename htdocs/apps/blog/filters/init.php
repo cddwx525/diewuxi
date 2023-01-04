@@ -21,15 +21,15 @@ class init
      */
     public function init()
     {
-        $option_model = new option();
+        $option = new option();
 
-        foreach ($option_model->select()["record"] as $one_option)
+        foreach ($option->select()["record"] as $one_option)
         {
             \swdf::$app->data["options"][$one_option["name"]] = $one_option["value"];
         }
 
         if (
-            (isset(\swdf::$app->data["options"]["flag"])) &&
+            (isset(\swdf::$app->data["options"]["flag"]) === TRUE) &&
             (\swdf::$app->data["options"]["flag"] === "on")
         )
         {

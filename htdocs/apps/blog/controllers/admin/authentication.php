@@ -1,10 +1,10 @@
 <?php
 namespace blog\controllers\admin;
 
+use swdf\helpers\url;
 use swdf\base\controller;
 use blog\filters\init;
 use blog\filters\user_data;
-use blog\models\user;
 
 class authentication extends controller
 {
@@ -31,7 +31,7 @@ class authentication extends controller
                 "actions" => array("write", "login"),
                 "rule" => array(
                     "true" => array(
-                        "common/already_login",
+                        "admin/common/already_login",
                         array()
                     ),
                     "false" => TRUE,
@@ -71,16 +71,16 @@ class authentication extends controller
      */
     public function login()
     {
-        $user_model = new user();
+        $ret = \swdf::$app->data["user"]->login();
 
-        $result = $user_model->login(\swdf::$app->request["post"]);
-        if (! $result["result"])
+        if ($ret["result"] === FALSE)
         {
             return array(
-                "common/message",
+                "admin/common/message",
                 array(
                     "source" => "Login",
-                    "message" => $result["message"],
+                    "message" => $ret["message"],
+                    "back_url" => url::get(array(\swdf::$app->name, "admin/authentication.write", ""), array(), ""),
                 )
             );
         }
@@ -100,8 +100,7 @@ class authentication extends controller
      */
     public function logout()
     {
-        $user_model = new user();
-        $user_model->logout();
+        \swdf::$app->data["user"]->logout();
 
         return array(
             "admin/authentication/logout",

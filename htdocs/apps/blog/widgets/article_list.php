@@ -13,9 +13,7 @@ class article_list extends widget
      */
     protected function run($config)
     {
-        $articles = $config["data"];
-
-        return $this->get_articles($articles);
+        return $this->get_html($config["data"]);
     }
 
 
@@ -23,11 +21,11 @@ class article_list extends widget
      *
      *
      */
-    private function get_articles($articles)
+    private function get_html($articles)
     {
-        if (empty($articles))
+        if (empty($articles) === TRUE)
         {
-            $articles_link = html::inline_tag(
+            $html = html::inline_tag(
                 "p",
                 "There is no articles now.",
                 array()
@@ -35,24 +33,23 @@ class article_list extends widget
         }
         else
         {
-            // Get tag links.
             $article_link_list = array();
             foreach ($articles as $article)
             {
-                if (empty($article["tags"]))
+                if (empty($article->get_tags()) === TRUE)
                 {
                     $tag_links = html::inline_tag("span", "NULL", array());
                 }
                 else
                 {
                     $tag_link_list = array();
-                    foreach ($article["tags"] as $tag)
+                    foreach ($article->get_tags() as $tag)
                     {
                         $tag_link_list[] = html::a(
-                            htmlspecialchars($tag["name"]),
+                            htmlspecialchars($tag->record["name"]),
                             url::get(
                                 array(\swdf::$app->name, "guest/tag.slug_show", ""),
-                                array("slug" => $tag["slug"]),
+                                array("slug" => $tag->record["slug"]),
                                 ""
                             ),
                             array()
@@ -67,10 +64,10 @@ class article_list extends widget
                     html::inline_tag(
                         "p",
                         html::a(
-                            htmlspecialchars($article["title"]),
+                            htmlspecialchars($article->record["title"]),
                             url::get(
                                 array(\swdf::$app->name, "guest/article.slug_show", ""),
-                                array("full_slug" => $article["full_slug"]),
+                                array("full_slug" => $article->get_full_slug()),
                                 ""
                             ),
                             array()
@@ -86,10 +83,10 @@ class article_list extends widget
                             html::inline_tag(
                                 "span",
                                 html::a(
-                                    htmlspecialchars($article["category"]["full_name"]),
+                                    htmlspecialchars($article->get_category()->get_full_name()),
                                     url::get(
                                         array(\swdf::$app->name, "guest/category.slug_show", ""),
-                                        array("full_slug" => $article["category"]["full_slug"]),
+                                        array("full_slug" => $article->get_category()->get_full_slug()),
                                         ""
                                     ),
                                     array()
@@ -109,7 +106,7 @@ class article_list extends widget
                         html::inline_tag(
                             "li",
                             html::inline_tag("span", "Date: ", array()) .
-                            html::inline_tag("span", $article["date"], array()),
+                            html::inline_tag("span", $article->record["date"], array()),
                             array()
                         ),
                         array()
@@ -117,10 +114,10 @@ class article_list extends widget
                     array()
                 );
             }
-            $articles_link = implode("\n", $article_link_list);
+            $html = implode("\n", $article_link_list);
         }
 
-        return $articles_link;
+        return $html;
     }
 }
 ?>

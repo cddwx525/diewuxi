@@ -1,67 +1,87 @@
 <?php
 namespace blog\views\admin\tag;
 
-use blog\lib\url;
-use blog\lib\views\admin_base;
+use swdf\helpers\url;
+use swdf\helpers\html;
+use blog\views\layouts\admin_base;
+use blog\widgets\admin_tags;
 
 class edit extends admin_base
 {
-    public function get_items($result)
+    /**
+     *
+     *
+     */
+    protected function set_items()
     {
-        $url = new url();
+        $this->title = "Edit tag: [" . $this->data["tag"]->record["name"] . "]";
+        $this->position = array("Edit tag");
 
-        $parameters = $result["parameters"];
-        $tag = $result["tag"];
-        $tags = $result["tags"];
-        $form_stamp = $result["form_stamp"];
-        $app_space_name = $result["meta_data"]["settings"]["app_space_name"];
-
-
-        $title = "Edit tag";
-        $position = " > Edit tag";
-
-        if (empty($tags))
-        {
-            $tag_names = "<p>There is no tags now.</p>";
-        }
-        else
-        {
-            $tag_names = array();
-            foreach ($tags as $one_tag)
-            {
-                $tag_names[] = "<a href=\"" . $url->get(array($app_space_name, "admin/tag.show", ""), array("id" => $one_tag["id"]), "") . "\">" . htmlspecialchars($one_tag["name"]) . "</a>";
-            }
-            $tag_names = implode(" ", $tag_names);
-        }
-
-        $tag_edit = "<h3 class=\"bg-primary\">Edit tag(* must be write)</h3>
-
-<p>Availiable tags:</p>
-" . $tag_names . "
-
-<form action=\"". $url->get(array($app_space_name, "admin/tag.update", ""), array(), "") . "\" method=\"post\">
-<p><input type=\"hidden\" name=\"form_stamp\" value=\"" . $form_stamp . "\" /></p>
-<p><input type=\"hidden\" name=\"id\" value=\"" . $tag["id"] . "\" /></p>
-
-<p>* Name(vchar(64)):</p>
-<p><input type=\"text\" name=\"name\" value=\"" . $tag["name"] . "\" class=\"input_text\" /></p>
-
-<p>Slug(vchar(64)):</p>
-<p><input type=\"text\" name=\"slug\" value=\"" . $tag["slug"] . "\" class=\"input_text\" /></p>
-
-<p>Description(text):</p>
-<p><textarea name=\"description\" class=\"textarea\">" . $tag["description"] . "</textarea></p>
-
-<p><input type=\"submit\" name=\"update\" value=\"Update\" class=\"input_submit\" /></p>
-</form >";
-
-        $main = "<div>" . "\n" . $tag_edit . "\n" . "</div>";
-
-        return array(
-            "title" => $title,
-            "position" => $position,
-            "main" => $main,
+        $this->main = html::tag(
+            "div",
+            html::inline_tag(
+                "h3",
+                "Edit tag: [" . htmlspecialchars($this->data["tag"]->record["name"]) . "]",
+                array()
+            ) . "\n\n" .
+            html::inline_tag(
+                "p",
+                "Availiable tags:",
+                array()
+            ) . "\n\n" .
+            admin_tags::widget(array("data" => $this->data["tags"])) . "\n\n" .
+            html::tag(
+                "form",
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "hidden", "name" => "form_stamp", "value" => $this->data["form_stamp"])),
+                    array()
+                ) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "hidden", "name" => "id", "value" => $this->data["tag"]->record["id"])),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "* Name:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "text", "name" => "name", "value" => $this->data["tag"]->record["name"], "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "* Slug:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "text", "name" => "slug", "value" => $this->data["tag"]->record["slug"], "class" => "input-text")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag("p", "Description:", array()) . "\n" .
+                html::inline_tag(
+                    "p",
+                    html::inline_tag("textarea", $this->data["tag"]->record["description"], array("name" => "description", "class" => "textarea")),
+                    array()
+                ) . "\n\n" .
+                html::inline_tag(
+                    "p",
+                    html::mono_tag("input", array("type" => "submit", "name" => "update", "value" => "Update", "class" => "input-submit")),
+                    array()
+                ),
+                array(
+                    "action" => url::get(array(\swdf::$app->name, "admin/tag.update", ""), array(), ""),
+                    "method" => "post"
+                )
+            ),
+            array()
         );
+    }
+
+
+    /**
+     *
+     *
+     */
+    protected function set_text()
+    {
+        $this->text = "Form_stamp: " . $this->data["form_stamp"];
     }
 }
 ?>

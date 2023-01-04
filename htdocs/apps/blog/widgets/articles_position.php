@@ -13,17 +13,17 @@ class articles_position extends widget
      */
     protected function run($config)
     {
-        return $this->get_position($config["data"]);
+        return $this->get_html($config["data"]);
     }
 
     /**
      *
      *
      */
-    private function get_position($category_path)
+    private function get_html($category_path)
     {
-        $position_list = array();
-        $position_list[] = html::a(
+        $html = array();
+        $html[] = html::a(
             "Articles",
             url::get(
                 array(\swdf::$app->name, "guest/article.list_all", ""),
@@ -33,20 +33,20 @@ class articles_position extends widget
             array()
         );
 
-        foreach ($category_path as $one_category)
+        foreach ($category_path as $category)
         {
-            $position_list[] = html::a(
-                htmlspecialchars($one_category["name"]),
+            $html[] = html::a(
+                htmlspecialchars($category->record["name"]),
                 url::get(
-                    array(\swdf::$app->name, "guest/article.slug_list_category", ""),
-                    array("full_category_slug" => $one_category["full_slug"]),
+                    array(\swdf::$app->name, "guest/article.slug_list_by_category", ""),
+                    array("full_category_slug" => $category->get_full_slug()),
                     ""
                 ),
                 array()
             );
         }
 
-        return $position_list;
+        return $html;
     }
 }
 ?>

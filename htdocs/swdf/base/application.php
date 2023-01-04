@@ -28,6 +28,7 @@ class application
     public $db = NULL;
     public $router = NULL;
     public $request = NULL;
+    public $file = NULL;
 
     public $data = NULL;
 
@@ -54,15 +55,17 @@ class application
 
         if ($router === FALSE)
         {
+            // Response as static file by php built-in server.
+
             return FALSE;
         }
         else
         {
+            $this->configure_app($router);
+            $this->response($router);
+
+            return TRUE;
         }
-
-        $this->configure_app($router);
-
-        $this->response($router);
     }
 
 
@@ -114,6 +117,7 @@ class application
 
         $this->router = $router;
         $this->request = $router["parameters"];
+        $this->file = $_FILES;
 
         if (! is_null($this->db_id))
         {
@@ -136,23 +140,25 @@ class application
         if (STATIC_FILE === TRUE)
         {
             // Use php build in server to route static file.
+
             $static_match = $this->static_match($request_uri);
             if ($static_match)
             {
                 // Static file.
+
                 return FALSE;
             }
             else
             {
                 // Dynamic url.
-                //$this->response($request_uri);
+
                 return $this->dynamic_match($request_uri);
             }
         }
         else
         {
             // Use web server to route static file.
-            //$this->response($request_uri);
+
             return $this->dynamic_match($request_uri);
         }
     }
@@ -165,6 +171,12 @@ class application
     private function response($router)
     {
         // Special router.
+        //
+        // special_actions array example:
+        // array(
+        //     "default" => array("main", "home.show", ""),
+        //     "not_found" => array("main", "not_found.show", ""),
+        // ),
         if ($router["controller_type"] === "special")
         {
             $special_actions = $this->apps[$this->name]["special_actions"];
@@ -175,15 +187,6 @@ class application
         {
         }
 
-        /*
-        print("<pre>");
-        print_r($router);
-        print("</pre>");
-        exit();
-        */
-
-
-        // Filter redirect.
         if (
             ($router["method"] === "301") ||
             ($router["method"] === "302")
@@ -194,7 +197,6 @@ class application
         }
         else
         {
-
             $controller_class = $this->name . "\\controllers\\" . str_replace("/", "\\", $router["controller_name"]);
             $controller = new $controller_class();
 
@@ -217,13 +219,13 @@ class application
             $view = new $view_class($result[1]);
 
             // Output mode.
-            if ($router["method"] === "text")
-            {
-                $view->output_text();
-            }
-            else if ($router["method"] === "")
+            if ($router["method"] === "")
             {
                 $view->output_html();
+            }
+            else if ($router["method"] === "text")
+            {
+                $view->output_text();
             }
             else
             {
@@ -240,12 +242,12 @@ class application
     {
         /*
          * Static file check.
-         * /apps/{app_name}/static/{folder}/path/to/file$
+         * /APP_DIR/{app_name}/WEB_DIR/{folder}/path/to/file$
          * /favicon.ico
          * /robots.txt
          */
 
-        $static_match = preg_match("%^/apps/\w+/static/\w+(/\w+)*/.*$%", $request_uri);
+        $static_match = preg_match("%^/" . APP_DIR . "/\w+/" . WEB_DIR . "/\w+(/\w+)*/.*$%", $request_uri);
         $static_match_ico = preg_match("%^/favicon\.ico$%", $request_uri);
         $static_match_robot = preg_match("%^/robots\.txt$%", $request_uri);
 
@@ -296,6 +298,7 @@ class application
                 if (is_array($one_map[3][0]) === TRUE)
                 {
                     $new_string = substr($target_string, strlen($matches[0]));
+
                     // The return here is necessary.
                     return $this->parse_uri($one_map[3], $new_string, $request_uri);
                 }
@@ -304,7 +307,7 @@ class application
                     $match_variable = array();
                     foreach ($one_map[2] as $one_match_varibale)
                     {
-                        if ($one_match_varibale != "")
+                        if ($one_match_varibale !== "")
                         {
                             $match_variable[$one_match_varibale] = $matches[$one_match_varibale];
                         }
@@ -320,7 +323,6 @@ class application
                         "parameters" => array(
                             "get" => $match_variable,
                             "post" => $_POST,
-                            "file" => $_FILES,
                             "url" => url::root_url() . $request_uri,
                         ),
                     );
@@ -343,7 +345,6 @@ class application
             "parameters" => array(
                 "get" => array(),
                 "post" => $_POST,
-                "file" => $_FILES,
                 "url" => url::root_url() . $request_uri,
             ),
         );
@@ -389,7 +390,7 @@ class application
      *
      */
     private function init_tables($meta_table, $sql)
-    {   
+    {
         try
         {
             $this->db->query("SELECT * FROM `" . $meta_table . "`");

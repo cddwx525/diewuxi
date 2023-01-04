@@ -45,19 +45,9 @@ class about extends controller
      */
     public function show()
     {
-        $page_model = new page();
-
-        $about_page_id = \swdf::$app->data["options"]["about_page"];
-        $about_page = $page_model->select_by_id((int) $about_page_id)["record"];
-
-        $about_page["content"] = MarkdownExtra::defaultTransform($about_page["content"]);
-
-
         return array(
             "guest/about",
-            array(
-                "about_page" => $about_page,
-            ),
+            array(),
         );
     }
 }

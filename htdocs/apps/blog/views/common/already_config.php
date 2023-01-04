@@ -32,7 +32,7 @@ class already_config extends common_base
                         url::get(array(\swdf::$app->name, "guest/home.show",""), array(), ""),
                         array()
                     ),
-                    array()
+                    array("class" => "text-center")
                 ),
                 array()
             ),
