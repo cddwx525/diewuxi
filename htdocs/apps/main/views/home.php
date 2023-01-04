@@ -2,6 +2,7 @@
 namespace main\views;
 
 use swdf\helpers\html;
+use swdf\helpers\url;
 use main\views\layouts\base;
 
 class home extends base
@@ -11,6 +12,9 @@ class home extends base
      */
     protected function set_items()
     {
+        $this->css = array(
+            url::get_static("css/github-markdown.css"),
+        );
         $this->description = "Diewuxi.";
         $this->title = "Home";
         $this->position = array("Home");
@@ -22,7 +26,7 @@ class home extends base
                 html::inline_tag("p", "Welcome to Diewuxi.", array()) . "\n" .
                 html::mono_tag(
                     "img",
-                    array("src" => "/apps/blog/web/uploads/000/000/000/026-circutss.jpg", "alt" => "site_logo"),
+                    array("src" => "/apps/main/web/image/diewuxi.png", "alt" => "site_logo"),
                 ) . "\n" .
                 html::mono_tag("br", array()) . "\n" .
                 html::mono_tag("br", array()),

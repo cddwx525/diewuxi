@@ -1,6 +1,6 @@
 <?php
 return array(
-    "version" => "1.0.2",
+    "version" => "2.0.0",
     "main_app" => "main",
     "site_base" => "",
 

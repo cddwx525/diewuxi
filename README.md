@@ -564,3 +564,19 @@ Dynamic pages.
     RewriteCond %{REQUEST_URI} !^/favicon\.ico$
     RewriteCond %{REQUEST_URI} !^/robots\.txt$
     RewriteRule ^.*$ main.php [L]
+
+# Deploy guide
+
+* Check current program version on host
+* Backup files and databases of current website
+* Prepare release program code.
+* Adjust page according to online file just backuped
+* Config remote database in apps/{app}/config.php
+* Remove local uploaded files
+* Set debug, static define in main.php
+* Tar program code files
+* Tar uploaded files just backuped.
+* Delete online files
+* Upload program code files
+* Upload uploaded files
+

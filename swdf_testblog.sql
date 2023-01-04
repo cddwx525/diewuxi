@@ -1,25 +1,4 @@
-<?php
-return array(
-    "name" => "blog",
-    "title" => "Blog",
-    "version" => "1.0.0",
-    "params" => array(
-    ),
-
-    "db_id" => array(
-        "host" => "localhost",
-        "name" => "swdf_testblog",
-        "user" => "swdf_testblog",
-        "password" => "swdf_testblog",
-    ),
-
-    "special_actions" => array(
-        "default" => array("blog", "guest/home.show", ""),
-        "not_found" => array("blog", "common/not_found.show", ""),
-    ),
-
-    "meta_table" => "option",
-    "sql" => "DROP TABLE IF EXISTS `article`;
+DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `slug` varchar(128) NOT NULL,
@@ -129,6 +108,4 @@ CREATE TABLE `user` (
   `last_session_id` varchar(256) NOT NULL,
   `form_stamp` varchar(256) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;",
-);
-?>
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
