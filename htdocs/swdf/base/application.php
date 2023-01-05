@@ -366,7 +366,7 @@ class application
                     $user,
                     $pass,
                     array(
-                        \PDO::ATTR_PERSISTENT => TRUE,
+                        //\PDO::ATTR_PERSISTENT => TRUE,
                     )
                 );
 
