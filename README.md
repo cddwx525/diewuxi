@@ -1,28 +1,54 @@
 # Introduction
 
-A simple MVC web app development framwork written in php.
+A personal website, containing a simple MVC web app development framwork.
 
-# Feature
+This website contains 2 APPs: "main" and "blog". "main" contains few static
+pages which does not use database, this APP acts as main interface of the website.
+"blog" use database, it is a simple blog APP.
 
-* URL map, and reverse map, URL custom freely.
+## Framework Feature
 
-# Directory structure
+* MVC code structure.
+* URL pattern customize, url generation.
+* Html tags generation, html code auto indent.
+* Database operation class with often used functions.
+
+## "blog" APP feature
+
+* Unlimit category hierarchy list
+* Unlimit comment hierarchy list
+* Administration panel
+* Cookies or session based login remember
+* XSRF check
+* Cookies token steal check
+* File upload, management
+
+
+# Files organization
 
     htdocs/
         apps/
-            <app1>/
+            blog/
                 controllers/
                 lib/
                 models/
+                views/
                 web/
                     css/
                     fonts/
                     uploads/
-                views/
                 config.php
                 urls.php
-            <app2>/
-                ...
+            main/
+                controllers/
+                lib/
+                models/
+                views/
+                web/
+                    css/
+                    fonts/
+                config.php
+                urls.php
         config/
             config.php
         swdf/
@@ -40,12 +66,13 @@ A simple MVC web app development framwork written in php.
         main.php
         robots.txt
         favicon.ico
+        .htaccess
 
 # Implenmentation
 
 ## `main.php`
 
-### Source
+### Code
 
     define("DEBUG", TRUE);
     define("STATIC_FILE", TRUE);
@@ -67,20 +94,20 @@ A simple MVC web app development framwork written in php.
     $application = new swdf\base\application($config);
     $application->run();
 
-### Process
+### Exec flow
 
 1. settings
 
     `swdf.php`: Define a swdf class, set autoload class, set php.
-    `config.php`: Overall config.
+    `config.php`: Global config.
 
 The `swdf` class is global class, it is necessary to controll the whole data, it is the "pointer".
 
 2. Create $application instance and run with config
 
-## Application run
+## Application
 
-### Source
+### Code
 
     // Global config.
     public $config = NULL;
@@ -146,7 +173,7 @@ The `swdf` class is global class, it is necessary to controll the whole data, it
     }
 
 
-### Process
+### Exec flow
 
 1. Get request URI from `$_SERVER["REQUEST_URI"]`
 2. Get router form request URI
@@ -533,29 +560,9 @@ So main app must define this key.
 Define URLs used in this app.
 
 
-# Example app
-
-## main
-
-Static pages.
-
 ## simpleblog
 
 Dynamic pages.
-
-### Feature
-
-    * Add, update, delete, get function for article, category, tag
-    * Edit about and home page
-    * Edit article with markdown syntax
-    * Unlimit category hierarchy list
-    * Unlimit comment hierarchy list
-    * Article-tag many-to-many relation
-    * All left-align HTML code
-    * Cookies or session based login remember
-    * XSRF check
-    * Cookies token steal check
-    * Media managent
 
 # htaccess file
 
@@ -572,11 +579,11 @@ Dynamic pages.
 * Prepare release program code.
 * Adjust page according to online file just backuped
 * Config remote database in apps/{app}/config.php
-* Remove local uploaded files
+* Remove local static files
 * Set debug, static define in main.php
 * Tar program code files
-* Tar uploaded files just backuped.
+* Tar static files just backuped.
 * Delete online files
 * Upload program code files
-* Upload uploaded files
+* Upload static files
 
