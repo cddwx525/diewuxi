@@ -65,7 +65,7 @@ class file extends model
                 "condition" => "",
             ),
         );
-        $records = $article_file->where($where)->select()["record"];
+        $records = $article_file->where($where)->order(array("`date` DESC"))->select()["record"];
 
         $articles = array();
         foreach ($records as $key => $item)

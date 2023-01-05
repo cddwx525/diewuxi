@@ -126,7 +126,7 @@ class category extends model
                 "condition" => "",
             ),
         );
-        $records = $article->where($where)->select()["record"];
+        $records = $article->where($where)->order(array("`date` DESC"))->select()["record"];
 
 
         $articles = array();
