@@ -6,6 +6,12 @@ This website contains 2 APPs: "main" and "blog". "main" contains few static
 pages which does not use database, this APP acts as main interface of the website.
 "blog" use database, it is a simple blog APP.
 
+![main_home](main_home)
+
+![blog_home](blog_home)
+
+![blog_admin](blog_admin)
+
 ## Framework Feature
 
 * MVC code structure.
