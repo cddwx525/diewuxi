@@ -36,14 +36,14 @@ class about extends base
                     html::inline_tag("span", "v2.0 2023-01-04", array("class" => "text-padding")),
                     array()
                 ) . "\n" .
-                html::inline_tag(
+                html::tag(
                     "ul",
                     html::inline_tag("li", "New program design, more convenience for develop, especially with database operation.", array()) . "\n" .
                     html::inline_tag("li", "Simple interface style(Because I can not do it good).", array()) . "\n" .
                     html::inline_tag("li", "Html code is strictly indent.", array()) . "\n" .
                     html::mono_tag("br", array()),
                     array()
-                ) . "\n\n" .
+                ) . "\n" .
                 html::inline_tag(
                     "li",
                     html::inline_tag("span", "v1.0 2017-09-18", array("class" => "text-padding")) .
@@ -54,7 +54,7 @@ class about extends base
                     ),
                     array()
                 ) . "\n" .
-                html::inline_tag(
+                html::tag(
                     "ul",
                     html::inline_tag("li", "Use bootstrap.", array()) . "\n" .
                     html::inline_tag("li", "Somewhat first version.", array()) . "\n" .
