@@ -35,6 +35,13 @@ return array(
         array("main", "common", "one_page", "show", "", array()),
         array("main", "one_page.show", "",),
     ),
+    array(
+        "^/screenshot_v1_0$",
+        array("/screenshot_v1_0"),
+        array(""),
+        array("main", "common", "screenshot", "show_v1_0", "", array()),
+        array("main", "screenshot.show_v1_0", "",),
+    ),
 
     /*
      * Text mode.
