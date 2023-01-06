@@ -566,10 +566,6 @@ So main app must define this key.
 Define URLs used in this app.
 
 
-## simpleblog
-
-Dynamic pages.
-
 # htaccess file
 
     RewriteEngine On
