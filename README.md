@@ -6,11 +6,11 @@ This website contains 2 APPs: "main" and "blog". "main" contains few static
 pages which does not use database, this APP acts as main interface of the website.
 "blog" use database, it is a simple blog APP.
 
-![main_home](main_home.png)
+![main_home](screenshot/main_home.png)
 
-![blog_home](blog_home.png)
+![blog_home](screenshot/blog_home.png)
 
-![blog_admin](blog_admin.png)
+![blog_admin](screenshot/blog_admin.png)
 
 ## Framework Feature
 
