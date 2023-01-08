@@ -7,15 +7,15 @@ return array(
         "^$",
         array(""),
         array(""),
-        array("blog", "common", "guest/home", "show", "", array()),
-        array("blog", "guest/home.show", "",),
+        array("blog", "", "", "", "301", array("blog", "guest/home.show", "",)),
+        array("blog", "", " ",),
     ),
     array(
         "^/$",
         array("/"),
         array(""),
         array("blog", "common", "guest/home", "show", "", array()),
-        array("blog", "", "/",),
+        array("blog", "guest/home.show", "",),
     ),
     array(
         "^/about\.html$",
@@ -113,15 +113,15 @@ return array(
                 "^$",
                 array(""),
                 array(""),
-                array("blog", "common", "admin/home", "show", "", array()),
-                array("blog", "admin/home.show", "",),
+                array("blog", "", "", "", "301", array("blog", "admin/home.show", "",)),
+                array("blog", "", " ",),
             ),
             array(
                 "^/$",
                 array("/"),
                 array(""),
-                array("blog", "", "", "", "301", array("blog", "admin/home.show", "",),),
-                array("blog", "", "/",),
+                array("blog", "common", "admin/home", "show", "", array()),
+                array("blog", "admin/home.show", "",),
             ),
 
             //

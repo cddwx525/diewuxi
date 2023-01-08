@@ -293,7 +293,7 @@ abstract class base extends view
                 "About",
             ),
             array(
-                url::root_url() . "/blog",
+                url::root_url() . "/blog/",
                 "Blog >>",
             ),
         );
