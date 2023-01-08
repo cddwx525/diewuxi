@@ -26,45 +26,36 @@ body
     margin-right: auto;
 }
 
+
 /*******************************************************************************
  * # Link
  ******************************************************************************/
 a:link
 {
-    /*
-    color: blue;
+    color: Brown;
     text-decoration: none;
-    */
-    text-decoration: none;
-}
-
-a:hover
-{
-    /*
-    color: blue;
-    text-decoration: underline;
-    */
-    text-decoration: underline;
-}
-
-a:active
-{
-    /*
-    color: blue;
-    text-decoration: underline;
-    */
-    text-decoration: underline;
 }
 
 a:visited
 {
-    /*
-    color: blue;
-    text-decoration: none;
-    */
+    color: Brown;
     text-decoration: none;
 }
 
+
+a:hover
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
+}
+
+a:active
+{
+    color: White;
+    background-color: Brown;
+    text-decoration: none;
+}
 
 /*******************************************************************************
  * # Class
@@ -150,7 +141,6 @@ a:visited
 
 
 
-
 .bottom-border
 {
     border-bottom-style: solid;
@@ -225,4 +215,18 @@ a:visited
     /*
     max-width: 80em;
     */
+}
+
+
+/*******************************************************************************
+ * ## layout
+ ******************************************************************************/
+.side
+{
+    width: 30%;
+}
+
+.main
+{
+    width: 70%;
 }

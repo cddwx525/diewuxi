@@ -28,18 +28,22 @@ class tag_cloud extends widget
         foreach ($tags as $tag)
         {
             $tag_list[] = html::a(
-                htmlspecialchars($tag->record["name"]),
+                html::inline_tag(
+                    "span",
+                    htmlspecialchars($tag->record["name"]),
+                    array()
+                ) .
+                html::inline_tag(
+                    "span",
+                    "[" . $tag->get_article_count() . "]",
+                    array()
+                ),
                 url::get(
                     array( \swdf::$app->name, "guest/article.slug_list_by_tag", ""),
                     array("tag_slug" => $tag->record["slug"]),
                     ""
                 ),
                 array("class" => "tag")
-            ) .
-            html::inline_tag(
-                "span",
-                "[" . $tag->get_article_count() . "]",
-                array()
             );
         }
 
