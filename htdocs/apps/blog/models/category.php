@@ -886,6 +886,7 @@ class category extends model
 
     /**
      *
+     * TODO: full_slug check, "([[:word:]-]+/)*[[:word:]-]+".
      *
      */
     private function validate()

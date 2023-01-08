@@ -363,6 +363,7 @@ class tag extends model
 
     /**
      *
+     * TODO: slug check, "[[:word:]-]+".
      *
      */
     private function validate()

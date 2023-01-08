@@ -727,6 +727,7 @@ class article extends model
 
     /**
      *
+     * TODO: slug check, "[[:word:]-]+".
      *
      */
     private function validate()
