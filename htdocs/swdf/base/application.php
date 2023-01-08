@@ -170,6 +170,11 @@ class application
      */
     private function response($router)
     {
+        //print("<pre>");
+        //print_r($router);
+        //print("</pre>");
+        //exit();
+
         // Special router.
         //
         // special_actions array example:
