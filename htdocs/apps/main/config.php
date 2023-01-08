@@ -2,7 +2,6 @@
 return array(
     "name" => "main",
     "title" => "Main",
-    "version" => "1.0.0",
     "params" => array(),
 
     "db_id" => NULL,

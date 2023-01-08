@@ -2,7 +2,6 @@
 return array(
     "name" => "blog",
     "title" => "Blog",
-    "version" => "1.0.0",
     "params" => array(
     ),
 
