@@ -11,31 +11,27 @@ use blog\lib\Michelf\MarkdownExtra;
 
 class show extends admin_base
 {
-    /**
-     *
-     *
-     */
     protected function set_items()
     {
         $this->description = $this->data["article"]->record["description"];
         $this->keywords = $this->data["article"]->record["keywords"];
         $this->css = array(url::get_static("css/github-markdown.css"),);
 
-        $this->js = array(
-            html::inline_tag(
-                "script",
-                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, processEscapes: true, TeX: {extensions: [\"mhchem.js\"]}})",
-                array("type" => "text/x-mathjax-config",)
-            ),
-            html::inline_tag(
-                "script",
-                "",
-                array(
-                    "type" => "text/javascript",
-                    "async src" => "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML",
-                )
-            ),
-        );
+        //$this->js = array(
+        //    html::inline_tag(
+        //        "script",
+        //        "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}, processEscapes: true, TeX: {extensions: [\"mhchem.js\"]}})",
+        //        array("type" => "text/x-mathjax-config",)
+        //    ),
+        //    html::inline_tag(
+        //        "script",
+        //        "",
+        //        array(
+        //            "type" => "text/javascript",
+        //            "async src" => "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML",
+        //        )
+        //    ),
+        //);
 
         $this->title = "Article: [" . $this->data["article"]->record["title"] . "]";
         $this->position = array("Show article");
@@ -44,37 +40,76 @@ class show extends admin_base
             "div",
             html::inline_tag(
                 "h3",
-                "Article: [" . htmlspecialchars($this->data["article"]->record["title"]) . "]",
-                array()
-            ) . "\n" .
-            html::inline_tag(
-                "h4",
                 htmlspecialchars($this->data["article"]->record["title"]),
                 array("class" => "text-center")
-            ) . "\n\n" .
+            ) . "\n" .
+            html::mono_tag("hr", array()) . "\n\n" .
+
             html::tag(
                 "div",
                 html::tag(
-                    "ul",
-                    "<li><span>Date: </span><span>" . $this->data["article"]->record["date"] . "</span></li>" . "\n" .
-                    "<li><span>Description: </span><span>" . htmlspecialchars($this->data["article"]->record["description"]) . "</span></li>" . "\n" .
-                    "<li><span>Keywords: </span><span>" . htmlspecialchars($this->data["article"]->record["keywords"]) . "</span></li>" . "\n" .
-                    "<li><span>Category: </span><span>" . admin_category_path::widget(array("data" => $this->data["article"]->get_category())) . "</span></li>" . "\n" .
-                    "<li><span>Tag: </span><span>" . admin_tags::widget(array("data" => $this->data["article"]->get_tags())) . "</span></li>" . "\n" .
-                    "<li><span>Link: </span><span>" . url::get(
-                        array(\swdf::$app->name, "guest/article.slug_show", ""),
-                        array("full_slug" => $this->data["article"]->get_full_slug()),
-                        ""
-                    ) . "</span></li>",
-                    array()
+                    "table",
+                    html::tag(
+                        "tr",
+                        html::inline_tag("td", "Date:", array("class" => "text-right")) . "\n" .
+                        html::inline_tag("td", "<span>" . $this->data["article"]->record["date"] . "</span>", array()),
+                        array()
+                    ) . "\n" .
+                    html::tag(
+                        "tr",
+                        html::inline_tag("td", "Description:", array("class" => "text-right")) . "\n" .
+                        html::inline_tag("td", "<span>" . htmlspecialchars($this->data["article"]->record["description"]) . "</span>", array()),
+                        array()
+                    ) . "\n" .
+                    html::tag(
+                        "tr",
+                        html::inline_tag("td", "Keywords:", array("class" => "text-right")) . "\n" .
+                        html::inline_tag("td", "<span>" . htmlspecialchars($this->data["article"]->record["keywords"]) . "</span>", array()),
+                        array()
+                    ) . "\n" .
+                    html::tag(
+                        "tr",
+                        html::inline_tag("td", "Category:", array("class" => "text-right")) . "\n" .
+                        html::inline_tag("td", "<span>" . admin_category_path::widget(array("data" => $this->data["article"]->get_category())) . "</span>", array()),
+                        array()
+                    ) . "\n" .
+                    html::tag(
+                        "tr",
+                        html::inline_tag("td", "Tag:", array("class" => "text-right")) . "\n" .
+                        html::inline_tag("td", "<span>" . admin_tags::widget(array("data" => $this->data["article"]->get_tags())) . "</span>", array()),
+                        array()
+                    ) . "\n" .
+                    html::tag(
+                        "tr",
+                        html::inline_tag("td", "Link:", array("class" => "text-right")) . "\n" .
+                        html::inline_tag(
+                            "td",
+                            html::inline_tag(
+                                "span",
+                                url::get(
+                                    array(\swdf::$app->name, "guest/article.slug_show", ""),
+                                    array("full_slug" => $this->data["article"]->get_full_slug()),
+                                    ""
+                                ),
+                                array()
+                            ),
+                            array()
+                        ),
+                        array()
+                    ),
+                    array("class" => "table-noborder")
                 ),
                 array()
-            ) . "\n\n" .
+            ) . "\n" .
+            html::mono_tag("hr", array()) . "\n\n" .
+
             html::tag(
                 "div",
                 MarkdownExtra::defaultTransform($this->data["article"]->record["content"]),
-                array("class" => "markdown-body")
-            ) . "\n\n" .
+                array("class" => "markdown-body block-padding")
+            ) . "\n" .
+            html::mono_tag("hr", array()) . "\n\n" .
+
             html::inline_tag(
                 "h3",
                 "Comments [" . $this->data["article"]->get_comment_count() . "]",
@@ -89,7 +124,9 @@ class show extends admin_base
                 ),
                 array()
             ) . "\n\n" .
-            admin_comment_tree::widget(array("data" => $this->data["root_comments"])) . "\n\n" .
+            admin_comment_tree::widget(array("data" => $this->data["root_comments"])) . "\n" .
+            html::mono_tag("hr", array()) . "\n\n" .
+
             html::inline_tag(
                 "h3",
                 "Write comment(* is necessary, and email is not shown to public)",
