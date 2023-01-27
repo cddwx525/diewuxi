@@ -1,11 +1,11 @@
 <?php
-namespace main\views;
+namespace main\views\screenshot;
 
 use swdf\helpers\html;
 use swdf\helpers\url;
 use main\views\layouts\base;
 
-class screenshot_v1_0 extends base
+class v1_0 extends base
 {
     public function set_items()
     {

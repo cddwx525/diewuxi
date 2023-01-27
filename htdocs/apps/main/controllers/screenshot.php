@@ -8,7 +8,7 @@ class screenshot extends controller
     public function show_v1_0()
     {
         return array(
-            "screenshot_v1_0",
+            "screenshot/v1_0",
             array(
             ),
         );

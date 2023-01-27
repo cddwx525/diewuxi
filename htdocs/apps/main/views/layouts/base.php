@@ -285,16 +285,16 @@ abstract class base extends view
                 "Home",
             ),
             array(
-                url::get(array(\swdf::$app->name, "one_page.show", ""), array(), ""),
-                "One page",
-            ),
-            array(
-                url::get(array(\swdf::$app->name, "about.show", ""), array(), ""),
-                "About",
+                url::get(array(\swdf::$app->name, "program.index", ""), array(), ""),
+                "Programs",
             ),
             array(
                 url::root_url() . "/blog/",
                 "Blog >>",
+            ),
+            array(
+                url::get(array(\swdf::$app->name, "about.show", ""), array(), ""),
+                "About",
             ),
         );
 
