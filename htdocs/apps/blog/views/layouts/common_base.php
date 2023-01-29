@@ -73,7 +73,7 @@ abstract class common_base extends view
             "head",
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" . "\n" .
             "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" . "\n" .
-            //"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" . "\n" .
             implode("\n", $head_list),
             array()
         );

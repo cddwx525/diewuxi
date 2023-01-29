@@ -75,7 +75,7 @@ abstract class guest_base extends view
             "head",
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" . "\n" .
             "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" . "\n" .
-            //"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" . "\n" .
             implode("\n", $head_list),
             array()
         );
@@ -340,40 +340,16 @@ abstract class guest_base extends view
     {
         $main = html::tag(
             "div",
+            html::tag("div", $this->main, array("class" => "main float-left")) .  "\n" .
             html::tag(
                 "div",
-                $this->main,
-                array("class" => "main float-left")
-            ) .  "\n" .
-            html::tag(
-                "div",
-                html::inline_tag(
-                    "h3",
-                    "Browse by category",
-                    array()
-                ) .  "\n" .
-                html::tag(
-                    "div",
-                    category_side::widget(array("data" => \swdf::$app->data["root_categories"])),
-                    array()
-                ) .  "\n" .
-                html::inline_tag(
-                    "h3",
-                    "Browse by tag",
-                    array()
-                ) .  "\n" .
-                html::tag(
-                    "div",
-                    tag_cloud::widget(array("data" => \swdf::$app->data["tags"])),
-                    array()
-                ),
+                html::inline_tag("h3", "Browse by category", array()) .  "\n" .
+                html::tag("div", category_side::widget(array("data" => \swdf::$app->data["root_categories"])), array()) .  "\n" .
+                html::inline_tag("h3", "Browse by tag", array()) .  "\n" .
+                html::tag("div", tag_cloud::widget(array("data" => \swdf::$app->data["tags"])), array()),
                 array("class" => "side float-right")
             ) . "\n" .
-            html::tag(
-                "div",
-                "",
-                array("class" => "clear-both")
-            ),
+            html::tag("div", "", array("class" => "clear-both")),
             array()
         );
 

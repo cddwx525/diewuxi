@@ -75,7 +75,7 @@ abstract class base extends view
             "head",
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" . "\n" .
             "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" . "\n" .
-            //"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />" . "\n" .
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" . "\n" .
             implode("\n", $head_list),
             array()
         );
@@ -350,7 +350,7 @@ abstract class base extends view
             "div",
             html::inline_tag(
                 "p",
-                "SWDF" . " " . "2017" . "--" . date("Y"),
+                \swdf::$app->config["site_name"] . " " . \swdf::$app->config["site_begin_year"] . "--" . date("Y"),
                 array("class" => "float-right")
             ) . "\n" .
             html::tag(
