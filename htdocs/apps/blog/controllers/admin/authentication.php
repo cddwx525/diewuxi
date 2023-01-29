@@ -76,7 +76,7 @@ class authentication extends controller
         if ($ret["result"] === FALSE)
         {
             return array(
-                "admin/common/message",
+                "common/message",
                 array(
                     "source" => "Login",
                     "message" => $ret["message"],
