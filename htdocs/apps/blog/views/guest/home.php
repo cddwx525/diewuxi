@@ -22,10 +22,7 @@ class home extends guest_base
             "div",
             html::tag(
                 "div",
-                html::inline_tag("p", "Home page.", array()) . "\n" .
-                html::mono_tag("br", array()) . "\n" .
-                html::mono_tag("br", array()) . "\n" .
-                html::mono_tag("br", array()),
+                "",
                 array()
             ) . "\n\n" .
             html::inline_tag(
