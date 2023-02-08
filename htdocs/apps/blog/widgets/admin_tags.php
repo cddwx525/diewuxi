@@ -30,25 +30,25 @@ class admin_tags extends widget
         else
         {
             $tags_link_list = array();
-            foreach ($tags as $tag)
+            foreach ($tags as $one_tag)
             {
                 $tags_link_list[] = html::a(
-                    htmlspecialchars($tag->record["name"]),
+                    htmlspecialchars($one_tag->record["name"]),
                     url::get(
                         array(\swdf::$app->name, "admin/tag.show", ""),
-                        array("id" => $tag->record["id"]),
+                        array("id" => $one_tag->record["id"]),
                         ""
                     ),
                     array()
                 ) .
                 html::inline_tag(
                     "span",
-                    htmlspecialchars($tag->record["slug"]),
+                    htmlspecialchars($one_tag->record["slug"]),
                     array("class" => "text-padding-s")
                 ) .
                 html::inline_tag(
                     "span",
-                    "[" . $tag->get_article_count() . "]",
+                    "[" . $one_tag->get_article_count() . "]",
                     array()
                 );
             }

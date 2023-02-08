@@ -31,22 +31,22 @@ class tags extends widget
         {
             $tag_link_list = array();
 
-            foreach ($tags as $tag)
+            foreach ($tags as $one_tag)
             {
                 $tag_link_list[] = html::inline_tag(
                     "span",
                     html::a(
-                        htmlspecialchars($tag->record["name"]),
+                        htmlspecialchars($one_tag->record["name"]),
                         url::get(
                             array(\swdf::$app->name, "guest/tag.slug_show", ""),
-                            array("slug" => $tag->record["slug"]),
+                            array("slug" => $one_tag->record["slug"]),
                             ""
                         ),
                         array()
                     ) .
                     html::inline_tag(
                         "span",
-                        "[" . $tag->get_article_count() . "]",
+                        "[" . $one_tag->get_article_count() . "]",
                         array()
                     ),
                     array()

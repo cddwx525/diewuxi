@@ -24,17 +24,17 @@ class category_list extends widget
     private function get_html($categories)
     {
         $category_link_list = array();
-        foreach ($categories  as $category)
+        foreach ($categories  as $one_category)
         {
             $category_link_list[] = html::tag(
                 "div",
                 html::inline_tag(
                     "p",
                     html::a(
-                        htmlspecialchars($category->record["name"]) . ">>",
+                        htmlspecialchars($one_category->record["name"]) . ">>",
                         url::get(
                             array(\swdf::$app->name, "guest/article.slug_list_by_category", ""),
-                            array("full_category_slug" => $category->get_full_slug()),
+                            array("full_category_slug" => $one_category->get_full_slug()),
                             ""
                         ),
                         array()

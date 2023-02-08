@@ -44,33 +44,33 @@ class admin_category_tree extends widget
     {
         $category_link_list = array();
 
-        foreach ($categories as $category)
+        foreach ($categories as $one_category)
         {
             $category_link_list[] = html::inline_tag(
                 "li",
                 html::a(
-                    htmlspecialchars($category->record["name"]),
+                    htmlspecialchars($one_category->record["name"]),
                     url::get(
                         array(\swdf::$app->name, "admin/category.show", ""),
-                        array("id" => $category->record["id"]),
+                        array("id" => $one_category->record["id"]),
                         ""
                     ),
                     array()
                 ) .
                 html::inline_tag(
                     "span",
-                    "(" . htmlspecialchars($category->get_full_slug()) . ")",
+                    "(" . htmlspecialchars($one_category->get_full_slug()) . ")",
                     array("class" => "text-padding-s")
                 ) .
                 html::inline_tag(
                     "span",
-                    "[" . $category->get_article_count() . "]",
+                    "[" . $one_category->get_article_count() . "]",
                     array()
                 ),
                 array()
             );
 
-            $sub_categories = $category->get_sub();
+            $sub_categories = $one_category->get_sub();
 
             if (empty($sub_categories) === FALSE)
             {

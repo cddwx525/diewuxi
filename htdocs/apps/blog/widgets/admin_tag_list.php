@@ -29,13 +29,13 @@ class admin_tag_list extends widget
         else
         {
             $tags_link_list = array();
-            foreach ($tags as $tag)
+            foreach ($tags as $one_tag)
             {
                 $tags_link_list[] = html::a(
-                    htmlspecialchars($tag->record["name"]),
+                    htmlspecialchars($one_tag->record["name"]),
                     url::get(
                         array(\swdf::$app->name, "admin/article.list_by_tag", ""),
-                        array("tag_id" => $tag->record["id"]),
+                        array("tag_id" => $one_tag->record["id"]),
                         ""
                     ),
                     array()

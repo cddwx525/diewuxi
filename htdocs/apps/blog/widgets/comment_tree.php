@@ -43,9 +43,9 @@ class comment_tree extends widget
     private function recusive_comments($comments)
     {
         $comment_link_list = array();
-        foreach ($comments as $comment)
+        foreach ($comments as $one_comment)
         {
-            if ($comment->record["author"] === "1")
+            if ($one_comment->record["author"] === "1")
             {
                 $author_part = html::inline_tag("span", "[Author]", array("class" => "text-warning text-padding"));
             }
@@ -58,11 +58,11 @@ class comment_tree extends widget
                 "li",
                 html::tag(
                     "div",
-                    html::inline_tag("span", htmlspecialchars($comment->record["user"]), array()).
+                    html::inline_tag("span", htmlspecialchars($one_comment->record["user"]), array()).
                     $author_part .
                     html::inline_tag(
                         "span",
-                        is_null($comment->record["target_id"]) ? "[" . $comment->record["number"] . "#]" : "",
+                        is_null($one_comment->record["target_id"]) ? "[" . $one_comment->record["number"] . "#]" : "",
                         array("class" => "float-right")
                     ) . "\n" .
                     html::tag("div", "", array("class" => "clear-both")),
@@ -70,19 +70,19 @@ class comment_tree extends widget
                 ) . "\n\n" .
                 html::tag(
                     "div",
-                    htmlspecialchars($comment->record["content"]),
+                    htmlspecialchars($one_comment->record["content"]),
                     array("class" => "block-padding")
                 ) . "\n\n" .
                 html::tag(
                     "div",
-                    html::inline_tag("span", $comment->record["date"], array("class" => "text-muted")) .
+                    html::inline_tag("span", $one_comment->record["date"], array("class" => "text-muted")) .
                     html::inline_tag(
                         "span",
                         html::a(
                             "Reply",
                             url::get(
                                 array(\swdf::$app->name, "guest/comment.write", ""),
-                                array("article_id" => $comment->record["article_id"], "target_id" => $comment->record["id"]),
+                                array("article_id" => $one_comment->record["article_id"], "target_id" => $one_comment->record["id"]),
                                 ""
                             ),
                             array("class" => "text-padding")
@@ -91,10 +91,10 @@ class comment_tree extends widget
                     ),
                     array()
                 ),
-                array("id" => $comment->record["id"])
+                array("id" => $one_comment->record["id"])
             );
 
-            $reply = $comment->get_reply();
+            $reply = $one_comment->get_reply();
 
             if (empty($reply) === FALSE)
             {

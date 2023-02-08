@@ -44,28 +44,28 @@ class categories extends widget
     {
         $category_link_list = array();
 
-        foreach ($categories as $category)
+        foreach ($categories as $one_category)
         {
             $category_link_list[] = html::inline_tag(
                 "li",
                 html::a(
-                    htmlspecialchars($category->record["name"]),
+                    htmlspecialchars($one_category->record["name"]),
                     url::get(
                         array(\swdf::$app->name, "guest/category.slug_show", ""),
-                        array("full_slug" => $category->get_full_slug()),
+                        array("full_slug" => $one_category->get_full_slug()),
                         ""
                     ),
                     array()
                 ) .
                 html::inline_tag(
                     "span",
-                    "[" . $category->get_article_count() . "]",
+                    "[" . $one_category->get_article_count() . "]",
                     array()
                 ),
                 array()
             );
 
-            $sub_categories = $category->get_sub();
+            $sub_categories = $one_category->get_sub();
 
             if (empty($sub_categories) === FALSE)
             {

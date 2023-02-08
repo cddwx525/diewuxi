@@ -34,16 +34,16 @@ class article_list extends widget
         else
         {
             $article_link_list = array();
-            foreach ($articles as $article)
+            foreach ($articles as $one_article)
             {
-                if (empty($article->get_tags()) === TRUE)
+                if (empty($one_article->get_tags()) === TRUE)
                 {
                     $tag_links = html::inline_tag("span", "NULL", array());
                 }
                 else
                 {
                     $tag_link_list = array();
-                    foreach ($article->get_tags() as $tag)
+                    foreach ($one_article->get_tags() as $tag)
                     {
                         $tag_link_list[] = html::a(
                             htmlspecialchars($tag->record["name"]),
@@ -64,10 +64,10 @@ class article_list extends widget
                     html::inline_tag(
                         "p",
                         html::a(
-                            htmlspecialchars($article->record["title"]),
+                            htmlspecialchars($one_article->record["title"]),
                             url::get(
                                 array(\swdf::$app->name, "guest/article.slug_show", ""),
-                                array("full_slug" => $article->get_full_slug()),
+                                array("full_slug" => $one_article->get_full_slug()),
                                 ""
                             ),
                             array()
@@ -83,10 +83,10 @@ class article_list extends widget
                             html::inline_tag(
                                 "span",
                                 html::a(
-                                    htmlspecialchars($article->get_category()->get_full_name()),
+                                    htmlspecialchars($one_article->get_category()->get_full_name()),
                                     url::get(
                                         array(\swdf::$app->name, "guest/category.slug_show", ""),
-                                        array("full_slug" => $article->get_category()->get_full_slug()),
+                                        array("full_slug" => $one_article->get_category()->get_full_slug()),
                                         ""
                                     ),
                                     array()
@@ -106,7 +106,7 @@ class article_list extends widget
                         html::inline_tag(
                             "li",
                             html::inline_tag("span", "Date: ", array()) .
-                            html::inline_tag("span", $article->record["date"], array()),
+                            html::inline_tag("span", $one_article->record["date"], array()),
                             array()
                         ),
                         array()

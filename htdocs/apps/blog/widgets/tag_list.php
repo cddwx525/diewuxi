@@ -29,13 +29,13 @@ class tag_list extends widget
         else
         {
             $tags_link_list = array();
-            foreach ($tags as $tag)
+            foreach ($tags as $one_tag)
             {
                 $tags_link_list[] = html::a(
-                    htmlspecialchars($tag->record["name"]),
+                    htmlspecialchars($one_tag->record["name"]),
                     url::get(
                         array(\swdf::$app->name, "guest/article.slug_list_by_tag", ""),
-                        array("tag_slug" => $tag->record["slug"]),
+                        array("tag_slug" => $one_tag->record["slug"]),
                         ""
                     ),
                     array()
