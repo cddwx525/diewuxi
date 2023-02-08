@@ -266,15 +266,15 @@ class category extends model
 
         $categories[] = $this;
 
-        // New instance, do NOT affect this instance.
-        $category = new category();
-        $category->get_by_id($this->record["id"]);
+        $parent_id = $this->record["parent_id"];
 
-        while ($category->record["parent_id"] !== NULL)
+        while ($parent_id !== NULL)
         {
-            // Use return value to accept instance.
-            $category = $category->get_by_id($category->record["parent_id"]);
-            $categories[] = $category;
+            $category = new category();
+
+            $categories[] = $category->get_by_id($parent_id);
+
+            $parent_id = $category->record["parent_id"];
         }
 
         krsort($categories, SORT_NUMERIC);
